@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Damascerebro · Seu Sistema de IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --terra:#C85A36;--terra-light:#FFF4F0;--terra-dark:#A84525;
+  --sage:#6B8E7B;--sage-light:#EEF2F0;
+  --charcoal:#1A1A1A;--charcoal-mid:#2D2D2D;--charcoal-soft:#4A4A4A;
+  --sand:#F9F8F6;--sand-mid:#F0EBE1;--sand-deep:#E5DCCB;
+  --white:#FFFFFF;--border:#E5E0D8;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --radius:14px;--radius-sm:8px;
+}
+html,body{height:100%;font-family:var(--font-body);background:var(--sand);color:var(--charcoal)}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+.sidebar{width:260px;background:var(--charcoal);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;padding:0 0 1.5rem;z-index:100;transition:transform .3s ease}
+.sidebar::after{content:'';position:absolute;bottom:0;right:0;width:200px;height:200px;background:radial-gradient(circle,var(--terra) 0%,transparent 70%);opacity:.08;pointer-events:none}
+.main{margin-left:260px;flex:1;padding:2rem;max-width:900px}
+.sb-header{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:.5rem}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.sb-logo svg{width:32px;height:32px;flex-shrink:0}
+.sb-logo-text{display:flex;align-items:baseline;gap:2px}
+.sb-logo-text .w1{font-family:var(--font-display);font-size:17px;font-weight:800;color:white;letter-spacing:-.02em}
+.sb-logo-text .w2{font-family:var(--font-display);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra)}
+.sb-tagline{font-size:11px;color:rgba(255,255,255,.3);margin-top:2px}
+.sb-section{padding:0 .875rem;margin-bottom:.25rem}
+.sb-label{font-size:9px;text-transform:uppercase;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.25);padding:0 .5rem;margin-bottom:4px;margin-top:.75rem}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:10px;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .15s;font-family:var(--font-body)}
+.sb-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+.sb-item.active{background:rgba(200,90,54,.18);color:white;font-weight:600}
+.sb-item svg{width:15px;height:15px;flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-badge{font-size:9px;font-weight:700;background:var(--terra);color:white;padding:2px 6px;border-radius:10px;margin-left:auto}
+.topbar{display:none;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:var(--charcoal);position:sticky;top:0;z-index:99}
+.topbar-logo{display:flex;align-items:center;gap:8px}
+.topbar-logo span{font-family:var(--font-display);font-size:15px;font-weight:800;color:white}
+.menu-btn{background:none;border:none;color:white;cursor:pointer;padding:4px}
+.tab-page{display:none}
+.tab-page.active{display:block}
+.page-header{margin-bottom:2rem}
+.page-title{font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.page-sub{font-size:14px;color:var(--charcoal-soft)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+.card-title{font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.card-title .dot{width:8px;height:8px;border-radius:50%;background:var(--terra);flex-shrink:0}
+.context-block{background:var(--sand);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;font-size:13px;line-height:1.7;font-family:var(--font-body);color:var(--charcoal-soft);margin-bottom:.75rem}
+.context-block strong{color:var(--charcoal);font-weight:600}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;background:var(--charcoal);color:white;border:none;padding:8px 14px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font-body)}
+.copy-btn:hover{background:var(--terra)}
+.copy-btn svg{width:13px;height:13px}
+.prompt-grid{display:grid;gap:.75rem}
+.prompt-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:all .2s;cursor:pointer;position:relative}
+.prompt-card:hover{border-color:var(--terra);box-shadow:0 4px 20px rgba(200,90,54,.08)}
+.prompt-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:20px;margin-bottom:8px}
+.tag-dev{background:#EFF6FF;color:#1D4ED8}
+.tag-venda{background:#F0FDF4;color:#166534}
+.tag-fiverr{background:#FFF7ED;color:#C2410C}
+.tag-produto{background:var(--terra-light);color:var(--terra-dark)}
+.tag-geral{background:var(--sage-light);color:#2D5A4A}
+.tag-obsidian{background:#F3E8FF;color:#6D28D9}
+.tag-skills{background:#FEF3C7;color:#92400E}
+.prompt-title{font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:6px}
+.prompt-desc{font-size:12.5px;color:var(--charcoal-soft);line-height:1.6;margin-bottom:10px}
+.prompt-text{background:var(--charcoal);color:rgba(255,255,255,.85);border-radius:var(--radius-sm);padding:1rem;font-size:12px;font-family:var(--font-mono);line-height:1.6;display:none;margin-bottom:10px;white-space:pre-wrap}
+.prompt-card.open .prompt-text{display:block}
+.prompt-actions{display:flex;gap:8px}
+.btn-expand{background:none;border:1px solid var(--border);color:var(--charcoal-soft);padding:6px 12px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font-body)}
+.btn-expand:hover{border-color:var(--terra);color:var(--terra)}
+.btn-copy{background:var(--terra);color:white;border:none;padding:6px 12px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font-body)}
+.btn-copy:hover{background:var(--terra-dark)}
+.projeto-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:.75rem}
+.projeto-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.75rem}
+.projeto-nome{font-family:var(--font-display);font-size:15px;font-weight:700}
+.projeto-status{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.status-ativo{background:#DCFCE7;color:#166534}
+.status-dev{background:#FFF7ED;color:#C2410C}
+.status-paused{background:var(--sand-mid);color:var(--charcoal-soft)}
+.projeto-desc{font-size:12.5px;color:var(--charcoal-soft);line-height:1.6;margin-bottom:.75rem}
+.projeto-tags{display:flex;flex-wrap:wrap;gap:6px}
+.projeto-tag{font-size:11px;background:var(--sand);border:1px solid var(--border);padding:3px 10px;border-radius:20px;font-weight:500}
+.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.skill-item{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.skill-icon{font-size:24px;margin-bottom:8px}
+.skill-name{font-family:var(--font-display);font-size:13px;font-weight:700;margin-bottom:4px}
+.skill-desc{font-size:12px;color:var(--charcoal-soft);line-height:1.5}
+.learn-item{display:flex;gap:12px;padding:.875rem 0;border-bottom:1px solid var(--border)}
+.learn-item:last-child{border-bottom:none}
+.learn-dot{width:8px;height:8px;border-radius:50%;background:var(--terra);flex-shrink:0;margin-top:5px}
+.learn-content{flex:1}
+.learn-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.learn-desc{font-size:12px;color:var(--charcoal-soft);line-height:1.5}
+.learn-date{font-size:10px;color:rgba(0,0,0,.3);font-family:var(--font-mono);margin-top:4px}
+.obsidian-folder{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:.75rem}
+.obsidian-folder-header{display:flex;align-items:center;gap:10px;margin-bottom:.75rem}
+.obsidian-folder-icon{font-size:20px}
+.obsidian-folder-name{font-family:var(--font-display);font-size:14px;font-weight:700}
+.obsidian-template{background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:var(--radius-sm);padding:1rem;font-size:12px;font-family:var(--font-mono);line-height:1.7;white-space:pre-wrap}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--charcoal);color:white;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s ease;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+.mobile-overlay.open{display:block}
+.skills-ref-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:.75rem;display:flex;gap:12px;align-items:flex-start}
+.skills-ref-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.skills-ref-name{font-family:var(--font-display);font-size:13px;font-weight:700;margin-bottom:3px}
+.skills-ref-desc{font-size:12px;color:var(--charcoal-soft);line-height:1.5;margin-bottom:6px}
+.skills-ref-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:1rem}
+  .topbar{display:flex}
+  .skill-grid{grid-template-columns:1fr}
+  .page-title{font-size:22px}
+}
+</style>
+<meta name="theme-color" content="#1A1A1A"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Damascerebro"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<link rel="manifest" href="manifest.json"/>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(r=>console.log("SW registered")).catch(e=>console.log("SW error",e))})}</script>
+</head>
+<body>
+
+<div class="toast" id="toast">✅ Copiado!</div>
+<div class="mobile-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div class="app">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M50 10 C28 10 10 28 10 50 C10 72 28 90 50 90 C62 90 68 82 62 72 C56 62 60 54 68 50 C80 45 88 36 83 24 C78 13 64 10 50 10Z" fill="#C85A36" opacity="0.9"/>
+        <path d="M50 22 C33 22 22 36 25 50 C27 62 39 68 50 65 C59 62 64 53 59 45 C55 37 58 30 66 28 C60 24 55 22 50 22Z" fill="#C85A36" opacity="0.45"/>
+        <path d="M50 33 C41 33 36 41 39 50 C41 57 48 60 54 57 C59 53 58 46 53 42 C56 40 57 36 54 33 C52 32.5 51 33 50 33Z" fill="white" opacity="0.7"/>
+        <path d="M28 56 Q22 67 28 78 Q34 85 46 83" stroke="#C85A36" stroke-width="3.5" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+      <div class="sb-logo-text">
+        <span class="w1">concha</span>
+        <span class="w2">brain v2</span>
+      </div>
+    </div>
+    <div class="sb-tagline">Seu segundo cérebro pessoal</div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Principal</div>
+    <button class="sb-item active" onclick="goTab('contexto',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      Meu Contexto
+    </button>
+    <button class="sb-item" onclick="goTab('prompts',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      Biblioteca de Prompts
+      <span class="sb-badge">18</span>
+    </button>
+    <button class="sb-item" onclick="goTab('projetos',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+      Meus Projetos
+    </button>
+    <button class="sb-item" onclick="goTab('skills',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Minhas Skills
+    </button>
+    <button class="sb-item" onclick="goTab('skills-claude',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+      Skills do Claude
+      <span class="sb-badge" style="background:var(--sage)">Novo</span>
+    </button>
+    <button class="sb-item" onclick="goTab('obsidian',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+      Obsidian · Setup
+      <span class="sb-badge" style="background:var(--sage)">Novo</span>
+    </button>
+    <button class="sb-item" onclick="goTab('aprendizados',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      Aprendizados
+    </button>
+
+```
+<button class="sb-item" onclick="goTab('artigos',this)">
+  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+  Artigos & Insights
+  <span class="sb-badge">5</span>
+</button>
+
+<div class="sb-label">Monetização</div>
+<button class="sb-item" onclick="goTab('fiverr',this)">
+  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+  Fiverr · Dólar
+</button>
+<button class="sb-item" onclick="goTab('concha',this)">
+  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+  Concha Lab · Plano
+</button>
+```
+
+  </div>
+</aside>
+
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg viewBox="0 0 100 100" fill="none" style="width:24px;height:24px">
+      <path d="M50 10 C28 10 10 28 10 50 C10 72 28 90 50 90 C62 90 68 82 62 72 C56 62 60 54 68 50 C80 45 88 36 83 24 C78 13 64 10 50 10Z" fill="#C85A36" opacity="0.9"/>
+    </svg>
+    <span>damascerebro</span>
+  </div>
+  <button class="menu-btn" onclick="openSidebar()">
+    <svg width="22" height="22" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+</div>
+
+<main class="main">
+
+<!-- CONTEXTO -->
+
+<div class="tab-page active" id="tab-contexto">
+  <div class="page-header">
+    <div class="page-title">Meu Contexto</div>
+    <div class="page-sub">Cole isso no início de qualquer conversa com o Claude</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Contexto Master — Copiar e Colar</div>
+    <div class="context-block" id="contexto-master">
+<strong>QUEM SOU:</strong>
+Empreendedor brasileiro, estudante de Arquitetura e Urbanismo na UFBA (1º semestre, 6 anos pela frente). Trabalho das 7h às 16h na Stand1 (empresa de cenografia/stands para eventos) como projetista. Das 18h30 às 22h30 estou na faculdade. Tenho uma sócia chamada Giovana.
+
+<strong>FERRAMENTAS:</strong>
+Claude como principal ferramenta de desenvolvimento e estratégia. Gemini como backup quando Claude atinge limite de contexto. Plano Claude $20/mês. Obsidian como segundo cérebro.
+
+<strong>MEU PERFIL TÉCNICO:</strong>
+Construo sistemas completos em HTML/CSS/JS puro em menos de 1 hora usando Claude. Senso de produto e UX apurado. Conheço o setor de arquitetura por dentro. Prefiro arquivos HTML monolíticos (tudo num arquivo só). Itero rápido: testo, reporto bug, quero solução imediata.
+
+<strong>PROJETOS ATIVOS:</strong>
+
+1. CONCHA LAB — SaaS para arquitetura brasileira. No ar em concha-lab.vercel.app. Stack: Next.js + Tailwind + Clerk + Supabase + Vercel. Módulos: OS, Community, Market, Academy, Talent, Vitrine. Preço: R$97/mês Pro, R$247/mês Studio.
+1. FUSION BLOG — Blog build in public sobre IA + Arquitetura. 4 pilares: Build in Public, Tutoriais IA, Arquitetura, Notícias. Marca independente, português agora, inglês depois.
+1. EDUCALAURO — Sistema gestão escolar para Prefeitura Lauro de Freitas. Pitch pronto. Potencial R$500k-1M/ano.
+1. FIVERR — Perfil ativo @damascenogdr. Gig publicado: custom business management system. Portfólio: AgroOS + Stand1 OS.
+
+<strong>OBJETIVO IMEDIATO:</strong>
+Primeiros clientes pagantes na Concha Lab. Primeira venda no Fiverr. Publicar primeiros artigos no Fusion Blog.
+
+<strong>PREFERÊNCIAS DE RESPOSTA:</strong>
+Direto ao ponto. Prefere código e arquivos prontos. Sem rodeios. Quando pedir código, entregar arquivo HTML completo funcional. Português brasileiro.
+</div>
+<button class="copy-btn" onclick="copyContext()">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+Copiar Contexto
+</button>
+
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Como usar este arquivo</div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.8;">
+      <strong style="color:var(--charcoal)">1. Início de conversa:</strong> Copie o contexto acima e cole na primeira mensagem.<br>
+      <strong style="color:var(--charcoal)">2. Prompts prontos:</strong> Use a biblioteca para tarefas recorrentes.<br>
+      <strong style="color:var(--charcoal)">3. Skills do Claude:</strong> Use os comandos da seção Skills para tarefas avançadas.<br>
+      <strong style="color:var(--charcoal)">4. Obsidian:</strong> Anote aprendizados e feedbacks de clientes em tempo real.<br>
+      <strong style="color:var(--charcoal)">5. Atualizar:</strong> Sempre que terminar um trabalho, atualize o contexto.
+    </div>
+  </div>
+</div>
+
+<!-- PROMPTS -->
+
+<div class="tab-page" id="tab-prompts">
+  <div class="page-header">
+    <div class="page-title">Biblioteca de Prompts</div>
+    <div class="page-sub">Comandos prontos para cada situação. Clique para expandir e copiar.</div>
+  </div>
+  <div class="prompt-grid">
+
+```
+<div class="prompt-card">
+  <span class="prompt-tag tag-dev">Desenvolvimento</span>
+  <div class="prompt-title">Nova feature — com validação antes</div>
+  <div class="prompt-desc">Faz perguntas difíceis antes de codar. Evita retrabalho.</div>
+  <div class="prompt-text">Antes de codar qualquer coisa, me faça perguntas difíceis sobre essa feature — uma por vez — até não restar nenhuma dúvida sobre o que precisa ser construído.
+```
+
+Feature: [DESCREVA A IDEIA]
+
+Só comece a codar quando eu confirmar que todas as dúvidas foram resolvidas.</div>
+<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+</div>
+
+```
+<div class="prompt-card">
+  <span class="prompt-tag tag-dev">Desenvolvimento</span>
+  <div class="prompt-title">Debug sistemático</div>
+  <div class="prompt-desc">Metodologia que proíbe tentativa e erro. Resolve na raiz.</div>
+  <div class="prompt-text">Siga metodologia sistemática de debug:
+```
+
+1. Reproduza o bug de forma mínima
+1. Identifique a causa raiz (não os sintomas)
+1. Proponha UMA única correção
+1. Verifique que não quebra nada
+
+Não tente várias coisas ao mesmo tempo.
+
+Bug: [DESCREVA O PROBLEMA]
+Arquivo: [COLE O ARQUIVO]</div>
+<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+</div>
+
+```
+<div class="prompt-card">
+  <span class="prompt-tag tag-dev">Desenvolvimento</span>
+  <div class="prompt-title">Novo sistema do zero</div>
+  <div class="prompt-desc">Para criar sistema completo para novo cliente ou nicho.</div>
+  <div class="prompt-text">Preciso criar um sistema de gestão completo em HTML/CSS/JS para [TIPO DE NEGÓCIO].
+```
+
+Cliente: [NOME/SEGMENTO]
+Módulos: [LISTE OS MÓDULOS]
+Identidade visual: [CORES, ESTILO]
+Funcionalidades: [LISTE]
+
+Regras:
+
+- Arquivo HTML único e completo
+- Visual profissional e polido
+- Sidebar escura com accent colorido
+- Responsivo para mobile
+- Português brasileiro</div>
+  <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+  
+    </div>
+  
+    <div class="prompt-card">
+      <span class="prompt-tag tag-dev">Desenvolvimento</span>
+      <div class="prompt-title">Code review sistemático</div>
+      <div class="prompt-desc">Revisão completa antes de publicar qualquer coisa.</div>
+      <div class="prompt-text">Faça uma revisão sistemática desse código verificando:
+
+1. Segurança — há alguma vulnerabilidade óbvia?
+1. Performance — algo que vai ficar lento com mais dados?
+1. UX — algo que vai confundir o usuário?
+1. Bugs — algum caso que vai quebrar?
+1. Código morto — algo que não está sendo usado?
+
+Me dê uma lista priorizada do que corrigir primeiro.
+
+[COLE O CÓDIGO]</div>
+<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+</div>
+
+```
+<div class="prompt-card">
+  <span class="prompt-tag tag-fiverr">Fiverr</span>
+  <div class="prompt-title">Resposta para cliente</div>
+  <div class="prompt-desc">Para responder mensagens de clientes internacionais em inglês.</div>
+  <div class="prompt-text">Preciso responder um cliente no Fiverr. Segue a mensagem dele:
+```
+
+“[COLE A MENSAGEM DO CLIENTE]”
+
+Contexto: sou desenvolvedor de sistemas web, entrego em HTML/CSS/JS, prazo padrão é [X] dias, preço base $[VALOR].
+
+Escreva resposta em inglês:
+
+- Profissional e confiante
+- Confirme que entendi o pedido
+- Faça 1-2 perguntas se necessário
+- Máximo 5 linhas</div>
+  <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+  
+    </div>
+  
+    <div class="prompt-card">
+      <span class="prompt-tag tag-venda">Vendas</span>
+      <div class="prompt-title">Abordagem para arquiteto</div>
+      <div class="prompt-desc">Script para abordar escritórios sobre a Concha Lab.</div>
+      <div class="prompt-text">Preciso de script de abordagem para arquiteto/escritório para apresentar a Concha Lab.
+
+Contexto do prospect: [DESCREVA O QUE VOCÊ SABE]
+Canal: [WhatsApp / Instagram / Email / Presencial]
+Objetivo: [Demo / Venda / Feedback]
+
+Crie script curto, direto, que gere curiosidade. Sem pitch longo. Máximo 5 linhas.</div>
+<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+</div>
+
+```
+<div class="prompt-card">
+  <span class="prompt-tag tag-venda">Vendas</span>
+  <div class="prompt-title">Análise de artigo</div>
+  <div class="prompt-desc">Para extrair insights aplicáveis de qualquer artigo.</div>
+  <div class="prompt-text">Segue meu contexto: [COLE O CONTEXTO MASTER]
+```
+
+Analise esse artigo:
+[COLE O TEXTO]
+
+Me responda:
+
+1. Os 3 insights mais relevantes para minha situação
+1. O que posso aplicar ESTA SEMANA
+1. O que é teoria que não se aplica ao meu momento
+1. Alguma oportunidade de monetização que não estou vendo</div>
+   
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
+   
+    <div class="prompt-card">
+      <span class="prompt-tag tag-produto">Produto</span>
+      <div class="prompt-title">Validar ideia de feature</div>
+      <div class="prompt-desc">Antes de construir, verificar se vale o esforço.</div>
+      <div class="prompt-text">Estou pensando em adicionar: [DESCREVA A IDEIA]
+
+Produto: Concha Lab (SaaS arquitetura, R$97/mês)
+Usuário alvo: [Arquiteto autônomo / Escritório pequeno]
+
+Responda:
+
+1. Resolve dor real ou é nice-to-have?
+1. Esforço para construir (baixo/médio/alto)?
+1. Aumenta conversão, retenção ou receita?
+1. Devo construir agora ou depois do MVP validado?
+   Seja direto. Sem rodeios.</div>
+   
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
+   
+    <div class="prompt-card">
+      <span class="prompt-tag tag-geral">Estratégia</span>
+      <div class="prompt-title">Prioridade da semana</div>
+      <div class="prompt-desc">Para não se perder com muitos projetos ao mesmo tempo.</div>
+      <div class="prompt-text">Segue meu contexto: [COLE O CONTEXTO MASTER]
+
+Esta semana tenho: [X horas em blocos de Y horas]
+
+Situação atual:
+
+- [DESCREVA O STATUS DE CADA PROJETO]
+
+Me diga:
+
+1. A UMA coisa mais importante dessa semana
+1. O que pode esperar
+1. O que ignorar completamente
+   Seja brutal na priorização.</div>
+   
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
+   
+    <div class="prompt-card">
+      <span class="prompt-tag tag-geral">Estratégia</span>
+      <div class="prompt-title">Prospectar clientes no setor</div>
+      <div class="prompt-desc">Para encontrar escritórios sem sistema digital.</div>
+      <div class="prompt-text">Pesquise escritórios de arquitetura em [CIDADE] que parecem não ter sistema de gestão digital.
+
+Critérios: presença no Instagram sem site profissional, portfólio no Google Drive ou PDF, sem menção a software de gestão.
+
+Me dê: nome do escritório, Instagram, o que encontrou sobre eles e por que seriam um bom prospect para a Concha Lab.</div>
+<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+</div>
+
+```
+<div class="prompt-card">
+  <span class="prompt-tag tag-obsidian">Obsidian</span>
+  <div class="prompt-title">Criar nota de feedback de cliente</div>
+  <div class="prompt-desc">Para estruturar feedback recebido no formato Obsidian.</div>
+  <div class="prompt-text">Crie uma nota no formato Obsidian para registrar esse feedback de cliente:
+```
+
+Cliente: [NOME/PERFIL]
+Canal: [Telegram/Email/Presencial]
+Data: [DATA]
+Feedback: [O QUE DISSERAM]
+
+Formato da nota:
+
+- Título com data
+- Tags relevantes
+- Resumo do feedback
+- Pontos de dor identificados
+- Próxima ação sugerida
+- Links para projetos relacionados [[Concha Lab]]</div>
+  <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+  
+    </div>
+  
+    <div class="prompt-card">
+      <span class="prompt-tag tag-skills">Blog Fusion</span>
+      <div class="prompt-title">Escrever artigo no meu tom</div>
+      <div class="prompt-desc">Para produzir conteúdo do Fusion com sua voz real.</div>
+      <div class="prompt-text">Escreva um artigo para o blog Fusion no meu estilo: honesto, direto, sem filtro, primeira pessoa.
+
+Tom: quem está construindo ao vivo, mostra erros e acertos, sem pose de guru.
+
+Tema: [TEMA DO ARTIGO]
+Pilar: [Build in Public / Tutorial IA / Arquitetura / Notícias]
+Tamanho: 800-1000 palavras
+
+SEO: inclua palavras-chave sobre [IA / arquitetura / empreendedorismo] naturalmente no texto.</div>
+<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+</div>
+
+```
+<div class="prompt-card">
+  <span class="prompt-tag tag-skills">SEO</span>
+  <div class="prompt-title">Auditoria SEO de artigo</div>
+  <div class="prompt-desc">Para otimizar artigos do Fusion antes de publicar.</div>
+  <div class="prompt-text">Faça auditoria SEO completa desse artigo:
+```
+
+[COLE O ARTIGO]
+
+Me diga:
+
+1. Título ideal (máx 60 caracteres, com palavra-chave principal)
+1. Meta description (máx 155 caracteres)
+1. Palavra-chave principal e 3 secundárias
+1. Densidade de palavras-chave — está ok?
+1. O que melhorar na estrutura de headers (H1, H2, H3)
+1. Sugestão de links internos possíveis</div>
+   
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PROJETOS -->
+
+<div class="tab-page" id="tab-projetos">
+  <div class="page-header">
+    <div class="page-title">Meus Projetos</div>
+    <div class="page-sub">Status atual de cada produto</div>
+  </div>
+  <div class="projeto-card">
+    <div class="projeto-header"><div class="projeto-nome">🐚 Concha Lab</div><span class="projeto-status status-ativo">No ar</span></div>
+    <div class="projeto-desc">SaaS para escritórios de arquitetura. No ar em concha-lab.vercel.app. 49 acessos no primeiro dia. Aguardando primeiros clientes pagantes.</div>
+    <div class="projeto-tags"><span class="projeto-tag">R$97/mês Pro</span><span class="projeto-tag">R$247/mês Studio</span><span class="projeto-tag">concha-lab.vercel.app</span><span class="projeto-tag">49 acessos dia 1</span></div>
+  </div>
+  <div class="projeto-card">
+    <div class="projeto-header"><div class="projeto-nome">⚡ Fusion Blog</div><span class="projeto-status status-dev">Em construção</span></div>
+    <div class="projeto-desc">Blog build in public sobre IA + Arquitetura. Template criado. Precisa de domínio e WordPress no Hostinger. Primeiro artigo pendente.</div>
+    <div class="projeto-tags"><span class="projeto-tag">fusionbuilds.com.br</span><span class="projeto-tag">4 pilares</span><span class="projeto-tag">WordPress</span><span class="projeto-tag">AdSense futuro</span></div>
+  </div>
+  <div class="projeto-card">
+    <div class="projeto-header"><div class="projeto-nome">💼 Fiverr</div><span class="projeto-status status-ativo">Ativo</span></div>
+    <div class="projeto-desc">Gig publicado: custom business management system. Portfólio com AgroOS e Stand1 OS. Aguardando primeiro cliente real — ignorar scams.</div>
+    <div class="projeto-tags"><span class="projeto-tag">@damascenogdr</span><span class="projeto-tag">$75–$400</span><span class="projeto-tag">2 cases no portfólio</span></div>
+  </div>
+  <div class="projeto-card">
+    <div class="projeto-header"><div class="projeto-nome">🏫 EducaLauro</div><span class="projeto-status status-dev">Em negociação</span></div>
+    <div class="projeto-desc">Sistema gestão escolar para Prefeitura Lauro de Freitas. Pitch e protótipo prontos. Aguardando reunião com pessoa certa.</div>
+    <div class="projeto-tags"><span class="projeto-tag">R$500k–1M/ano potencial</span><span class="projeto-tag">Piloto 90 dias grátis</span></div>
+  </div>
+</div>
+
+<!-- SKILLS PESSOAIS -->
+
+<div class="tab-page" id="tab-skills">
+  <div class="page-header">
+    <div class="page-title">Minhas Skills</div>
+    <div class="page-sub">O que você já sabe fazer — use para se posicionar</div>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-item"><div class="skill-icon">⚡</div><div class="skill-name">Sistemas em 1 hora</div><div class="skill-desc">Constrói sistemas completos em HTML/CSS/JS usando Claude. O que uma agência cobra R$5k e entrega em meses, você entrega em dias.</div></div>
+    <div class="skill-item"><div class="skill-icon">🎨</div><div class="skill-name">UX e identidade visual</div><div class="skill-desc">Senso estético apurado. Cada sistema tem identidade própria, não parece template genérico.</div></div>
+    <div class="skill-item"><div class="skill-icon">🏗️</div><div class="skill-name">Conhecimento de arquitetura</div><div class="skill-desc">Estuda Arquitetura na UFBA e trabalha no setor. Entende a dor do arquiteto de dentro — vantagem competitiva real.</div></div>
+    <div class="skill-item"><div class="skill-icon">🤖</div><div class="skill-name">Uso avançado de IA</div><div class="skill-desc">Usa Claude + Gemini em paralelo. Sabe extrair o máximo das ferramentas — isso é habilidade de mercado.</div></div>
+    <div class="skill-item"><div class="skill-icon">📦</div><div class="skill-name">Produto completo</div><div class="skill-desc">Não entrega só código. Entrega produto com modelo de negócio, identidade, UX e documentação.</div></div>
+    <div class="skill-item"><div class="skill-icon">✍️</div><div class="skill-name">Build in Public</div><div class="skill-desc">Documenta a jornada ao vivo. Isso cria audiência, credibilidade e funil de clientes orgânico.</div></div>
+  </div>
+</div>
+
+<!-- SKILLS DO CLAUDE -->
+
+<div class="tab-page" id="tab-skills-claude">
+  <div class="page-header">
+    <div class="page-title">Skills do Claude</div>
+    <div class="page-sub">Comandos avançados baseados no artigo de Skills. Use no Claude Code ou como referência de prompts.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>O que são Skills</div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.8;">Skills são arquivos SKILL.md que ensinam o Claude a fazer tarefas específicas com processo definido. Em vez de reexplicar seu workflow toda sessão, você instala o processo uma vez e reutiliza para sempre. Para você, o mais útil é usar os <strong>princípios</strong> dessas skills como comandos nos seus prompts.</div>
+  </div>
+
+  <div style="margin-bottom:1rem;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--charcoal-soft);text-transform:uppercase;letter-spacing:.06em">Desenvolvimento</div>
+
+  <div class="skills-ref-card">
+    <div class="skills-ref-icon">🧪</div>
+    <div>
+      <div class="skills-ref-name">TDD — Test Driven Development</div>
+      <div class="skills-ref-desc">Escreve testes antes do código. Garante que cada feature funciona antes de avançar.</div>
+      <div><span class="skills-ref-tag tag-dev">Comando:</span></div>
+      <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:6px;padding:8px 12px;font-size:11px;font-family:var(--font-mono);margin-top:8px">"Antes de codar, escreva os testes que provam que essa feature funciona. Só depois implemente o código mínimo para passar nos testes."</div>
+    </div>
+  </div>
+
+  <div class="skills-ref-card">
+    <div class="skills-ref-icon">🔍</div>
+    <div>
+      <div class="skills-ref-name">Systematic Debugging</div>
+      <div class="skills-ref-desc">4 fases: reproduzir → causa raiz → única correção → verificar. Proíbe tentativa e erro.</div>
+      <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:6px;padding:8px 12px;font-size:11px;font-family:var(--font-mono);margin-top:8px">"Siga debug sistemático: 1) reproduza com caso mínimo, 2) encontre causa raiz, 3) aplique UMA correção, 4) verifique com testes. Não tente múltiplas coisas."</div>
+    </div>
+  </div>
+
+  <div class="skills-ref-card">
+    <div class="skills-ref-icon">🏗️</div>
+    <div>
+      <div class="skills-ref-name">Grill Me — Perguntas antes de codar</div>
+      <div class="skills-ref-desc">Força o Claude a fazer perguntas difíceis sobre edge cases, decisões de dados e falhas antes de construir.</div>
+      <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:6px;padding:8px 12px;font-size:11px;font-family:var(--font-mono);margin-top:8px">"Antes de qualquer código, me faça perguntas difíceis sobre essa feature — uma por vez — até resolver toda a árvore de decisão."</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:1rem;margin-top:1.5rem;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--charcoal-soft);text-transform:uppercase;letter-spacing:.06em">Conteúdo & Marketing</div>
+
+  <div class="skills-ref-card">
+    <div class="skills-ref-icon">✍️</div>
+    <div>
+      <div class="skills-ref-name">Content Researcher — No seu tom</div>
+      <div class="skills-ref-desc">Aprende seu estilo de escrita e produz posts e artigos com sua voz.</div>
+      <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:6px;padding:8px 12px;font-size:11px;font-family:var(--font-mono);margin-top:8px">"Aprenda meu estilo com esses exemplos: [COLE 2-3 TEXTOS SEUS]. Agora escreva um artigo sobre [TEMA] no meu tom."</div>
+    </div>
+  </div>
+
+  <div class="skills-ref-card">
+    <div class="skills-ref-icon">🔎</div>
+    <div>
+      <div class="skills-ref-name">Claude SEO — Auditoria completa</div>
+      <div class="skills-ref-desc">Título, meta description, palavras-chave, densidade, estrutura de headers e links internos.</div>
+      <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:6px;padding:8px 12px;font-size:11px;font-family:var(--font-mono);margin-top:8px">"Auditoria SEO completa: título ideal, meta description, keyword principal e secundárias, estrutura de headers, o que melhorar. Artigo: [COLE]"</div>
+    </div>
+  </div>
+
+  <div class="skills-ref-card">
+    <div class="skills-ref-icon">🎯</div>
+    <div>
+      <div class="skills-ref-name">Lead Research — Prospecção</div>
+      <div class="skills-ref-desc">Encontra empresas e decisores baseado no seu perfil de cliente ideal.</div>
+      <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:6px;padding:8px 12px;font-size:11px;font-family:var(--font-mono);margin-top:8px">"Pesquise escritórios de arquitetura em [CIDADE] sem sistema digital. Me dê: nome, Instagram, por que seriam bom prospect para a Concha Lab."</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:1rem;margin-top:1.5rem;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--charcoal-soft);text-transform:uppercase;letter-spacing:.06em">Produto & Estratégia</div>
+
+  <div class="skills-ref-card">
+    <div class="skills-ref-icon">📋</div>
+    <div>
+      <div class="skills-ref-name">PRD — Documento de Produto</div>
+      <div class="skills-ref-desc">Transforma ideia em documento estruturado com objetivos, métricas e não-objetivos.</div>
+      <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:6px;padding:8px 12px;font-size:11px;font-family:var(--font-mono);margin-top:8px">"Crie um PRD para essa feature: objetivos, não-objetivos, histórias de usuário, métricas de sucesso, sistemas que vai afetar. Feature: [DESCREVA]"</div>
+    </div>
+  </div>
+
+  <div class="skills-ref-card">
+    <div class="skills-ref-icon">🔄</div>
+    <div>
+      <div class="skills-ref-name">Simplification Cascade</div>
+      <div class="skills-ref-desc">Identifica lógica complicada e reescreve em partes menores e composáveis.</div>
+      <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:6px;padding:8px 12px;font-size:11px;font-family:var(--font-mono);margin-top:8px">"Identifique a lógica mais complicada nesse código e reescreva em funções menores, cada uma fazendo uma única coisa. [COLE O CÓDIGO]"</div>
+    </div>
+  </div>
+</div>
+
+<!-- OBSIDIAN -->
+
+<div class="tab-page" id="tab-obsidian">
+  <div class="page-header">
+    <div class="page-title">Obsidian · Setup</div>
+    <div class="page-sub">Seu segundo cérebro. Instale em obsidian.md — gratuito.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Estrutura do Vault</div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.8;margin-bottom:1rem">Nome do vault: <strong style="color:var(--charcoal)">concha-brain</strong>. Crie essas 5 pastas:</div>
+    <div style="display:grid;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--sand);border-radius:8px;font-size:13px">📁 <strong>Projetos</strong> <span style="color:var(--charcoal-soft);margin-left:4px">— uma nota por projeto ativo</span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--sand);border-radius:8px;font-size:13px">📁 <strong>Clientes</strong> <span style="color:var(--charcoal-soft);margin-left:4px">— feedback e contatos recebidos</span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--sand);border-radius:8px;font-size:13px">📁 <strong>Ideias</strong> <span style="color:var(--charcoal-soft);margin-left:4px">— tudo que vier na cabeça</span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--sand);border-radius:8px;font-size:13px">📁 <strong>Aprendizados</strong> <span style="color:var(--charcoal-soft);margin-left:4px">— insights de artigos e experiências</span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--sand);border-radius:8px;font-size:13px">📁 <strong>Diário</strong> <span style="color:var(--charcoal-soft);margin-left:4px">— registro semanal build in public</span></div>
+    </div>
+  </div>
+
+  <div class="obsidian-folder">
+    <div class="obsidian-folder-header"><div class="obsidian-folder-icon">🐚</div><div class="obsidian-folder-name">Template — Nota de Projeto</div></div>
+    <div class="obsidian-template">---
+tags: [projeto, ativo]
+status: ativo
+---
+
+# [[Concha Lab]]
+
+## O que é
+
+SaaS de gestão para escritórios de arquitetura brasileiros.
+
+## Objetivo atual
+
+Primeiros 10 clientes pagantes — R$97/mês cada.
+
+## Links úteis
+
+- URL: concha-lab.vercel.app
+- GitHub: [[repo-concha-lab]]
+
+## Decisões tomadas
+
+- Apenas role Arquiteto na versão pública
+- Aba Novidades para plantar interesse no ecossistema
+
+## Próximos passos
+
+- [ ] Follow-up com professor da UFBA
+- [ ] Post semanal no LinkedIn
+- [ ] Responder feedback do Telegram
+
+## Histórico
+
+### Semana 1 (Abr 16, 2026)
+
+- Deploy no Vercel ✅
+- 49 acessos no primeiro dia ✅
+- Fiverr Gig publicado ✅</div>
+  
+  </div>
+  
+  <div class="obsidian-folder">
+    <div class="obsidian-folder-header"><div class="obsidian-folder-icon">👤</div><div class="obsidian-folder-name">Template — Nota de Cliente/Feedback</div></div>
+    <div class="obsidian-template">---
+
+## tags: [cliente, feedback]
+data: 2026-04-16
+canal: telegram
+
+# Feedback — [Nome ou @usuário]
+
+## Perfil
+
+- Tipo: Arquiteto autônomo / Escritório / Estudante
+- Localização: [cidade]
+- Canal: Telegram / LinkedIn / Email
+
+## O que disseram
+
+> “[Copie o feedback aqui]”
+
+## Pontos de dor identificados
+
+- 
+
+## O que gostaram
+
+- 
+
+## O que sentiram falta
+
+- 
+
+## Próxima ação
+
+- [ ] Responder com…
+- [ ] Ajustar na plataforma…
+
+## Projetos relacionados
+
+[[Concha Lab]] · [[Fusion Blog]]</div>
+
+  </div>
+
+  <div class="obsidian-folder">
+    <div class="obsidian-folder-header"><div class="obsidian-folder-icon">📖</div><div class="obsidian-folder-name">Template — Diário Semanal (Build in Public)</div></div>
+    <div class="obsidian-template">---
+tags: [diario, build-in-public]
+semana: S01
+data: 2026-04-16
+---
+
+# Semana 1 — Build in Public
+
+## O que foi feito
+
+- 
+
+## O que tentei vender
+
+- 
+
+## Números reais
+
+- Acessos Concha Lab: 49
+- Impressões Fiverr: 0
+- Respostas recebidas: 0
+
+## O que deu errado
+
+- 
+
+## O que aprendi
+
+- 
+
+## O que faço diferente semana que vem
+
+- 
+
+## Para o artigo do Fusion
+
+> Resumo em 3 linhas para virar post:</div>
+
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Prompt para usar o Obsidian com o Claude</div>
+    <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:8px;padding:1rem;font-size:12px;font-family:var(--font-mono);line-height:1.7">Vou te dar um feedback que recebi. Crie uma nota no formato Obsidian para registrar no meu vault, pasta Clientes.
+
+Feedback: [COLE O FEEDBACK]
+Canal: [Telegram/Email/Presencial]
+Perfil de quem mandou: [DESCREVA]
+
+Inclua: tags, pontos de dor, o que gostaram, o que sentiram falta e próxima ação sugerida.</div>
+<button class="copy-btn" style="margin-top:.75rem" onclick="navigator.clipboard.writeText('Vou te dar um feedback que recebi. Crie uma nota no formato Obsidian para registrar no meu vault, pasta Clientes.\n\nFeedback: [COLE O FEEDBACK]\nCanal: [Telegram/Email/Presencial]\nPerfil de quem mandou: [DESCREVA]\n\nInclua: tags, pontos de dor, o que gostaram, o que sentiram falta e próxima ação sugerida.');showToast('✅ Prompt copiado!')">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+Copiar Prompt
+</button>
+
+  </div>
+</div>
+
+<!-- APRENDIZADOS -->
+
+<div class="tab-page" id="tab-aprendizados">
+  <div class="page-header">
+    <div class="page-title">Aprendizados</div>
+    <div class="page-sub">O que funcionou, o que não funcionou. Atualize sempre.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Registros — Abril 2026</div>
+    <div>
+      <div class="learn-item"><div class="learn-dot"></div><div class="learn-content"><div class="learn-title">Contexto é tudo com o Claude</div><div class="learn-desc">Quanto mais contexto no início da conversa, melhor o resultado. Sem contexto, resposta genérica.</div><div class="learn-date">Abr 2026</div></div></div>
+      <div class="learn-item"><div class="learn-dot"></div><div class="learn-content"><div class="learn-title">Fiverr — scams são comuns no início</div><div class="learn-desc">Perfis femininos com contas recentes mandando "Good evening" logo após publicar um Gig são quase sempre scam. Regra: cliente real descreve projeto, scammer manda link.</div><div class="learn-date">Abr 16, 2026</div></div></div>
+      <div class="learn-item"><div class="learn-dot"></div><div class="learn-content"><div class="learn-title">49 acessos no primeiro dia sem investimento</div><div class="learn-desc">Telegram de arquitetos + LinkedIn + email para professores gerou tráfego real no dia 1. Distribuição orgânica funciona quando o produto é real.</div><div class="learn-date">Abr 16, 2026</div></div></div>
+      <div class="learn-item"><div class="learn-dot"></div><div class="learn-content"><div class="learn-title">Começar pelo que você conhece</div><div class="learn-desc">A melhor oportunidade está no nicho que você já conhece. Arquitetura é vantagem competitiva, não limitação.</div><div class="learn-date">Abr 2026</div></div></div>
+      <div class="learn-item"><div class="learn-dot"></div><div class="learn-content"><div class="learn-title">Produto pronto vale mais que ideia</div><div class="learn-desc">A Concha Lab está construída. O próximo passo não é mais desenvolvimento — é vender. Construir mais sem vender é procrastinação disfarçada.</div><div class="learn-date">Abr 2026</div></div></div>
+      <div class="learn-item"><div class="learn-dot"></div><div class="learn-content"><div class="learn-title">Skills do Claude mudam o jogo</div><div class="learn-desc">Em vez de reexplicar workflows toda sessão, usar comandos estruturados (Grill Me, TDD, Systematic Debug) entrega resultados muito melhores e consistentes.</div><div class="learn-date">Abr 16, 2026</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FIVERR -->
+
+<div class="tab-page" id="tab-fiverr">
+  <div class="page-header">
+    <div class="page-title">Fiverr · Dólar</div>
+    <div class="page-sub">Status e plano do perfil @damascenogdr</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Status atual</div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.8;">
+      ✅ Perfil reformado — Web Systems Developer<br>
+      ✅ Bio em inglês profissional<br>
+      ✅ Skills adicionadas (HTML, JS, Dashboard, etc)<br>
+      ✅ Gig publicado — custom business management system<br>
+      ✅ Portfólio: AgroOS + Stand1 OS<br>
+      ✅ Imagens de capa profissionais<br>
+      🔜 Primeira venda real — ignorar scams<br>
+      🔜 5 reviews para poder subir preço
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Regra anti-scam</div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.8;"><strong style="color:var(--charcoal)">Cliente real:</strong> descreve o projeto específico que precisa.<br><strong style="color:var(--charcoal)">Scammer:</strong> manda link externo, diz que pedido está pronto, pede confirmação.<br><br>Se receber mensagem genérica sem mencionar seu serviço — ignore e reporte.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Pacotes ativos</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div style="background:var(--sand);border-radius:8px;padding:12px;text-align:center"><div style="font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--terra)">$75</div><div style="font-size:11px;color:var(--charcoal-soft);margin-top:4px">Starter · 3 dias</div></div>
+      <div style="background:var(--sand);border-radius:8px;padding:12px;text-align:center"><div style="font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--terra)">$200</div><div style="font-size:11px;color:var(--charcoal-soft);margin-top:4px">Professional · 5 dias</div></div>
+      <div style="background:var(--charcoal);border-radius:8px;padding:12px;text-align:center"><div style="font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--terra)">$400</div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px">Complete OS · 7 dias</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONCHA LAB PLANO -->
+
+<div class="tab-page" id="tab-concha">
+  <div class="page-header">
+    <div class="page-title">Concha Lab · Plano</div>
+    <div class="page-sub">Próximos passos para crescer</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Checklist de lançamento</div>
+    <div style="display:grid;gap:.5rem;">
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" checked style="width:15px;height:15px;accent-color:var(--terra)"/> Subir no Vercel ✅</label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" checked style="width:15px;height:15px;accent-color:var(--terra)"/> Postar no Telegram de arquitetos ✅</label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" checked style="width:15px;height:15px;accent-color:var(--terra)"/> Postar no LinkedIn ✅</label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" checked style="width:15px;height:15px;accent-color:var(--terra)"/> Email para 2 professores da UFBA ✅</label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" style="width:15px;height:15px;accent-color:var(--terra)"/> Atualizar cores com paleta oficial</label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" style="width:15px;height:15px;accent-color:var(--terra)"/> Primeiro cliente pagante</label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" style="width:15px;height:15px;accent-color:var(--terra)"/> Abrir early adopter R$67/mês</label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" style="width:15px;height:15px;accent-color:var(--terra)"/> Retomar negociação EducaLauro</label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" style="width:15px;height:15px;accent-color:var(--terra)"/> Primeiro artigo do Fusion Blog</label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;padding:.5rem;border-radius:8px;transition:background .15s" onmouseover="this.style.background='var(--sand)'" onmouseout="this.style.background='transparent'"><input type="checkbox" style="width:15px;height:15px;accent-color:var(--terra)"/> Setup do Obsidian</label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Meta de receita</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;text-align:center;">
+      <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem"><div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--terra)">R$970</div><div style="font-size:11px;color:var(--charcoal-soft);margin-top:4px">10 clientes × R$97</div></div>
+      <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem"><div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--sage)">R$2.910</div><div style="font-size:11px;color:var(--charcoal-soft);margin-top:4px">30 clientes × R$97</div></div>
+      <div style="background:var(--charcoal);border-radius:var(--radius-sm);padding:1rem"><div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--terra)">R$9.700</div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px">100 clientes × R$97</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTIGOS & INSIGHTS -->
+
+<div class="tab-page" id="tab-artigos">
+  <div class="page-header">
+    <div class="page-title">Artigos & Insights</div>
+    <div class="page-sub">Cada artigo com resumo, insights aplicados e prompt pronto para usar.</div>
+  </div>
+
+  <!-- ARTIGO 1 -->
+
+  <div class="card" style="border-left:3px solid var(--terra)">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
+      <div>
+        <span class="prompt-tag tag-produto" style="margin-bottom:6px;display:inline-block">Monetização com IA</span>
+        <div class="card-title" style="margin-bottom:0"><span class="dot"></span>17 habilidades para ganhar dinheiro com Claude</div>
+      </div>
+      <span style="font-size:10px;color:var(--charcoal-soft);font-family:var(--font-mono)">Artigo 1</span>
+    </div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.7;margin-bottom:1rem">
+      <strong style="color:var(--charcoal)">Ideia central:</strong> Tratar o Claude como funcionário júnior, não como mágica. Construir fluxos de trabalho repetíveis com resultado claro que economiza tempo, reduz risco ou aumenta receita para outra pessoa.
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin-bottom:8px">🎯 Aplicado ao seu contexto</div>
+      <div style="font-size:12.5px;color:var(--charcoal-soft);line-height:1.7">
+        • <strong>Análise competitiva para arquitetos</strong> — R$350-550 por entrega, 2-3h de trabalho<br>
+        • <strong>Contrato digital como serviço</strong> — ensinar escritórios a usar o sistema<br>
+        • <strong>SOPs para escritórios</strong> — documentar processos que arquitetos odeiam fazer<br>
+        • <strong>Precificação inteligente</strong> — o motor de IA da Concha Lab já faz isso
+      </div>
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal-soft);margin-bottom:8px">📌 Regra de ouro do artigo</div>
+      <div style="font-size:12.5px;color:var(--charcoal);font-style:italic">"Um fluxo de trabalho repetível onde Claude produz resultado claro que salva tempo, reduz risco ou aumenta receita para outra pessoa. Se não consegue explicar em uma frase, não é uma habilidade."</div>
+    </div>
+  </div>
+
+  <!-- ARTIGO 2 -->
+
+  <div class="card" style="border-left:3px solid var(--sage)">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
+      <div>
+        <span class="prompt-tag tag-produto" style="margin-bottom:6px;display:inline-block">Produtos Digitais</span>
+        <div class="card-title" style="margin-bottom:0"><span class="dot" style="background:var(--sage)"></span>Templates de Notion com IA — R$312/dia</div>
+      </div>
+      <span style="font-size:10px;color:var(--charcoal-soft);font-family:var(--font-mono)">Artigo 2</span>
+    </div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.7;margin-bottom:1rem">
+      <strong style="color:var(--charcoal)">Ideia central:</strong> Usar Claude para criar templates de Notion para nichos específicos e vender no Gumroad/Etsy. Download digital = custo marginal zero. Uma template de second brain vendeu 7.000 cópias a $79.
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin-bottom:8px">🎯 Aplicado ao seu contexto</div>
+      <div style="font-size:12.5px;color:var(--charcoal-soft);line-height:1.7">
+        • <strong>Template Notion para arquiteto autônomo</strong> — gestão de projetos, clientes e finanças<br>
+        • <strong>Template de precificação para arquitetura</strong> — calculadora por m² integrada<br>
+        • <strong>Template de briefing de obra</strong> — fluxo completo do cliente<br>
+        • Vender no Gumroad a R$47-97 como produto complementar à Concha Lab
+      </div>
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal-soft);margin-bottom:8px">📌 Hack do artigo</div>
+      <div style="font-size:12.5px;color:var(--charcoal);font-style:italic">"Antes de criar qualquer coisa, gere 5 títulos de produto e busque no Etsy. Se existem produtos similares com reviews, há demanda. Se não existe nada, pode ser mina de ouro ou ideia morta."</div>
+    </div>
+  </div>
+
+  <!-- ARTIGO 3 -->
+
+  <div class="card" style="border-left:3px solid #8B5CF6">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
+      <div>
+        <span class="prompt-tag tag-obsidian" style="margin-bottom:6px;display:inline-block">Claude Avançado</span>
+        <div class="card-title" style="margin-bottom:0"><span class="dot" style="background:#8B5CF6"></span>Everything Claude Code (ECC) — 47 agentes, 181 skills</div>
+      </div>
+      <span style="font-size:10px;color:var(--charcoal-soft);font-family:var(--font-mono)">Artigo 3</span>
+    </div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.7;margin-bottom:1rem">
+      <strong style="color:var(--charcoal)">Ideia central:</strong> ECC é um pacote que transforma o Claude Code em assistente muito mais poderoso com agentes especializados, skills por contexto e hooks automáticos. Criado pelo vencedor de um hackathon da Anthropic.
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin-bottom:8px">🎯 Princípios aplicados ao seu contexto</div>
+      <div style="font-size:12.5px;color:var(--charcoal-soft);line-height:1.7">
+        • <strong>Salvar o que funciona</strong> — quando um prompt gerar boa análise, guarde no Obsidian<br>
+        • <strong>Dividir em etapas</strong> — pesquisar → organizar → recomendar, nunca tudo junto<br>
+        • <strong>Validar antes de construir</strong> — 5 títulos no Etsy antes de criar qualquer produto<br>
+        • <strong>Contexto é tudo</strong> — quanto mais contexto no início, melhor o resultado
+      </div>
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal-soft);margin-bottom:8px">📌 Lição principal</div>
+      <div style="font-size:12.5px;color:var(--charcoal);font-style:italic">"Boas práticas conhecidas mas não executadas valem zero. O ECC automatiza o que você sabe que deveria fazer mas esquece sob pressão."</div>
+    </div>
+  </div>
+
+  <!-- ARTIGO 4 -->
+
+  <div class="card" style="border-left:3px solid #F59E0B">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
+      <div>
+        <span class="prompt-tag tag-skills" style="margin-bottom:6px;display:inline-block">Renda Passiva</span>
+        <div class="card-title" style="margin-bottom:0"><span class="dot" style="background:#F59E0B"></span>Blog e sites como ativo de longo prazo — AdSense + IA</div>
+      </div>
+      <span style="font-size:10px;color:var(--charcoal-soft);font-family:var(--font-mono)">Artigo 4</span>
+    </div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.7;margin-bottom:1rem">
+      <strong style="color:var(--charcoal)">Ideia central:</strong> Blog próprio é terreno digital imutável — não depende de algoritmo de rede social. Com IA para produzir conteúdo, dá para escalar 4-5 artigos por semana com 1-2h de trabalho. Nichos de tecnologia têm RPM alto.
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin-bottom:8px">🎯 Aplicado ao Fusion Blog</div>
+      <div style="font-size:12.5px;color:var(--charcoal-soft);line-height:1.7">
+        • <strong>4 pilares definidos</strong> — Build in Public, Tutoriais IA, Arquitetura, Notícias<br>
+        • <strong>Efeito bola de neve</strong> — 3-6 meses de sandbox, depois tráfego orgânico cresce sozinho<br>
+        • <strong>Cada artigo = funcionário 24/7</strong> — trabalha enquanto você dorme<br>
+        • <strong>Monetização em fases</strong> — AdSense mês 6, afiliados mês 12, Concha Lab mês 18
+      </div>
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal-soft);margin-bottom:8px">📌 Projeção realista</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+        <div style="background:var(--white);border-radius:8px;padding:10px;text-align:center"><div style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--charcoal)">Mês 6</div><div style="font-size:11px;color:var(--charcoal-soft)">R$0–50</div></div>
+        <div style="background:var(--white);border-radius:8px;padding:10px;text-align:center"><div style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--terra)">Mês 12</div><div style="font-size:11px;color:var(--charcoal-soft)">R$200–600</div></div>
+        <div style="background:var(--white);border-radius:8px;padding:10px;text-align:center"><div style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--sage)">Mês 24</div><div style="font-size:11px;color:var(--charcoal-soft)">R$1.500–4k</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTIGO 5 -->
+
+  <div class="card" style="border-left:3px solid #EC4899">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
+      <div>
+        <span class="prompt-tag" style="background:#FDF2F8;color:#BE185D;margin-bottom:6px;display:inline-block">Conteúdo & TikTok</span>
+        <div class="card-title" style="margin-bottom:0"><span class="dot" style="background:#EC4899"></span>TikTok Slideshows automatizados com IA — custo ~$0</div>
+      </div>
+      <span style="font-size:10px;color:var(--charcoal-soft);font-family:var(--font-mono)">Artigo 5</span>
+    </div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.7;margin-bottom:1rem">
+      <strong style="color:var(--charcoal)">Ideia central:</strong> Stack gratuita para criar e agendar slideshows virais no TikTok. TikTok está dando boost a slideshows agora. Imagens do Pinterest (grátis), hooks extraídos pelo Claude, slides gerados por Node.js, agendado pelo Postiz.
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin-bottom:8px">🎯 Aplicado ao seu contexto</div>
+      <div style="font-size:12.5px;color:var(--charcoal-soft);line-height:1.7">
+        • <strong>Fusion Blog no TikTok</strong> — cada artigo vira slideshow com hook forte<br>
+        • <strong>Concha Lab no TikTok</strong> — mostrar funcionalidades em slides visuais<br>
+        • <strong>Build in Public em slides</strong> — "construí um sistema em 1h usando IA" performa muito<br>
+        • <strong>Arquitetura + IA</strong> — nicho inexplorado no TikTok brasileiro
+      </div>
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal-soft);margin-bottom:8px">📋 Stack completa</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:var(--white);border-radius:8px;padding:10px"><div style="font-size:11px;font-weight:700;color:var(--charcoal)">1. TikTok + SnapTik</div><div style="font-size:11px;color:var(--charcoal-soft)">Encontrar e baixar vídeos virais para análise de hooks</div></div>
+        <div style="background:var(--white);border-radius:8px;padding:10px"><div style="font-size:11px;font-weight:700;color:var(--charcoal)">2. Claude</div><div style="font-size:11px;color:var(--charcoal-soft)">Extrair hooks e gerar variações + queries para Pinterest</div></div>
+        <div style="background:var(--white);border-radius:8px;padding:10px"><div style="font-size:11px;font-weight:700;color:var(--charcoal)">3. Pinterest</div><div style="font-size:11px;color:var(--charcoal-soft)">Imagens gratuitas de alta qualidade para os slides</div></div>
+        <div style="background:var(--white);border-radius:8px;padding:10px"><div style="font-size:11px;font-weight:700;color:var(--charcoal)">4. Node.js Canvas</div><div style="font-size:11px;color:var(--charcoal-soft)">Gerar slides 1080×1920 automaticamente sem Canva</div></div>
+        <div style="background:var(--white);border-radius:8px;padding:10px;grid-column:span 2"><div style="font-size:11px;font-weight:700;color:var(--charcoal)">5. Postiz (gratuito self-hosted)</div><div style="font-size:11px;color:var(--charcoal-soft)">Agendar posts — use modo Draft para evitar detecção de bot</div></div>
+      </div>
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal-soft);margin-bottom:8px">📌 Prompt para extrair hooks com Claude</div>
+      <div style="background:var(--charcoal);color:rgba(255,255,255,.8);border-radius:6px;padding:10px;font-size:11px;font-family:var(--font-mono);line-height:1.6">Analise esse slideshow viral e:
+1. Identifique o hook principal do primeiro slide
+2. Explique por que funciona (curiosidade/dor/surpresa)
+3. Escreva 5 variações de hook para o nicho [ARQUITETURA/IA]
+- Máx 10 palavras cada
+- Formato: pergunta OU afirmação forte
+- Evite aberturas genéricas como "Você sabia"</div>
+      <button class="copy-btn" style="margin-top:.75rem" onclick="navigator.clipboard.writeText('Analise esse slideshow viral e:\n1. Identifique o hook principal do primeiro slide\n2. Explique por que funciona (curiosidade/dor/surpresa)\n3. Escreva 5 variações de hook para o nicho [ARQUITETURA/IA]\n- Máx 10 palavras cada\n- Formato: pergunta OU afirmação forte\n- Evite aberturas genéricas como Você sabia');showToast('✅ Prompt copiado!')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        Copiar Prompt
+      </button>
+    </div>
+  </div>
+
+  <!-- COMO ADICIONAR NOVOS ARTIGOS -->
+
+  <div class="card" style="background:var(--charcoal);border-color:var(--charcoal)">
+    <div class="card-title" style="color:white"><span class="dot"></span><span style="color:rgba(255,255,255,.8)">Como adicionar novos artigos</span></div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:1rem">Quando encontrar um artigo relevante, manda para o Claude com esse prompt:</div>
+    <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:1rem;font-size:12px;font-family:var(--font-mono);color:rgba(255,255,255,.7);line-height:1.7">Segue meu contexto: [COLE O CONTEXTO MASTER]
+
+Analise esse artigo e me entregue no formato para o Damascerebro:
+
+1. Título curto
+1. Ideia central em 2 linhas
+1. 3-4 aplicações diretas ao meu contexto (Concha Lab, Fusion, Fiverr, UFBA)
+1. Regra de ouro ou frase marcante do artigo
+1. Prompt pronto para usar essa estratégia
+
+Artigo: [COLE O ARTIGO]</div>
+<button class="copy-btn" style="margin-top:.75rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)" onclick="navigator.clipboard.writeText('Segue meu contexto: [COLE O CONTEXTO MASTER]\n\nAnalise esse artigo e me entregue no formato para o Damascerebro:\n1. Título curto\n2. Ideia central em 2 linhas\n3. 3-4 aplicações diretas ao meu contexto (Concha Lab, Fusion, Fiverr, UFBA)\n4. Regra de ouro ou frase marcante do artigo\n5. Prompt pronto para usar essa estratégia\n\nArtigo: [COLE O ARTIGO]');showToast('✅ Prompt copiado!')">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+Copiar Prompt
+</button>
+
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function goTab(id, btn) {
+  document.querySelectorAll('.tab-page').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  closeSidebar();
+}
+function togglePrompt(btn) {
+  const card = btn.closest('.prompt-card');
+  card.classList.toggle('open');
+  btn.textContent = card.classList.contains('open') ? 'Fechar' : 'Ver prompt';
+}
+function copyPrompt(btn) {
+  const card = btn.closest('.prompt-card');
+  const text = card.querySelector('.prompt-text').textContent;
+  navigator.clipboard.writeText(text.trim()).then(() => showToast('✅ Prompt copiado!'));
+}
+function copyContext() {
+  const text = document.getElementById('contexto-master').innerText;
+  navigator.clipboard.writeText(text.trim()).then(() => showToast('✅ Contexto copiado!'));
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+</script>
+
+</body>
+</html>
