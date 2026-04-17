@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
@@ -19,10 +18,10 @@
   --font-mono:'DM Mono',monospace;
   --radius:14px;--radius-sm:8px;
 }
-html,body{height:100%;font-family:var(--font-body);background:var(--sand);color:var(--charcoal)}
+html,body{height:100%;font-family:var(--font-body);background:var(--sand);color:var(--charcoal);overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
-.app{display:flex;min-height:100vh;position:relative;z-index:1}
-.sidebar{width:260px;background:var(--charcoal);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;padding:0 0 1.5rem;z-index:100;transition:transform .3s ease}
+.app{display:block;min-height:100vh;min-height:100dvh;position:relative;z-index:1}
+.sidebar{width:260px;background:var(--charcoal);position:fixed;top:0;left:0;height:100vh;height:100dvh;overflow-y:auto;display:flex;flex-direction:column;padding:0 0 1.5rem;z-index:100;transition:transform .3s ease}
 .sidebar::after{content:'';position:absolute;bottom:0;right:0;width:200px;height:200px;background:radial-gradient(circle,var(--terra) 0%,transparent 70%);opacity:.08;pointer-events:none}
 .main{margin-left:260px;flex:1;padding:2rem;max-width:900px}
 .sb-header{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:.5rem}
@@ -114,12 +113,37 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .skills-ref-desc{font-size:12px;color:var(--charcoal-soft);line-height:1.5;margin-bottom:6px}
 .skills-ref-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block}
 @media(max-width:768px){
-  .sidebar{transform:translateX(-100%)}
+  /* Sidebar escondida por padrão no mobile */
+  .sidebar{transform:translateX(-100%);width:85vw;max-width:300px}
   .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0;padding:1rem}
+  /* Main ocupa tela toda */
+  .main{margin-left:0;padding:1rem;width:100%;max-width:100%}
+  /* Topbar visível */
   .topbar{display:flex}
+  /* Grids viram coluna única */
   .skill-grid{grid-template-columns:1fr}
-  .page-title{font-size:22px}
+  .page-title{font-size:20px}
+  /* Cards mais compactos */
+  .card{padding:1rem}
+  .prompt-card{padding:1rem}
+  /* Contexto block legível */
+  .context-block{font-size:14px;line-height:1.8}
+  /* Botões maiores para toque */
+  .copy-btn{padding:12px 18px;font-size:13px;width:100%;justify-content:center}
+  .btn-copy,.btn-expand{padding:10px 14px;font-size:12px}
+  /* App ocupa tela toda */
+  .app{min-height:100vh;min-height:100dvh}
+  /* Overlay funcional */
+  .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99}
+  .mobile-overlay.open{display:block}
+  /* Grids de stats viram coluna */
+  .stats-row{grid-template-columns:1fr 1fr}
+  /* Obsidian templates scroll horizontal */
+  .obsidian-template{overflow-x:auto;font-size:11px}
+  /* Skills ref cards */
+  .skills-ref-card{flex-direction:column}
+  /* Projeto tags wrap */
+  .projeto-tags{flex-wrap:wrap}
 }
 </style>
 <meta name="theme-color" content="#1A1A1A"/>
@@ -188,24 +212,21 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       Aprendizados
     </button>
 
-```
-<button class="sb-item" onclick="goTab('artigos',this)">
-  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
-  Artigos & Insights
-  <span class="sb-badge">5</span>
-</button>
+    <button class="sb-item" onclick="goTab('artigos',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+      Artigos & Insights
+      <span class="sb-badge">5</span>
+    </button>
 
-<div class="sb-label">Monetização</div>
-<button class="sb-item" onclick="goTab('fiverr',this)">
-  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-  Fiverr · Dólar
-</button>
-<button class="sb-item" onclick="goTab('concha',this)">
-  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-  Concha Lab · Plano
-</button>
-```
-
+    <div class="sb-label">Monetização</div>
+    <button class="sb-item" onclick="goTab('fiverr',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Fiverr · Dólar
+    </button>
+    <button class="sb-item" onclick="goTab('concha',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      Concha Lab · Plano
+    </button>
   </div>
 </aside>
 
@@ -224,7 +245,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <main class="main">
 
 <!-- CONTEXTO -->
-
 <div class="tab-page active" id="tab-contexto">
   <div class="page-header">
     <div class="page-title">Meu Contexto</div>
@@ -243,23 +263,21 @@ Claude como principal ferramenta de desenvolvimento e estratégia. Gemini como b
 Construo sistemas completos em HTML/CSS/JS puro em menos de 1 hora usando Claude. Senso de produto e UX apurado. Conheço o setor de arquitetura por dentro. Prefiro arquivos HTML monolíticos (tudo num arquivo só). Itero rápido: testo, reporto bug, quero solução imediata.
 
 <strong>PROJETOS ATIVOS:</strong>
-
 1. CONCHA LAB — SaaS para arquitetura brasileira. No ar em concha-lab.vercel.app. Stack: Next.js + Tailwind + Clerk + Supabase + Vercel. Módulos: OS, Community, Market, Academy, Talent, Vitrine. Preço: R$97/mês Pro, R$247/mês Studio.
-1. FUSION BLOG — Blog build in public sobre IA + Arquitetura. 4 pilares: Build in Public, Tutoriais IA, Arquitetura, Notícias. Marca independente, português agora, inglês depois.
-1. EDUCALAURO — Sistema gestão escolar para Prefeitura Lauro de Freitas. Pitch pronto. Potencial R$500k-1M/ano.
-1. FIVERR — Perfil ativo @damascenogdr. Gig publicado: custom business management system. Portfólio: AgroOS + Stand1 OS.
+2. FUSION BLOG — Blog build in public sobre IA + Arquitetura. 4 pilares: Build in Public, Tutoriais IA, Arquitetura, Notícias. Marca independente, português agora, inglês depois.
+3. EDUCALAURO — Sistema gestão escolar para Prefeitura Lauro de Freitas. Pitch pronto. Potencial R$500k-1M/ano.
+4. FIVERR — Perfil ativo @damascenogdr. Gig publicado: custom business management system. Portfólio: AgroOS + Stand1 OS.
 
 <strong>OBJETIVO IMEDIATO:</strong>
 Primeiros clientes pagantes na Concha Lab. Primeira venda no Fiverr. Publicar primeiros artigos no Fusion Blog.
 
 <strong>PREFERÊNCIAS DE RESPOSTA:</strong>
 Direto ao ponto. Prefere código e arquivos prontos. Sem rodeios. Quando pedir código, entregar arquivo HTML completo funcional. Português brasileiro.
-</div>
-<button class="copy-btn" onclick="copyContext()">
-<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-Copiar Contexto
-</button>
-
+    </div>
+    <button class="copy-btn" onclick="copyContext()">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+      Copiar Contexto
+    </button>
   </div>
   <div class="card">
     <div class="card-title"><span class="dot"></span>Como usar este arquivo</div>
@@ -274,7 +292,6 @@ Copiar Contexto
 </div>
 
 <!-- PROMPTS -->
-
 <div class="tab-page" id="tab-prompts">
   <div class="page-header">
     <div class="page-title">Biblioteca de Prompts</div>
@@ -282,47 +299,40 @@ Copiar Contexto
   </div>
   <div class="prompt-grid">
 
-```
-<div class="prompt-card">
-  <span class="prompt-tag tag-dev">Desenvolvimento</span>
-  <div class="prompt-title">Nova feature — com validação antes</div>
-  <div class="prompt-desc">Faz perguntas difíceis antes de codar. Evita retrabalho.</div>
-  <div class="prompt-text">Antes de codar qualquer coisa, me faça perguntas difíceis sobre essa feature — uma por vez — até não restar nenhuma dúvida sobre o que precisa ser construído.
-```
+    <div class="prompt-card">
+      <span class="prompt-tag tag-dev">Desenvolvimento</span>
+      <div class="prompt-title">Nova feature — com validação antes</div>
+      <div class="prompt-desc">Faz perguntas difíceis antes de codar. Evita retrabalho.</div>
+      <div class="prompt-text">Antes de codar qualquer coisa, me faça perguntas difíceis sobre essa feature — uma por vez — até não restar nenhuma dúvida sobre o que precisa ser construído.
 
 Feature: [DESCREVA A IDEIA]
 
 Só comece a codar quando eu confirmar que todas as dúvidas foram resolvidas.</div>
-<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
-</div>
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
 
-```
-<div class="prompt-card">
-  <span class="prompt-tag tag-dev">Desenvolvimento</span>
-  <div class="prompt-title">Debug sistemático</div>
-  <div class="prompt-desc">Metodologia que proíbe tentativa e erro. Resolve na raiz.</div>
-  <div class="prompt-text">Siga metodologia sistemática de debug:
-```
-
-1. Reproduza o bug de forma mínima
-1. Identifique a causa raiz (não os sintomas)
-1. Proponha UMA única correção
-1. Verifique que não quebra nada
+    <div class="prompt-card">
+      <span class="prompt-tag tag-dev">Desenvolvimento</span>
+      <div class="prompt-title">Debug sistemático</div>
+      <div class="prompt-desc">Metodologia que proíbe tentativa e erro. Resolve na raiz.</div>
+      <div class="prompt-text">Siga metodologia sistemática de debug:
+1) Reproduza o bug de forma mínima
+2) Identifique a causa raiz (não os sintomas)
+3) Proponha UMA única correção
+4) Verifique que não quebra nada
 
 Não tente várias coisas ao mesmo tempo.
 
 Bug: [DESCREVA O PROBLEMA]
 Arquivo: [COLE O ARQUIVO]</div>
-<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
-</div>
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
 
-```
-<div class="prompt-card">
-  <span class="prompt-tag tag-dev">Desenvolvimento</span>
-  <div class="prompt-title">Novo sistema do zero</div>
-  <div class="prompt-desc">Para criar sistema completo para novo cliente ou nicho.</div>
-  <div class="prompt-text">Preciso criar um sistema de gestão completo em HTML/CSS/JS para [TIPO DE NEGÓCIO].
-```
+    <div class="prompt-card">
+      <span class="prompt-tag tag-dev">Desenvolvimento</span>
+      <div class="prompt-title">Novo sistema do zero</div>
+      <div class="prompt-desc">Para criar sistema completo para novo cliente ou nicho.</div>
+      <div class="prompt-text">Preciso criar um sistema de gestão completo em HTML/CSS/JS para [TIPO DE NEGÓCIO].
 
 Cliente: [NOME/SEGMENTO]
 Módulos: [LISTE OS MÓDULOS]
@@ -330,56 +340,49 @@ Identidade visual: [CORES, ESTILO]
 Funcionalidades: [LISTE]
 
 Regras:
-
 - Arquivo HTML único e completo
 - Visual profissional e polido
 - Sidebar escura com accent colorido
 - Responsivo para mobile
 - Português brasileiro</div>
-  <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
-  
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
     </div>
-  
+
     <div class="prompt-card">
       <span class="prompt-tag tag-dev">Desenvolvimento</span>
       <div class="prompt-title">Code review sistemático</div>
       <div class="prompt-desc">Revisão completa antes de publicar qualquer coisa.</div>
       <div class="prompt-text">Faça uma revisão sistemática desse código verificando:
-
 1. Segurança — há alguma vulnerabilidade óbvia?
-1. Performance — algo que vai ficar lento com mais dados?
-1. UX — algo que vai confundir o usuário?
-1. Bugs — algum caso que vai quebrar?
-1. Código morto — algo que não está sendo usado?
+2. Performance — algo que vai ficar lento com mais dados?
+3. UX — algo que vai confundir o usuário?
+4. Bugs — algum caso que vai quebrar?
+5. Código morto — algo que não está sendo usado?
 
 Me dê uma lista priorizada do que corrigir primeiro.
 
 [COLE O CÓDIGO]</div>
-<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
-</div>
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
 
-```
-<div class="prompt-card">
-  <span class="prompt-tag tag-fiverr">Fiverr</span>
-  <div class="prompt-title">Resposta para cliente</div>
-  <div class="prompt-desc">Para responder mensagens de clientes internacionais em inglês.</div>
-  <div class="prompt-text">Preciso responder um cliente no Fiverr. Segue a mensagem dele:
-```
+    <div class="prompt-card">
+      <span class="prompt-tag tag-fiverr">Fiverr</span>
+      <div class="prompt-title">Resposta para cliente</div>
+      <div class="prompt-desc">Para responder mensagens de clientes internacionais em inglês.</div>
+      <div class="prompt-text">Preciso responder um cliente no Fiverr. Segue a mensagem dele:
 
-“[COLE A MENSAGEM DO CLIENTE]”
+"[COLE A MENSAGEM DO CLIENTE]"
 
 Contexto: sou desenvolvedor de sistemas web, entrego em HTML/CSS/JS, prazo padrão é [X] dias, preço base $[VALOR].
 
 Escreva resposta em inglês:
-
 - Profissional e confiante
 - Confirme que entendi o pedido
 - Faça 1-2 perguntas se necessário
 - Máximo 5 linhas</div>
-  <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
-  
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
     </div>
-  
+
     <div class="prompt-card">
       <span class="prompt-tag tag-venda">Vendas</span>
       <div class="prompt-title">Abordagem para arquiteto</div>
@@ -391,30 +394,26 @@ Canal: [WhatsApp / Instagram / Email / Presencial]
 Objetivo: [Demo / Venda / Feedback]
 
 Crie script curto, direto, que gere curiosidade. Sem pitch longo. Máximo 5 linhas.</div>
-<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
-</div>
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
 
-```
-<div class="prompt-card">
-  <span class="prompt-tag tag-venda">Vendas</span>
-  <div class="prompt-title">Análise de artigo</div>
-  <div class="prompt-desc">Para extrair insights aplicáveis de qualquer artigo.</div>
-  <div class="prompt-text">Segue meu contexto: [COLE O CONTEXTO MASTER]
-```
+    <div class="prompt-card">
+      <span class="prompt-tag tag-venda">Vendas</span>
+      <div class="prompt-title">Análise de artigo</div>
+      <div class="prompt-desc">Para extrair insights aplicáveis de qualquer artigo.</div>
+      <div class="prompt-text">Segue meu contexto: [COLE O CONTEXTO MASTER]
 
 Analise esse artigo:
 [COLE O TEXTO]
 
 Me responda:
-
 1. Os 3 insights mais relevantes para minha situação
-1. O que posso aplicar ESTA SEMANA
-1. O que é teoria que não se aplica ao meu momento
-1. Alguma oportunidade de monetização que não estou vendo</div>
-   
+2. O que posso aplicar ESTA SEMANA
+3. O que é teoria que não se aplica ao meu momento
+4. Alguma oportunidade de monetização que não estou vendo</div>
       <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
     </div>
-   
+
     <div class="prompt-card">
       <span class="prompt-tag tag-produto">Produto</span>
       <div class="prompt-title">Validar ideia de feature</div>
@@ -425,16 +424,14 @@ Produto: Concha Lab (SaaS arquitetura, R$97/mês)
 Usuário alvo: [Arquiteto autônomo / Escritório pequeno]
 
 Responda:
-
 1. Resolve dor real ou é nice-to-have?
-1. Esforço para construir (baixo/médio/alto)?
-1. Aumenta conversão, retenção ou receita?
-1. Devo construir agora ou depois do MVP validado?
-   Seja direto. Sem rodeios.</div>
-   
+2. Esforço para construir (baixo/médio/alto)?
+3. Aumenta conversão, retenção ou receita?
+4. Devo construir agora ou depois do MVP validado?
+Seja direto. Sem rodeios.</div>
       <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
     </div>
-   
+
     <div class="prompt-card">
       <span class="prompt-tag tag-geral">Estratégia</span>
       <div class="prompt-title">Prioridade da semana</div>
@@ -444,19 +441,16 @@ Responda:
 Esta semana tenho: [X horas em blocos de Y horas]
 
 Situação atual:
-
 - [DESCREVA O STATUS DE CADA PROJETO]
 
 Me diga:
-
 1. A UMA coisa mais importante dessa semana
-1. O que pode esperar
-1. O que ignorar completamente
-   Seja brutal na priorização.</div>
-   
+2. O que pode esperar
+3. O que ignorar completamente
+Seja brutal na priorização.</div>
       <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
     </div>
-   
+
     <div class="prompt-card">
       <span class="prompt-tag tag-geral">Estratégia</span>
       <div class="prompt-title">Prospectar clientes no setor</div>
@@ -466,16 +460,14 @@ Me diga:
 Critérios: presença no Instagram sem site profissional, portfólio no Google Drive ou PDF, sem menção a software de gestão.
 
 Me dê: nome do escritório, Instagram, o que encontrou sobre eles e por que seriam um bom prospect para a Concha Lab.</div>
-<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
-</div>
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
 
-```
-<div class="prompt-card">
-  <span class="prompt-tag tag-obsidian">Obsidian</span>
-  <div class="prompt-title">Criar nota de feedback de cliente</div>
-  <div class="prompt-desc">Para estruturar feedback recebido no formato Obsidian.</div>
-  <div class="prompt-text">Crie uma nota no formato Obsidian para registrar esse feedback de cliente:
-```
+    <div class="prompt-card">
+      <span class="prompt-tag tag-obsidian">Obsidian</span>
+      <div class="prompt-title">Criar nota de feedback de cliente</div>
+      <div class="prompt-desc">Para estruturar feedback recebido no formato Obsidian.</div>
+      <div class="prompt-text">Crie uma nota no formato Obsidian para registrar esse feedback de cliente:
 
 Cliente: [NOME/PERFIL]
 Canal: [Telegram/Email/Presencial]
@@ -483,17 +475,15 @@ Data: [DATA]
 Feedback: [O QUE DISSERAM]
 
 Formato da nota:
-
 - Título com data
 - Tags relevantes
 - Resumo do feedback
 - Pontos de dor identificados
 - Próxima ação sugerida
 - Links para projetos relacionados [[Concha Lab]]</div>
-  <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
-  
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
     </div>
-  
+
     <div class="prompt-card">
       <span class="prompt-tag tag-skills">Blog Fusion</span>
       <div class="prompt-title">Escrever artigo no meu tom</div>
@@ -507,28 +497,24 @@ Pilar: [Build in Public / Tutorial IA / Arquitetura / Notícias]
 Tamanho: 800-1000 palavras
 
 SEO: inclua palavras-chave sobre [IA / arquitetura / empreendedorismo] naturalmente no texto.</div>
-<div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
-</div>
+      <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
 
-```
-<div class="prompt-card">
-  <span class="prompt-tag tag-skills">SEO</span>
-  <div class="prompt-title">Auditoria SEO de artigo</div>
-  <div class="prompt-desc">Para otimizar artigos do Fusion antes de publicar.</div>
-  <div class="prompt-text">Faça auditoria SEO completa desse artigo:
-```
+    <div class="prompt-card">
+      <span class="prompt-tag tag-skills">SEO</span>
+      <div class="prompt-title">Auditoria SEO de artigo</div>
+      <div class="prompt-desc">Para otimizar artigos do Fusion antes de publicar.</div>
+      <div class="prompt-text">Faça auditoria SEO completa desse artigo:
 
 [COLE O ARTIGO]
 
 Me diga:
-
 1. Título ideal (máx 60 caracteres, com palavra-chave principal)
-1. Meta description (máx 155 caracteres)
-1. Palavra-chave principal e 3 secundárias
-1. Densidade de palavras-chave — está ok?
-1. O que melhorar na estrutura de headers (H1, H2, H3)
-1. Sugestão de links internos possíveis</div>
-   
+2. Meta description (máx 155 caracteres)
+3. Palavra-chave principal e 3 secundárias
+4. Densidade de palavras-chave — está ok?
+5. O que melhorar na estrutura de headers (H1, H2, H3)
+6. Sugestão de links internos possíveis</div>
       <div class="prompt-actions"><button class="btn-expand" onclick="togglePrompt(this)">Ver prompt</button><button class="btn-copy" onclick="copyPrompt(this)">Copiar</button></div>
     </div>
 
@@ -536,7 +522,6 @@ Me diga:
 </div>
 
 <!-- PROJETOS -->
-
 <div class="tab-page" id="tab-projetos">
   <div class="page-header">
     <div class="page-title">Meus Projetos</div>
@@ -565,7 +550,6 @@ Me diga:
 </div>
 
 <!-- SKILLS PESSOAIS -->
-
 <div class="tab-page" id="tab-skills">
   <div class="page-header">
     <div class="page-title">Minhas Skills</div>
@@ -582,7 +566,6 @@ Me diga:
 </div>
 
 <!-- SKILLS DO CLAUDE -->
-
 <div class="tab-page" id="tab-skills-claude">
   <div class="page-header">
     <div class="page-title">Skills do Claude</div>
@@ -675,7 +658,6 @@ Me diga:
 </div>
 
 <!-- OBSIDIAN -->
-
 <div class="tab-page" id="tab-obsidian">
   <div class="page-header">
     <div class="page-title">Obsidian · Setup</div>
@@ -704,80 +686,64 @@ status: ativo
 # [[Concha Lab]]
 
 ## O que é
-
 SaaS de gestão para escritórios de arquitetura brasileiros.
 
 ## Objetivo atual
-
 Primeiros 10 clientes pagantes — R$97/mês cada.
 
 ## Links úteis
-
 - URL: concha-lab.vercel.app
 - GitHub: [[repo-concha-lab]]
 
 ## Decisões tomadas
-
 - Apenas role Arquiteto na versão pública
 - Aba Novidades para plantar interesse no ecossistema
 
 ## Próximos passos
-
 - [ ] Follow-up com professor da UFBA
 - [ ] Post semanal no LinkedIn
 - [ ] Responder feedback do Telegram
 
 ## Histórico
-
 ### Semana 1 (Abr 16, 2026)
-
 - Deploy no Vercel ✅
 - 49 acessos no primeiro dia ✅
 - Fiverr Gig publicado ✅</div>
-  
   </div>
-  
+
   <div class="obsidian-folder">
     <div class="obsidian-folder-header"><div class="obsidian-folder-icon">👤</div><div class="obsidian-folder-name">Template — Nota de Cliente/Feedback</div></div>
     <div class="obsidian-template">---
-
-## tags: [cliente, feedback]
+tags: [cliente, feedback]
 data: 2026-04-16
 canal: telegram
+---
 
 # Feedback — [Nome ou @usuário]
 
 ## Perfil
-
 - Tipo: Arquiteto autônomo / Escritório / Estudante
 - Localização: [cidade]
 - Canal: Telegram / LinkedIn / Email
 
 ## O que disseram
-
-> “[Copie o feedback aqui]”
+> "[Copie o feedback aqui]"
 
 ## Pontos de dor identificados
-
 - 
 
 ## O que gostaram
-
 - 
 
 ## O que sentiram falta
-
 - 
 
 ## Próxima ação
-
-- [ ] Responder com…
-- [ ] Ajustar na plataforma…
+- [ ] Responder com...
+- [ ] Ajustar na plataforma...
 
 ## Projetos relacionados
-
 [[Concha Lab]] · [[Fusion Blog]]</div>
-
   </div>
 
   <div class="obsidian-folder">
@@ -791,35 +757,27 @@ data: 2026-04-16
 # Semana 1 — Build in Public
 
 ## O que foi feito
-
 - 
 
 ## O que tentei vender
-
 - 
 
 ## Números reais
-
 - Acessos Concha Lab: 49
 - Impressões Fiverr: 0
 - Respostas recebidas: 0
 
 ## O que deu errado
-
 - 
 
 ## O que aprendi
-
 - 
 
 ## O que faço diferente semana que vem
-
 - 
 
 ## Para o artigo do Fusion
-
 > Resumo em 3 linhas para virar post:</div>
-
   </div>
 
   <div class="card">
@@ -831,16 +789,14 @@ Canal: [Telegram/Email/Presencial]
 Perfil de quem mandou: [DESCREVA]
 
 Inclua: tags, pontos de dor, o que gostaram, o que sentiram falta e próxima ação sugerida.</div>
-<button class="copy-btn" style="margin-top:.75rem" onclick="navigator.clipboard.writeText('Vou te dar um feedback que recebi. Crie uma nota no formato Obsidian para registrar no meu vault, pasta Clientes.\n\nFeedback: [COLE O FEEDBACK]\nCanal: [Telegram/Email/Presencial]\nPerfil de quem mandou: [DESCREVA]\n\nInclua: tags, pontos de dor, o que gostaram, o que sentiram falta e próxima ação sugerida.');showToast('✅ Prompt copiado!')">
-<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-Copiar Prompt
-</button>
-
+    <button class="copy-btn" style="margin-top:.75rem" onclick="navigator.clipboard.writeText('Vou te dar um feedback que recebi. Crie uma nota no formato Obsidian para registrar no meu vault, pasta Clientes.\n\nFeedback: [COLE O FEEDBACK]\nCanal: [Telegram/Email/Presencial]\nPerfil de quem mandou: [DESCREVA]\n\nInclua: tags, pontos de dor, o que gostaram, o que sentiram falta e próxima ação sugerida.');showToast('✅ Prompt copiado!')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+      Copiar Prompt
+    </button>
   </div>
 </div>
 
 <!-- APRENDIZADOS -->
-
 <div class="tab-page" id="tab-aprendizados">
   <div class="page-header">
     <div class="page-title">Aprendizados</div>
@@ -860,7 +816,6 @@ Copiar Prompt
 </div>
 
 <!-- FIVERR -->
-
 <div class="tab-page" id="tab-fiverr">
   <div class="page-header">
     <div class="page-title">Fiverr · Dólar</div>
@@ -894,7 +849,6 @@ Copiar Prompt
 </div>
 
 <!-- CONCHA LAB PLANO -->
-
 <div class="tab-page" id="tab-concha">
   <div class="page-header">
     <div class="page-title">Concha Lab · Plano</div>
@@ -926,7 +880,6 @@ Copiar Prompt
 </div>
 
 <!-- ARTIGOS & INSIGHTS -->
-
 <div class="tab-page" id="tab-artigos">
   <div class="page-header">
     <div class="page-title">Artigos & Insights</div>
@@ -934,7 +887,6 @@ Copiar Prompt
   </div>
 
   <!-- ARTIGO 1 -->
-
   <div class="card" style="border-left:3px solid var(--terra)">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
       <div>
@@ -962,7 +914,6 @@ Copiar Prompt
   </div>
 
   <!-- ARTIGO 2 -->
-
   <div class="card" style="border-left:3px solid var(--sage)">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
       <div>
@@ -990,7 +941,6 @@ Copiar Prompt
   </div>
 
   <!-- ARTIGO 3 -->
-
   <div class="card" style="border-left:3px solid #8B5CF6">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
       <div>
@@ -1018,7 +968,6 @@ Copiar Prompt
   </div>
 
   <!-- ARTIGO 4 -->
-
   <div class="card" style="border-left:3px solid #F59E0B">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
       <div>
@@ -1050,7 +999,6 @@ Copiar Prompt
   </div>
 
   <!-- ARTIGO 5 -->
-
   <div class="card" style="border-left:3px solid #EC4899">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
       <div>
@@ -1098,26 +1046,23 @@ Copiar Prompt
   </div>
 
   <!-- COMO ADICIONAR NOVOS ARTIGOS -->
-
   <div class="card" style="background:var(--charcoal);border-color:var(--charcoal)">
     <div class="card-title" style="color:white"><span class="dot"></span><span style="color:rgba(255,255,255,.8)">Como adicionar novos artigos</span></div>
     <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:1rem">Quando encontrar um artigo relevante, manda para o Claude com esse prompt:</div>
     <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:1rem;font-size:12px;font-family:var(--font-mono);color:rgba(255,255,255,.7);line-height:1.7">Segue meu contexto: [COLE O CONTEXTO MASTER]
 
 Analise esse artigo e me entregue no formato para o Damascerebro:
-
 1. Título curto
-1. Ideia central em 2 linhas
-1. 3-4 aplicações diretas ao meu contexto (Concha Lab, Fusion, Fiverr, UFBA)
-1. Regra de ouro ou frase marcante do artigo
-1. Prompt pronto para usar essa estratégia
+2. Ideia central em 2 linhas
+3. 3-4 aplicações diretas ao meu contexto (Concha Lab, Fusion, Fiverr, UFBA)
+4. Regra de ouro ou frase marcante do artigo
+5. Prompt pronto para usar essa estratégia
 
 Artigo: [COLE O ARTIGO]</div>
-<button class="copy-btn" style="margin-top:.75rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)" onclick="navigator.clipboard.writeText('Segue meu contexto: [COLE O CONTEXTO MASTER]\n\nAnalise esse artigo e me entregue no formato para o Damascerebro:\n1. Título curto\n2. Ideia central em 2 linhas\n3. 3-4 aplicações diretas ao meu contexto (Concha Lab, Fusion, Fiverr, UFBA)\n4. Regra de ouro ou frase marcante do artigo\n5. Prompt pronto para usar essa estratégia\n\nArtigo: [COLE O ARTIGO]');showToast('✅ Prompt copiado!')">
-<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-Copiar Prompt
-</button>
-
+    <button class="copy-btn" style="margin-top:.75rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)" onclick="navigator.clipboard.writeText('Segue meu contexto: [COLE O CONTEXTO MASTER]\n\nAnalise esse artigo e me entregue no formato para o Damascerebro:\n1. Título curto\n2. Ideia central em 2 linhas\n3. 3-4 aplicações diretas ao meu contexto (Concha Lab, Fusion, Fiverr, UFBA)\n4. Regra de ouro ou frase marcante do artigo\n5. Prompt pronto para usar essa estratégia\n\nArtigo: [COLE O ARTIGO]');showToast('✅ Prompt copiado!')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+      Copiar Prompt
+    </button>
   </div>
 </div>
 
@@ -1161,6 +1106,5 @@ function closeSidebar() {
   document.getElementById('overlay').classList.remove('open');
 }
 </script>
-
 </body>
 </html>
