@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Damascerebro · Seu Sistema de IA</title>
+<title>Concha Brain v3 · Seu Sistema de IA</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -18,10 +18,10 @@
   --font-mono:'DM Mono',monospace;
   --radius:14px;--radius-sm:8px;
 }
-html,body{height:100%;font-family:var(--font-body);background:var(--sand);color:var(--charcoal);overflow-x:hidden}
+html,body{height:100%;font-family:var(--font-body);background:var(--sand);color:var(--charcoal)}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
-.app{display:block;min-height:100vh;min-height:100dvh;position:relative;z-index:1}
-.sidebar{width:260px;background:var(--charcoal);position:fixed;top:0;left:0;height:100vh;height:100dvh;overflow-y:auto;display:flex;flex-direction:column;padding:0 0 1.5rem;z-index:100;transition:transform .3s ease}
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+.sidebar{width:260px;background:var(--charcoal);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;padding:0 0 1.5rem;z-index:100;transition:transform .3s ease}
 .sidebar::after{content:'';position:absolute;bottom:0;right:0;width:200px;height:200px;background:radial-gradient(circle,var(--terra) 0%,transparent 70%);opacity:.08;pointer-events:none}
 .main{margin-left:260px;flex:1;padding:2rem;max-width:900px}
 .sb-header{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:.5rem}
@@ -113,46 +113,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .skills-ref-desc{font-size:12px;color:var(--charcoal-soft);line-height:1.5;margin-bottom:6px}
 .skills-ref-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block}
 @media(max-width:768px){
-  /* Sidebar escondida por padrão no mobile */
-  .sidebar{transform:translateX(-100%);width:85vw;max-width:300px}
+  .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
-  /* Main ocupa tela toda */
-  .main{margin-left:0;padding:1rem;width:100%;max-width:100%}
-  /* Topbar visível */
+  .main{margin-left:0;padding:1rem}
   .topbar{display:flex}
-  /* Grids viram coluna única */
   .skill-grid{grid-template-columns:1fr}
-  .page-title{font-size:20px}
-  /* Cards mais compactos */
-  .card{padding:1rem}
-  .prompt-card{padding:1rem}
-  /* Contexto block legível */
-  .context-block{font-size:14px;line-height:1.8}
-  /* Botões maiores para toque */
-  .copy-btn{padding:12px 18px;font-size:13px;width:100%;justify-content:center}
-  .btn-copy,.btn-expand{padding:10px 14px;font-size:12px}
-  /* App ocupa tela toda */
-  .app{min-height:100vh;min-height:100dvh}
-  /* Overlay funcional */
-  .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99}
-  .mobile-overlay.open{display:block}
-  /* Grids de stats viram coluna */
-  .stats-row{grid-template-columns:1fr 1fr}
-  /* Obsidian templates scroll horizontal */
-  .obsidian-template{overflow-x:auto;font-size:11px}
-  /* Skills ref cards */
-  .skills-ref-card{flex-direction:column}
-  /* Projeto tags wrap */
-  .projeto-tags{flex-wrap:wrap}
+  .page-title{font-size:22px}
 }
 </style>
-<meta name="theme-color" content="#1A1A1A"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="Damascerebro"/>
-<link rel="apple-touch-icon" href="icon-192.png"/>
-<link rel="manifest" href="manifest.json"/>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(r=>console.log("SW registered")).catch(e=>console.log("SW error",e))})}</script>
 </head>
 <body>
 
@@ -175,7 +143,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <span class="w2">brain v2</span>
       </div>
     </div>
-    <div class="sb-tagline">Seu segundo cérebro pessoal</div>
+    <div class="sb-tagline">Seu sistema de IA pessoal</div>
   </div>
 
   <div class="sb-section">
@@ -215,7 +183,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <button class="sb-item" onclick="goTab('artigos',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
       Artigos & Insights
-      <span class="sb-badge">5</span>
+      <span class="sb-badge">6</span>
     </button>
 
     <div class="sb-label">Monetização</div>
@@ -235,7 +203,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <svg viewBox="0 0 100 100" fill="none" style="width:24px;height:24px">
       <path d="M50 10 C28 10 10 28 10 50 C10 72 28 90 50 90 C62 90 68 82 62 72 C56 62 60 54 68 50 C80 45 88 36 83 24 C78 13 64 10 50 10Z" fill="#C85A36" opacity="0.9"/>
     </svg>
-    <span>damascerebro</span>
+    <span>concha brain</span>
   </div>
   <button class="menu-btn" onclick="openSidebar()">
     <svg width="22" height="22" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -1045,13 +1013,52 @@ Inclua: tags, pontos de dor, o que gostaram, o que sentiram falta e próxima aç
     </div>
   </div>
 
+  <!-- ARTIGO 6 -->
+  <div class="card" style="border-left:3px solid #0EA5E9">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
+      <div>
+        <span class="prompt-tag tag-dev" style="margin-bottom:6px;display:inline-block">Ferramentas & Repos</span>
+        <div class="card-title" style="margin-bottom:0"><span class="dot" style="background:#0EA5E9"></span>Melhores repositórios GitHub para Claude — Abril 2026</div>
+      </div>
+      <span style="font-size:10px;color:var(--charcoal-soft);font-family:var(--font-mono)">Artigo 6</span>
+    </div>
+    <div style="font-size:13px;color:var(--charcoal-soft);line-height:1.7;margin-bottom:1rem">
+      <strong style="color:var(--charcoal)">Ideia central:</strong> Lista curada dos repositórios mais poderosos para ampliar o Claude. Vai de memória persistente a automação com n8n, UX avançado, agentes e skills prontas. Ouro para quem já usa Claude como ferramenta principal de trabalho.
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin-bottom:8px">🎯 Os mais relevantes para o seu contexto</div>
+      <div style="font-size:12.5px;color:var(--charcoal-soft);line-height:1.7">
+        • <strong>n8n-MCP</strong> — automatiza fluxos da Concha Lab quando tiver clientes (onboarding, emails, notificações). Instalar em 1-2 meses.<br>
+        • <strong>Claude Agent Blueprints</strong> — 75+ templates de agentes. Base para Stand1 Agente e ArqBot evoluírem.<br>
+        • <strong>Everything Claude Code</strong> — skills avançadas, já estudado. Princípios aplicados nos seus prompts.<br>
+        • <strong>Superpoderes</strong> — força pensar antes de codar. Já está no Damascerebro como "Grill Me".<br>
+        • <strong>Awesome Claude Plugins</strong> — 9.000+ repositórios indexados. Usar como biblioteca de busca.
+      </div>
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal-soft);margin-bottom:8px">📋 Ranking para o seu momento</div>
+      <div style="display:grid;gap:6px">
+        <div style="display:flex;align-items:center;gap:10px;background:var(--white);border-radius:6px;padding:8px 12px"><span style="font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--terra);width:20px">01</span><span style="font-size:12px"><strong>n8n-MCP</strong> — para quando tiver clientes na Concha Lab</span></div>
+        <div style="display:flex;align-items:center;gap:10px;background:var(--white);border-radius:6px;padding:8px 12px"><span style="font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--terra);width:20px">02</span><span style="font-size:12px"><strong>Claude Agent Blueprints</strong> — templates para Stand1 Agente e ArqBot</span></div>
+        <div style="display:flex;align-items:center;gap:10px;background:var(--white);border-radius:6px;padding:8px 12px"><span style="font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--sage);width:20px">03</span><span style="font-size:12px"><strong>Awesome Claude Plugins</strong> — biblioteca de busca quando precisar</span></div>
+        <div style="display:flex;align-items:center;gap:10px;background:var(--white);border-radius:6px;padding:8px 12px"><span style="font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--sage);width:20px">04</span><span style="font-size:12px"><strong>Claude Code Ultimate Guide</strong> — quando quiser aprofundar no Claude Code</span></div>
+        <div style="display:flex;align-items:center;gap:10px;background:var(--white);border-radius:6px;padding:8px 12px"><span style="font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--charcoal-soft);width:20px">05</span><span style="font-size:12px"><strong>VoiceMode MCP</strong> — voz com Claude. Futuro interessante.</span></div>
+      </div>
+    </div>
+    <div style="background:var(--sand);border-radius:var(--radius-sm);padding:1rem">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal-soft);margin-bottom:6px">📌 Regra de ouro</div>
+      <div style="font-size:12.5px;color:var(--charcoal);font-style:italic">"Não instale ferramentas sem problema para resolver. n8n-MCP é ouro — mas para quando você tiver clientes para automatizar, não antes."</div>
+    </div>
+  </div>
+
+
   <!-- COMO ADICIONAR NOVOS ARTIGOS -->
   <div class="card" style="background:var(--charcoal);border-color:var(--charcoal)">
     <div class="card-title" style="color:white"><span class="dot"></span><span style="color:rgba(255,255,255,.8)">Como adicionar novos artigos</span></div>
     <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:1rem">Quando encontrar um artigo relevante, manda para o Claude com esse prompt:</div>
     <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:1rem;font-size:12px;font-family:var(--font-mono);color:rgba(255,255,255,.7);line-height:1.7">Segue meu contexto: [COLE O CONTEXTO MASTER]
 
-Analise esse artigo e me entregue no formato para o Damascerebro:
+Analise esse artigo e me entregue no formato para o Concha Brain:
 1. Título curto
 2. Ideia central em 2 linhas
 3. 3-4 aplicações diretas ao meu contexto (Concha Lab, Fusion, Fiverr, UFBA)
@@ -1059,7 +1066,7 @@ Analise esse artigo e me entregue no formato para o Damascerebro:
 5. Prompt pronto para usar essa estratégia
 
 Artigo: [COLE O ARTIGO]</div>
-    <button class="copy-btn" style="margin-top:.75rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)" onclick="navigator.clipboard.writeText('Segue meu contexto: [COLE O CONTEXTO MASTER]\n\nAnalise esse artigo e me entregue no formato para o Damascerebro:\n1. Título curto\n2. Ideia central em 2 linhas\n3. 3-4 aplicações diretas ao meu contexto (Concha Lab, Fusion, Fiverr, UFBA)\n4. Regra de ouro ou frase marcante do artigo\n5. Prompt pronto para usar essa estratégia\n\nArtigo: [COLE O ARTIGO]');showToast('✅ Prompt copiado!')">
+    <button class="copy-btn" style="margin-top:.75rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)" onclick="navigator.clipboard.writeText('Segue meu contexto: [COLE O CONTEXTO MASTER]\n\nAnalise esse artigo e me entregue no formato para o Concha Brain:\n1. Título curto\n2. Ideia central em 2 linhas\n3. 3-4 aplicações diretas ao meu contexto (Concha Lab, Fusion, Fiverr, UFBA)\n4. Regra de ouro ou frase marcante do artigo\n5. Prompt pronto para usar essa estratégia\n\nArtigo: [COLE O ARTIGO]');showToast('✅ Prompt copiado!')">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
       Copiar Prompt
     </button>
