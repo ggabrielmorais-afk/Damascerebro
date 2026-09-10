@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="description" content="Protótipo do Placar FAUFBA. Só teste, nada é enviado.">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Placar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --dawn:#B8891F; --noon:#3F7D62; --night:#3A4CB0; --night-soft:#EAECFA;
+  --alert:#B23A2A; --alert-soft:#FBEAE7; --ok:#2E7D5B; --ok-soft:#E4F3EC; --warn-soft:#FBF1DC;
+  --calm:#5B4E8C; --calm-soft:#EFECF7;
+  --ink:#12151B; --ink-2:#3A414C; --ink-3:#6B7280;
+  --bg:#F1F2F0; --card:#FFFFFF; --tint:#F5F6F4; --line:#DFE1DE; --line-2:#C6C9C5;
+  --f-display:'Archivo',system-ui,sans-serif; --f-body:'Inter',system-ui,sans-serif; --f-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --dawn:#DEB558; --noon:#69AC8C; --night:#7C8BE0; --night-soft:#20243F;
+    --alert:#E0685A; --alert-soft:#331C19; --ok:#5FBF93; --ok-soft:#173026; --warn-soft:#3A2F14;
+    --calm:#A99CE0; --calm-soft:#26213A;
+    --ink:#EDEFF2; --ink-2:#B3B9C2; --ink-3:#7F8794;
+    --bg:#0F1216; --card:#171B21; --tint:#1C2128; --line:#252A31; --line-2:#333940;
+  }
+}
+:root[data-theme="dark"]{
+  --dawn:#DEB558; --noon:#69AC8C; --night:#7C8BE0; --night-soft:#20243F;
+  --alert:#E0685A; --alert-soft:#331C19; --ok:#5FBF93; --ok-soft:#173026; --warn-soft:#3A2F14;
+  --calm:#A99CE0; --calm-soft:#26213A;
+  --ink:#EDEFF2; --ink-2:#B3B9C2; --ink-3:#7F8794;
+  --bg:#0F1216; --card:#171B21; --tint:#1C2128; --line:#252A31; --line-2:#333940;
+}
+:root[data-theme="light"]{
+  --dawn:#B8891F; --noon:#3F7D62; --night:#3A4CB0; --night-soft:#EAECFA;
+  --alert:#B23A2A; --alert-soft:#FBEAE7; --ok:#2E7D5B; --ok-soft:#E4F3EC; --warn-soft:#FBF1DC;
+  --calm:#5B4E8C; --calm-soft:#EFECF7;
+  --ink:#12151B; --ink-2:#3A414C; --ink-3:#6B7280;
+  --bg:#F1F2F0; --card:#FFFFFF; --tint:#F5F6F4; --line:#DFE1DE; --line-2:#C6C9C5;
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+h1,h2{font-family:var(--f-display);margin:0;letter-spacing:-.015em;text-wrap:balance}
+p{margin:0}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--night);outline-offset:3px;border-radius:4px}
+
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--card);
+  border-left:1px solid var(--line);border-right:1px solid var(--line)}
+@media(max-width:520px){.app{border:0}}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 0}
+.brand{font-family:var(--f-display);font-weight:800;font-size:19px}
+.brand small{font-family:var(--f-mono);font-weight:400;font-size:11px;color:var(--ink-3);margin-left:8px;letter-spacing:.04em}
+.proto{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--line-2);padding:3px 7px;border-radius:4px}
+
+.scr{display:none;flex:1;flex-direction:column;padding:0 20px 24px}
+.scr.on{display:flex}
+.lbl{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:22px 0 9px}
+.q{font-family:var(--f-display);font-weight:800;font-size:23px;line-height:1.18;margin-top:22px}
+.sub{color:var(--ink-2);font-size:14.5px;margin-top:8px}
+.btn{width:100%;border:0;border-radius:11px;padding:17px;font-weight:600;font-size:16.5px;background:var(--night);color:#fff;min-height:54px}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--night);border:1.5px solid var(--night)}
+.btn.calm{background:var(--calm)}
+.foot{margin-top:12px;text-align:center;font-family:var(--f-mono);font-size:10px;color:var(--ink-3);letter-spacing:.06em}
+.acts{margin-top:auto;padding-top:26px;display:flex;flex-direction:column;gap:10px}
+.back{align-self:flex-start;background:none;border:0;padding:0;margin-top:18px;font-family:var(--f-mono);font-size:11.5px;color:var(--night);letter-spacing:.04em}
+.send{margin-top:auto;padding-top:22px;position:sticky;bottom:0;background:linear-gradient(to top,var(--card) 70%,transparent)}
+.tname{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--night);margin-top:6px}
+.tname.calm{color:var(--calm)}
+
+/* home */
+.grp{display:flex;align-items:baseline;justify-content:space-between;margin-top:26px}
+.grp h2{font-size:15px;font-weight:800}
+.grp small{font-family:var(--f-mono);font-size:10px;color:var(--ink-3);letter-spacing:.06em}
+.themes{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.theme{background:var(--card);border:1.5px solid var(--line-2);border-radius:12px;padding:14px 13px 12px;text-align:left;display:flex;flex-direction:column;gap:4px;min-height:108px}
+.theme .n{font-weight:600;font-size:15px;line-height:1.25}
+.theme .d{font-size:12px;color:var(--ink-3);line-height:1.35}
+.theme .c{margin-top:auto;font-family:var(--f-mono);font-size:10.5px;color:var(--night);letter-spacing:.03em;padding-top:8px}
+.rows{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.row{width:100%;background:var(--card);border:1.5px solid var(--line-2);border-radius:12px;padding:14px 15px;text-align:left;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;min-height:64px}
+.row .n{font-weight:600;font-size:15.5px}
+.row .d{font-size:12.5px;color:var(--ink-3);margin-top:2px;line-height:1.35}
+.row .tg{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border-radius:5px;white-space:nowrap}
+.row .tg.sig{background:var(--calm-soft);color:var(--calm)}
+.row .tg.n{background:var(--night-soft);color:var(--night)}
+.row.calm{border-color:var(--calm)}
+
+/* responder (placar themes) */
+.turnos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.turno{background:var(--card);border:1.5px solid var(--line-2);border-radius:9px;padding:13px 8px;font-family:var(--f-mono);font-size:13px;color:var(--ink-2);text-align:center;min-height:48px}
+.turno[aria-pressed="true"]{background:var(--night);border-color:var(--night);color:#fff;font-weight:600}
+.list{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-top:2px}
+.opt{width:100%;display:flex;align-items:center;gap:13px;padding:14px 15px;background:var(--card);border:0;border-top:1px solid var(--line);text-align:left;font-size:15.5px;min-height:52px}
+.opt:first-child{border-top:0}
+.bx{width:22px;height:22px;border:1.6px solid var(--line-2);border-radius:6px;flex:none;position:relative;background:var(--card)}
+.opt[aria-pressed="true"]{font-weight:600}
+.opt[aria-pressed="true"] .bx{background:var(--night);border-color:var(--night)}
+.opt[aria-pressed="true"] .bx::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid #fff;border-width:0 2.2px 2.2px 0;transform:rotate(45deg)}
+.calmset .opt[aria-pressed="true"] .bx{background:var(--calm);border-color:var(--calm)}
+.opt .tag{margin-left:auto;font-family:var(--f-mono);font-size:9.5px;color:var(--alert);letter-spacing:.06em;white-space:nowrap}
+.opt .cnt{margin-left:auto;font-family:var(--f-mono);font-size:11px;color:var(--ink-3);white-space:nowrap}
+.extra{margin-top:14px}
+.extra-t{background:none;border:0;padding:6px 0;font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.04em}
+.extra-t::before{content:"+ ";color:var(--night)}
+.extra-f{display:none;margin-top:8px}
+.extra-f.on{display:block}
+input[type=text],textarea{width:100%;border:1.5px solid var(--line-2);border-radius:9px;padding:13px 14px;background:var(--card);font-size:15px;min-height:48px}
+textarea{min-height:104px;resize:vertical;line-height:1.45}
+input[type=text]:focus,textarea:focus{border-color:var(--night);outline:0}
+.calmset input[type=text]:focus,.calmset textarea:focus{border-color:var(--calm)}
+.cnt-s{display:block;margin-top:6px;font-family:var(--f-mono);font-size:10px;color:var(--ink-3)}
+
+/* chips (multi/single) */
+.chips-w{display:flex;flex-wrap:wrap;gap:8px}
+.ch{border:1.5px solid var(--line-2);background:var(--card);border-radius:999px;padding:10px 14px;font-size:14px;color:var(--ink-2);min-height:42px}
+.ch[aria-pressed="true"]{background:var(--night);border-color:var(--night);color:#fff;font-weight:600}
+.calmset .ch[aria-pressed="true"]{background:var(--calm);border-color:var(--calm)}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:14px 0 4px;margin:0 -20px;padding-left:20px;padding-right:20px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1.5px solid var(--line-2);background:var(--card);border-radius:999px;padding:9px 14px;font-size:13.5px;color:var(--ink-2);white-space:nowrap;min-height:40px}
+.chip[aria-pressed="true"]{background:var(--night);border-color:var(--night);color:#fff;font-weight:600}
+
+/* banners */
+.ban{border-radius:10px;padding:13px 15px;font-size:13.5px;line-height:1.45;margin-top:16px}
+.ban.sig{background:var(--calm-soft);color:var(--ink);border:1.5px solid var(--calm)}
+.ban.sig b{color:var(--calm)}
+.ban.proto{background:var(--warn-soft);color:var(--ink);border:1.5px solid var(--dawn)}
+.ban.proto b{color:var(--dawn)}
+.ban ul{margin:8px 0 0;padding-left:18px}
+.ban li{margin-top:4px}
+.ban li b{font-family:var(--f-mono);font-weight:600}
+
+/* recebido */
+.big{font-family:var(--f-display);font-weight:900;font-size:44px;line-height:1;color:var(--ok);margin-top:34px}
+.big.calm{color:var(--calm)}
+.took{font-family:var(--f-mono);font-size:12.5px;color:var(--ink-3);margin-top:8px}
+.took b{color:var(--ink)}
+.lead{font-size:17px;line-height:1.4;margin-top:22px}
+.lead b{color:var(--night)}
+.more{font-size:13.5px;color:var(--ink-3);margin-top:6px}
+.bars{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+.br{display:grid;grid-template-columns:minmax(58px,38%) 1fr 38px;align-items:center;gap:11px;font-family:var(--f-mono);font-size:12px}
+.br .bl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.br .t{height:14px;background:var(--tint);border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.br .f{height:100%;border-radius:3px;transition:width .5s ease}
+.br .v{text-align:right;font-weight:600}
+.meta{margin-top:18px;border-radius:9px;padding:12px 14px;font-size:14px;font-weight:600}
+.meta.ok{background:var(--ok-soft);color:var(--ok)}
+.meta.warn{background:var(--warn-soft);color:var(--dawn)}
+.meta.neu{background:var(--night-soft);color:var(--night)}
+
+/* placar */
+.h2{font-size:22px;font-weight:800;margin-top:22px}
+.upd{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);margin-top:4px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:13px 14px}
+.kpi .v{font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1}
+.kpi .k{font-size:11.5px;color:var(--ink-3);margin-top:5px;line-height:1.35}
+.kpi.n .v{color:var(--night)} .kpi.a .v{color:var(--alert)}
+.tw{overflow-x:auto;margin-top:14px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%}
+th,td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--line);font-size:13.5px;white-space:nowrap}
+th{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;background:var(--tint)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--f-mono);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+td.num.hot{color:var(--night)}
+.pill{font-family:var(--f-mono);font-size:10px;padding:3px 7px;border-radius:5px;font-weight:600}
+.pill.no{background:var(--alert-soft);color:var(--alert)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--dawn)}
+.rel{margin-top:16px}
+.rel .lbl{margin-top:0}
+.rel ul{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.rel li{padding:11px 14px;border-top:1px solid var(--line);font-size:14px;line-height:1.4}
+.rel li:first-child{border-top:0}
+.rel li small{display:block;font-family:var(--f-mono);font-size:10px;color:var(--ink-3);margin-top:3px;letter-spacing:.04em}
+.empty{border:1px dashed var(--line-2);border-radius:10px;padding:18px;text-align:center;font-size:13.5px;color:var(--ink-3);margin-top:14px}
+.note{margin-top:16px;font-size:13px;color:var(--ink-3);line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="top">
+    <div class="brand">Placar<small>2026.2 · FAUFBA</small></div>
+    <span class="proto">protótipo</span>
+  </div>
+
+  <!-- S0 HOME -->
+  <section class="scr on" id="s0" aria-label="Início">
+    <h1 class="q">O que está travando você na Faculdade?</h1>
+    <p class="sub">Escolhe o tema, marca o que falta, pronto. Sem login, sem nome.</p>
+    <div class="grp"><h2>Placar</h2><small>VIRA NÚMERO PÚBLICO</small></div>
+    <div class="themes" id="themes" role="group" aria-label="Temas do placar"></div>
+    <button type="button" class="btn ghost" id="home-placar" style="margin-top:10px">Só ver o placar, sem responder</button>
+
+    <div class="grp"><h2>Falar com o DEA</h2><small>DENÚNCIA · AJUDA · IDEIA · VAGA</small></div>
+    <div class="rows">
+      <button type="button" class="row calm" id="go-den"><span><span class="n">Denúncia ou relato sensível</span><span class="d">Assédio, discriminação, abuso. Fora do placar, com sigilo.</span></span><span class="tg sig">sigiloso</span></button>
+      <button type="button" class="row" id="go-help"><span><span class="n">Quero ajudar</span><span class="d">Carona, monitoria, acolher calouro, comunicação.</span></span><span class="tg n">gente</span></button>
+      <button type="button" class="row" id="go-sug"><span><span class="n">Sugestão</span><span class="d">Uma ideia pra Faculdade ou pro DEA, em uma frase.</span></span><span class="tg n">ideia</span></button>
+      <button type="button" class="row" id="go-vagas"><span><span class="n">Vagas abertas</span><span class="d">O que o DEA precisa de gente pra tocar agora.</span></span><span class="tg n" id="vagas-cnt"></span></button>
+    </div>
+    <div class="foot" style="margin-top:22px">SÓ MARCAR · ESCREVER É OPCIONAL</div>
+  </section>
+
+  <!-- S1 RESPONDER (placar) -->
+  <section class="scr" id="s1" aria-label="Responder">
+    <button type="button" class="back" data-back>← VOLTAR</button>
+    <div class="tname" id="tname"></div>
+    <h1 class="q" id="tq" style="margin-top:8px"></h1>
+    <div id="turno-block">
+      <div class="lbl">Seu turno</div>
+      <div class="turnos" id="turnos" role="group" aria-label="Turno">
+        <button type="button" class="turno" id="t-manha" data-t="manha" aria-pressed="false">Manhã</button>
+        <button type="button" class="turno" id="t-tarde" data-t="tarde" aria-pressed="false">Tarde</button>
+        <button type="button" class="turno" id="t-noite" data-t="noite" aria-pressed="false">Noite</button>
+      </div>
+    </div>
+    <div class="lbl">Marque o que se aplica</div>
+    <div class="list" id="list" role="group" aria-label="Itens"></div>
+    <div class="extra">
+      <button type="button" class="extra-t" id="extra-t">acrescentar uma linha (opcional)</button>
+      <div class="extra-f" id="extra-f">
+        <input type="text" id="extra" maxlength="90" placeholder="Uma frase, sem nome, sem turma" autocomplete="off">
+        <small class="cnt-s" id="extra-n">0 / 90</small>
+      </div>
+    </div>
+    <div class="send"><button type="button" class="btn" id="send" disabled>Enviar</button><div class="foot">SEM LOGIN · SEM NOME · SÓ MARCAR</div></div>
+  </section>
+
+  <!-- S2 RECEBIDO (placar) -->
+  <section class="scr" id="s2" aria-label="Recebido">
+    <div class="big">Recebido.</div>
+    <div class="took" id="took"></div>
+    <p class="lead" id="lead"></p>
+    <p class="more" id="more"></p>
+    <div class="bars" id="bars"></div>
+    <div class="meta" id="meta"></div>
+    <div class="acts">
+      <button type="button" class="btn" id="go-placar">Ver placar completo</button>
+      <button type="button" class="btn ghost" data-home>Voltar ao início</button>
+    </div>
+    <div class="foot">NÚMERO PÚBLICO · MOSTRA PRA QUEM QUISER</div>
+  </section>
+
+  <!-- S3 PLACAR -->
+  <section class="scr" id="s3" aria-label="Placar">
+    <h2 class="h2">Placar · 2026.2</h2>
+    <div class="upd" id="upd">atualizado agora · sessão local</div>
+    <div class="chips" id="chips" role="group" aria-label="Tema do placar"></div>
+    <div id="pl-num">
+      <div class="kpis">
+        <div class="kpi n"><div class="v" id="k-total">0</div><div class="k">respostas no semestre, todos os temas</div></div>
+        <div class="kpi a"><div class="v" id="k-hot">0</div><div class="k" id="k-hot-l"></div></div>
+      </div>
+      <div class="tw"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+      <div class="rel" id="rel" hidden><div class="lbl">Relatos desta sessão</div><ul id="rel-list"></ul></div>
+    </div>
+    <div id="pl-sug" hidden>
+      <div class="kpis"><div class="kpi n"><div class="v" id="k-sug">0</div><div class="k">sugestões nesta sessão</div></div><div class="kpi"><div class="v" id="k-sug-h">0</div><div class="k">com "posso ajudar a fazer"</div></div></div>
+      <div class="rel" id="sug-wrap" style="margin-top:14px"><ul id="sug-list"></ul></div>
+      <div class="empty" id="sug-empty">Nenhuma sugestão ainda nesta sessão. A primeira aparece aqui.</div>
+    </div>
+    <div id="pl-vagas" hidden>
+      <div class="tw" style="margin-top:14px"><table><thead><tr><th>Vaga</th><th style="text-align:right">Interessados</th></tr></thead><tbody id="vagas-body"></tbody></table></div>
+    </div>
+    <p class="note">Qualquer pessoa abre esta tela. Aluno, Colegiado, Direção. Denúncias nunca aparecem aqui. Neste protótipo os números são ilustrativos e só mudam dentro desta sessão.</p>
+    <div class="acts"><button type="button" class="btn" data-home>Responder</button></div>
+  </section>
+
+  <!-- S-DEN DENÚNCIA -->
+  <section class="scr calmset" id="sden" aria-label="Denúncia ou relato sensível">
+    <button type="button" class="back" data-back>← VOLTAR</button>
+    <div class="tname calm">Denúncia ou relato sensível</div>
+    <h1 class="q" style="margin-top:8px">O que aconteceu fica só com quem recebe.</h1>
+    <div class="ban sig"><b>Isto não entra no placar.</b> Na versão real, chega a uma pessoa da gestão definida pelo DEA, com sigilo, e você escolhe se quer ser contatado.</div>
+    <div class="ban proto"><b>Protótipo: nada aqui é enviado a ninguém.</b> Se você precisa relatar algo agora, use um canal real:
+      <ul><li><b>Ouvidoria da UFBA</b></li><li><b>180</b> · violência contra a mulher</li><li><b>100</b> · direitos humanos</li><li><b>188</b> · CVV, apoio emocional, 24h</li></ul></div>
+    <div class="lbl">O que aconteceu</div>
+    <div class="chips-w" id="den-tipo" role="group" aria-label="Tipo"></div>
+    <div class="lbl">Onde</div>
+    <div class="chips-w" id="den-onde" role="group" aria-label="Onde"></div>
+    <div class="lbl">Como você quer seguir</div>
+    <div class="chips-w" id="den-seg" role="group" aria-label="Como seguir"></div>
+    <div id="den-ct" hidden><div class="lbl">Contato (só se você quiser)</div><input type="text" id="den-contato" maxlength="80" placeholder="E-mail ou WhatsApp" autocomplete="off"></div>
+    <div class="lbl">Se quiser contar mais (opcional)</div>
+    <textarea id="den-txt" maxlength="300" placeholder="No seu tempo, do seu jeito."></textarea>
+    <small class="cnt-s" id="den-n">0 / 300</small>
+    <div class="send"><button type="button" class="btn calm" id="den-send" disabled>Registrar com sigilo</button><div class="foot">SEM NOME · SEM TURNO · SEM PLACAR</div></div>
+  </section>
+
+  <!-- S-HELP QUERO AJUDAR -->
+  <section class="scr" id="shelp" aria-label="Quero ajudar">
+    <button type="button" class="back" data-back>← VOLTAR</button>
+    <div class="tname">Quero ajudar</div>
+    <h1 class="q" style="margin-top:8px">Do que você topa participar?</h1>
+    <div class="lbl">Marque quantas quiser</div>
+    <div class="chips-w" id="help-como" role="group" aria-label="Como ajudar"></div>
+    <div class="lbl">Quanto tempo dá</div>
+    <div class="chips-w" id="help-tempo" role="group" aria-label="Disponibilidade"></div>
+    <div class="lbl">Contato (opcional)</div>
+    <input type="text" id="help-contato" maxlength="80" placeholder="E-mail, WhatsApp ou @" autocomplete="off">
+    <div class="send"><button type="button" class="btn" id="help-send" disabled>Me chama</button><div class="foot">QUANDO APARECER ALGO DO SEU JEITO, ALGUÉM DO DEA CHAMA</div></div>
+  </section>
+
+  <!-- S-SUG SUGESTÃO -->
+  <section class="scr" id="ssug" aria-label="Sugestão">
+    <button type="button" class="back" data-back>← VOLTAR</button>
+    <div class="tname">Sugestão</div>
+    <h1 class="q" style="margin-top:8px">Uma ideia, em uma frase.</h1>
+    <div class="lbl">Pra Faculdade ou pro DEA</div>
+    <textarea id="sug-txt" maxlength="200" placeholder="Ex.: abrir o ateliê no sábado de manhã pra quem trabalha na semana."></textarea>
+    <small class="cnt-s" id="sug-n">0 / 200</small>
+    <div class="lbl">E aí</div>
+    <div class="chips-w"><button type="button" class="ch" id="sug-ajudo" aria-pressed="false">Posso ajudar a fazer</button></div>
+    <div class="send"><button type="button" class="btn" id="sug-send" disabled>Mandar sugestão</button><div class="foot">ENTRA NO PLACAR, NA ABA SUGESTÕES · SEM NOME</div></div>
+  </section>
+
+  <!-- S-VAGAS -->
+  <section class="scr" id="svagas" aria-label="Vagas abertas">
+    <button type="button" class="back" data-back>← VOLTAR</button>
+    <div class="tname">Vagas abertas</div>
+    <h1 class="q" style="margin-top:8px">O DEA precisa de gente pra isto.</h1>
+    <p class="sub">Toca em "tenho interesse" e pronto. Sem processo seletivo, sem formulário.</p>
+    <div class="list" id="vagas-list" role="group" aria-label="Vagas" style="margin-top:16px"></div>
+    <div class="acts"><button type="button" class="btn ghost" data-home>Voltar ao início</button></div>
+    <div class="foot">INTERESSE ENTRA NO PLACAR, NA ABA VAGAS · SEM NOME</div>
+  </section>
+
+  <!-- S-OK GENÉRICO -->
+  <section class="scr" id="sok" aria-label="Confirmação">
+    <div class="big" id="ok-big">Recebido.</div>
+    <p class="lead" id="ok-lead"></p>
+    <p class="more" id="ok-more"></p>
+    <div id="ok-ban"></div>
+    <div class="acts">
+      <button type="button" class="btn" id="ok-primary">Ver placar</button>
+      <button type="button" class="btn ghost" data-home>Voltar ao início</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var MIN = 25;
+  var TN = {manha:'Manhã',tarde:'Tarde',noite:'Noite'};
+  var TC = {manha:'var(--dawn)',tarde:'var(--noon)',noite:'var(--night)'};
+  var themes = [
+    { id:'oferta', n:'Oferta de disciplina', d:'Obrigatória sem turma no seu turno', turno:true, q:'Qual obrigatória você precisa e não tem turma no seu turno?',
+      items:[
+        {n:'Organização do Trabalho',c:{manha:9,tarde:12,noite:47},st:'no',tag:'crônico'},
+        {n:'Instalações Hidrossanitárias',c:{manha:14,tarde:18,noite:39},st:'no'},
+        {n:'Construção II',c:{manha:11,tarde:15,noite:33},st:'no'},
+        {n:'Técnicas Retrospectivas',c:{manha:8,tarde:10,noite:28},st:'no'},
+        {n:'Ateliê Integrado de Interesse Social',c:{manha:12,tarde:9,noite:31},st:'ok'},
+        {n:'Tecnologias Digitais Aplicadas II',c:{manha:36,tarde:30,noite:24},st:'warn'}]},
+    { id:'sigaa', n:'Matrícula e SIGAA', d:'Erro, trava, prazo perdido', turno:true, q:'O que deu errado na sua matrícula?',
+      items:[
+        {n:'Pré-requisito errado no sistema',c:{manha:7,tarde:9,noite:21}},
+        {n:'Matrícula não processou',c:{manha:12,tarde:14,noite:29}},
+        {n:'Componente sumiu da grade',c:{manha:5,tarde:6,noite:13}},
+        {n:'Não consegui trancar no prazo',c:{manha:4,tarde:8,noite:17}},
+        {n:'Moodle fora do ar na inscrição',c:{manha:9,tarde:11,noite:15}},
+        {n:'Sem resposta do Colegiado',c:{manha:6,tarde:7,noite:19}}]},
+    { id:'curriculo', n:'Currículo e pré-requisitos', d:'Matriz nova, equivalência', turno:false, q:'O que travou com a mudança de matriz?',
+      items:[
+        {n:'Migrei de matriz e perdi disciplina',c:23},
+        {n:'Equivalência não reconhecida',c:18},
+        {n:'Pré-requisito novo sem aviso',c:31},
+        {n:'Não sei em qual matriz estou',c:12},
+        {n:'Optativa não conta hora',c:9}]},
+    { id:'lab', n:'Laboratório e equipamento', d:'Computador, monitoria, material', turno:true, q:'O que falta pra disciplina rodar?',
+      items:[
+        {n:'Computadores insuficientes',c:{manha:22,tarde:19,noite:26}},
+        {n:'Sem monitoria na disciplina',c:{manha:15,tarde:13,noite:24}},
+        {n:'Software desatualizado',c:{manha:8,tarde:7,noite:11}},
+        {n:'Não posso usar meu notebook',c:{manha:6,tarde:9,noite:18}},
+        {n:'Plotter ou impressora indisponível',c:{manha:11,tarde:10,noite:14}},
+        {n:'Maquetaria sem material',c:{manha:5,tarde:6,noite:8}}]},
+    { id:'horario', n:'Horário e transporte', d:'Fim de aula, deslocamento', turno:true, q:'O que aperta no horário?',
+      items:[
+        {n:'Aula acaba tarde pro último transporte',c:{manha:2,tarde:4,noite:38}},
+        {n:'Professor não libera antes do fim',c:{manha:3,tarde:5,noite:27}},
+        {n:'Um dia só pra uma disciplina',c:{manha:9,tarde:8,noite:21}},
+        {n:'Choque de horário entre obrigatórias',c:{manha:11,tarde:12,noite:16}},
+        {n:'Sem opção de sair mais cedo',c:{manha:1,tarde:3,noite:22}}]},
+    { id:'predio', n:'Sala e prédio', d:'Espaço, conforto, segurança', turno:false, q:'O que incomoda no prédio?',
+      items:[
+        {n:'Sala sem ar ou ventilação',c:34},{n:'Sem tomada pra notebook',c:27},{n:'Banheiro sem manutenção',c:19},
+        {n:'Iluminação ruim à noite',c:16},{n:'Segurança na saída à noite',c:29},{n:'Sem espaço pra maquete',c:14}]}
+  ];
+  var vagas = [
+    {n:'Rádio',d:'Um programa por semana, gravado no celular',c:4,on:false},
+    {n:'Revista',d:'Textos curtos, edição digital',c:6,on:false},
+    {n:'Placar',d:'Manter este app e o cartaz da semana',c:3,on:false},
+    {n:'Agenda dos coletivos',d:'Um calendário pros seis',c:2,on:false},
+    {n:'Acolhimento de calouros',d:'Receber quem chega, tirar dúvida',c:7,on:false},
+    {n:'Comunicação',d:'Posts, cartazes, lista',c:5,on:false}
+  ];
+  var relatos = [], sugestoes = [];
+  var cur = null, turno = null, sel = [], t0 = null, placarView = 'oferta';
+  var $ = function(id){ return document.getElementById(id); };
+  function show(id){ document.querySelectorAll('.scr').forEach(function(s){ s.classList.toggle('on', s.id===id); }); window.scrollTo(0,0); }
+  function sum(th){ return th.items.reduce(function(a,it){ return a + (th.turno ? it.c.manha+it.c.tarde+it.c.noite : it.c); },0); }
+  function total(){ return themes.reduce(function(a,th){ return a+sum(th); },0); }
+  function cnt(th,it,t){ return th.turno ? it.c[t] : it.c; }
+  function ord(n){ return n+'º'; }
+  function chips(container, arr, opts, onChange){
+    var el = $(container); el.innerHTML='';
+    arr.forEach(function(v,i){
+      var b = document.createElement('button'); b.type='button'; b.className='ch'; b.id=container+'-'+i; b.setAttribute('aria-pressed','false'); b.textContent=v;
+      b.addEventListener('click', function(){
+        if (opts.single){ Array.prototype.forEach.call(el.children, function(x){ x.setAttribute('aria-pressed', x===b?'true':'false'); }); }
+        else b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true'?'false':'true');
+        onChange();
+      });
+      el.appendChild(b);
+    });
+  }
+  function picked(container){ return Array.prototype.filter.call($(container).children, function(x){ return x.getAttribute('aria-pressed')==='true'; }).map(function(x){ return x.textContent; }); }
+  document.querySelectorAll('[data-home]').forEach(function(b){ b.addEventListener('click', function(){ show('s0'); }); });
+  document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click', function(){ show('s0'); }); });
+
+  /* HOME */
+  var tg = $('themes');
+  themes.forEach(function(th){
+    var b = document.createElement('button'); b.type='button'; b.className='theme'; b.id='theme-'+th.id;
+    b.innerHTML='<span class="n"></span><span class="d"></span><span class="c"></span>';
+    b.querySelector('.n').textContent=th.n; b.querySelector('.d').textContent=th.d; b.querySelector('.c').textContent=sum(th)+' marcações';
+    b.addEventListener('click', function(){ openTheme(th); });
+    tg.appendChild(b);
+  });
+  function vagasCnt(){ $('vagas-cnt').textContent = vagas.length+' vagas'; }
+  vagasCnt();
+
+  /* PLACAR THEME FLOW */
+  var list=$('list'), send=$('send');
+  function openTheme(th){
+    cur=th; turno=null; sel=[]; t0=Date.now();
+    $('tname').textContent=th.n; $('tq').textContent=th.q; $('turno-block').hidden=!th.turno;
+    document.querySelectorAll('.turno').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+    list.innerHTML='';
+    th.items.forEach(function(it,i){
+      var b=document.createElement('button'); b.type='button'; b.className='opt'; b.id='opt-'+th.id+'-'+i; b.setAttribute('aria-pressed','false');
+      b.innerHTML='<span class="bx"></span><span class="tx"></span>'+(it.tag?'<span class="tag"></span>':'');
+      b.querySelector('.tx').textContent=it.n; if(it.tag) b.querySelector('.tag').textContent=it.tag;
+      b.addEventListener('click', function(){ var k=sel.indexOf(i); if(k>=0) sel.splice(k,1); else sel.push(i); b.setAttribute('aria-pressed',k>=0?'false':'true'); gate(); });
+      list.appendChild(b);
+    });
+    $('extra').value=''; $('extra-n').textContent='0 / 90'; $('extra-f').classList.remove('on');
+    gate(); show('s1');
+  }
+  $('turnos').addEventListener('click', function(e){ var b=e.target.closest('.turno'); if(!b) return; turno=b.getAttribute('data-t'); document.querySelectorAll('.turno').forEach(function(x){ x.setAttribute('aria-pressed',x===b?'true':'false'); }); gate(); });
+  $('extra-t').addEventListener('click', function(){ var f=$('extra-f'); f.classList.toggle('on'); if(f.classList.contains('on')) $('extra').focus(); });
+  $('extra').addEventListener('input', function(){ $('extra-n').textContent=this.value.length+' / 90'; });
+  function gate(){ send.disabled=!(sel.length>0 && (!cur.turno||turno)); }
+  send.addEventListener('click', function(){
+    var secs=Math.max(1,Math.round((Date.now()-t0)/1000));
+    var pk=sel.map(function(i){ return cur.items[i]; });
+    pk.forEach(function(it){ if(cur.turno) it.c[turno]+=1; else it.c+=1; });
+    var txt=$('extra').value.trim(); if(txt) relatos.unshift({th:cur.n,t:txt});
+    var first=pk[0], n=cnt(cur,first,turno);
+    $('took').innerHTML='Você levou <b>'+secs+' segundo'+(secs===1?'':'s')+'</b>.';
+    $('lead').innerHTML='Você é o <b>'+ord(n)+'</b> a marcar <b></b>'+(cur.turno?' no '+TN[turno].toLowerCase():'')+' neste semestre.';
+    $('lead').querySelectorAll('b')[1].textContent=first.n;
+    var ex=[]; if(pk.length>1) ex.push('mais '+(pk.length-1)+' item'+(pk.length>2?'s':'')+' registrado'+(pk.length>2?'s':'')); if(txt) ex.push('sua linha entrou nos relatos deste tema');
+    $('more').textContent=ex.length?'E '+ex.join(', ')+'.':'';
+    var rows;
+    if(cur.turno){ var mx=Math.max(first.c.manha,first.c.tarde,first.c.noite); rows=['noite','tarde','manha'].map(function(k){ return {l:TN[k],v:first.c[k],w:first.c[k]/mx,col:TC[k]}; }); }
+    else { var top=cur.items.slice().sort(function(a,b){return b.c-a.c;}).slice(0,3); var m2=top[0].c; rows=top.map(function(it){ return {l:it.n,v:it.c,w:it.c/m2,col:it===first?'var(--night)':'var(--line-2)'}; }); }
+    $('bars').innerHTML=rows.map(function(r){ return '<div class="br"><span class="bl"></span><div class="t"><div class="f" style="width:'+Math.round(r.w*100)+'%;background:'+r.col+'"></div></div><span class="v">'+r.v+'</span></div>'; }).join('');
+    Array.prototype.forEach.call($('bars').querySelectorAll('.bl'), function(el,i){ el.textContent=rows[i].l; });
+    var m=$('meta');
+    if(cur.id==='oferta'){ if(n>=MIN){ m.className='meta ok'; m.textContent='Turma mínima: '+MIN+'. A demanda do '+TN[turno].toLowerCase()+' já passa disso.'; } else { m.className='meta warn'; m.textContent='Turma mínima: '+MIN+'. Faltam '+(MIN-n)+' no '+TN[turno].toLowerCase()+'.'; } }
+    else { m.className='meta neu'; m.textContent=n+' pessoa'+(n===1?'':'s')+' já marcaram isso neste semestre.'; }
+    placarView=cur.id; show('s2');
+  });
+  $('go-placar').addEventListener('click', function(){ renderPlacar(); show('s3'); });
+  $('home-placar').addEventListener('click', function(){ renderPlacar(); show('s3'); });
+
+  /* PLACAR */
+  var chipsEl=$('chips');
+  var views=themes.map(function(t){ return {id:t.id,n:t.n}; }).concat([{id:'vagas',n:'Vagas'},{id:'sug',n:'Sugestões'}]);
+  views.forEach(function(v){ var b=document.createElement('button'); b.type='button'; b.className='chip'; b.id='chip-'+v.id; b.textContent=v.n; b.addEventListener('click', function(){ placarView=v.id; renderPlacar(); }); chipsEl.appendChild(b); });
+  function renderPlacar(){
+    views.forEach(function(v){ $('chip-'+v.id).setAttribute('aria-pressed', v.id===placarView?'true':'false'); });
+    $('pl-num').hidden = placarView==='vagas'||placarView==='sug';
+    $('pl-vagas').hidden = placarView!=='vagas';
+    $('pl-sug').hidden = placarView!=='sug';
+    if (placarView==='vagas'){
+      $('vagas-body').innerHTML=vagas.map(function(v){ return '<tr><td class="tx"></td><td class="num hot">'+v.c+'</td></tr>'; }).join('');
+      Array.prototype.forEach.call($('vagas-body').querySelectorAll('.tx'), function(el,i){ el.textContent=vagas[i].n; });
+    } else if (placarView==='sug'){
+      $('k-sug').textContent=sugestoes.length; $('k-sug-h').textContent=sugestoes.filter(function(s){return s.h;}).length;
+      var ul=$('sug-list'); ul.innerHTML=''; $('sug-wrap').hidden=sugestoes.length===0; $('sug-empty').hidden=sugestoes.length>0;
+      sugestoes.forEach(function(s){ var li=document.createElement('li'); li.textContent=s.t; var sm=document.createElement('small'); sm.textContent=(s.h?'POSSO AJUDAR A FAZER · ':'')+'AGORA · SEM NOME'; li.appendChild(sm); ul.appendChild(li); });
+    } else {
+      var th=themes.filter(function(t){return t.id===placarView;})[0];
+      $('k-total').textContent=total();
+      if(th.id==='oferta'){ $('k-hot').textContent=th.items.filter(function(it){return it.st==='no'&&it.c.noite>=MIN;}).length; $('k-hot-l').textContent='obrigatórias acima do mínimo e sem turma noturna'; }
+      else { $('k-hot').textContent=th.items.filter(function(it){ return (th.turno?it.c.manha+it.c.tarde+it.c.noite:it.c)>=MIN; }).length; $('k-hot-l').textContent='itens com '+MIN+' ou mais marcações'; }
+      var thead=$('thead'), tbody=$('tbody'), src;
+      if(th.turno){
+        thead.innerHTML='<tr><th>Item</th><th style="text-align:right">Manhã</th><th style="text-align:right">Tarde</th><th style="text-align:right">Noite</th>'+(th.id==='oferta'?'<th>Turma noturna</th>':'')+'</tr>';
+        src=th.items;
+        tbody.innerHTML=src.map(function(it){ var pill=th.id!=='oferta'?'':it.st==='no'?'<td><span class="pill no">sem turma'+(it.tag?' · '+it.tag:'')+'</span></td>':it.st==='ok'?'<td><span class="pill ok">aberta em 2026.2</span></td>':'<td><span class="pill warn">1 turma, sem monitoria</span></td>'; return '<tr><td class="tx"></td><td class="num">'+it.c.manha+'</td><td class="num">'+it.c.tarde+'</td><td class="num hot">'+it.c.noite+'</td>'+pill+'</tr>'; }).join('');
+      } else {
+        thead.innerHTML='<tr><th>Item</th><th style="text-align:right">Marcações</th></tr>';
+        src=th.items.slice().sort(function(a,b){return b.c-a.c;});
+        tbody.innerHTML=src.map(function(it){ return '<tr><td class="tx"></td><td class="num hot">'+it.c+'</td></tr>'; }).join('');
+      }
+      Array.prototype.forEach.call(tbody.querySelectorAll('.tx'), function(el,i){ el.textContent=src[i].n; });
+      var mine=relatos.filter(function(r){return r.th===th.n;}).slice(0,5); $('rel').hidden=mine.length===0;
+      var rl=$('rel-list'); rl.innerHTML=''; mine.forEach(function(r){ var li=document.createElement('li'); li.textContent=r.t; var sm=document.createElement('small'); sm.textContent='AGORA · SEM NOME'; li.appendChild(sm); rl.appendChild(li); });
+    }
+    $('upd').textContent='atualizado agora · sessão local';
+  }
+
+  /* DENÚNCIA */
+  chips('den-tipo',['Assédio sexual','Assédio moral','Discriminação','Abuso de poder','Outro'],{single:false},denGate);
+  chips('den-onde',['Sala de aula','Orientação ou banca','Ateliê','Online','Fora da Faculdade'],{single:false},denGate);
+  chips('den-seg',['Só registrar, sem contato','Quero ser contatado','Quero orientação sobre canais oficiais'],{single:true},function(){ $('den-ct').hidden = picked('den-seg')[0]!=='Quero ser contatado'; denGate(); });
+  $('den-txt').addEventListener('input', function(){ $('den-n').textContent=this.value.length+' / 300'; });
+  function denGate(){ $('den-send').disabled = !(picked('den-tipo').length>0 && picked('den-seg').length>0); }
+  $('go-den').addEventListener('click', function(){ show('sden'); });
+  $('den-send').addEventListener('click', function(){
+    var seg=picked('den-seg')[0];
+    okScreen({ big:'Registrado.', calm:true,
+      lead: 'Só quem recebe vê. Isto não entra em nenhum placar.',
+      more: seg==='Quero ser contatado' ? 'Na versão real, alguém da gestão entra em contato pelo canal que você deixou.' : seg==='Quero orientação sobre canais oficiais' ? 'Na versão real, você recebe os caminhos formais da UFBA por escrito, sem precisar contar de novo.' : 'Fica registrado, e ninguém vai te procurar.',
+      ban: '<div class="ban proto"><b>Protótipo: nada foi enviado.</b> Se você precisa relatar agora: <b>Ouvidoria da UFBA</b> · <b>180</b> violência contra a mulher · <b>100</b> direitos humanos · <b>188</b> CVV, 24h.</div>',
+      primary:null });
+    ['den-tipo','den-onde','den-seg'].forEach(function(c){ Array.prototype.forEach.call($(c).children, function(x){ x.setAttribute('aria-pressed','false'); }); });
+    $('den-txt').value=''; $('den-n').textContent='0 / 300'; $('den-contato').value=''; $('den-ct').hidden=true; denGate();
+  });
+
+  /* QUERO AJUDAR */
+  chips('help-como',['Carona','Monitoria informal','Revisar trabalho de colega','Acolher calouro','Comunicação e design','Organizar evento','Programar ou planilha','Revisar texto'],{single:false},helpGate);
+  chips('help-tempo',['1h por semana','3h por semana','Quando der'],{single:true},helpGate);
+  function helpGate(){ $('help-send').disabled = !(picked('help-como').length>0 && picked('help-tempo').length>0); }
+  $('go-help').addEventListener('click', function(){ show('shelp'); });
+  $('help-send').addEventListener('click', function(){
+    var como=picked('help-como');
+    okScreen({ big:'Anotado.', lead:'Você topou '+como.length+' coisa'+(como.length>1?'s':'')+': '+como.join(', ').toLowerCase()+'.', more:'Quando aparecer algo do seu jeito, alguém do DEA chama. Sem lista de espera, sem formulário depois.', ban:'', primary:'vagas' });
+    ['help-como','help-tempo'].forEach(function(c){ Array.prototype.forEach.call($(c).children, function(x){ x.setAttribute('aria-pressed','false'); }); }); $('help-contato').value=''; helpGate();
+  });
+
+  /* SUGESTÃO */
+  $('go-sug').addEventListener('click', function(){ show('ssug'); });
+  $('sug-txt').addEventListener('input', function(){ $('sug-n').textContent=this.value.length+' / 200'; $('sug-send').disabled=this.value.trim().length<8; });
+  $('sug-ajudo').addEventListener('click', function(){ this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')==='true'?'false':'true'); });
+  $('sug-send').addEventListener('click', function(){
+    var t=$('sug-txt').value.trim(), h=$('sug-ajudo').getAttribute('aria-pressed')==='true';
+    sugestoes.unshift({t:t,h:h});
+    okScreen({ big:'Recebida.', lead:'Sua ideia entrou no placar, na aba Sugestões.', more: h?'E você marcou que pode ajudar a fazer. Isso conta.':'', ban:'', primary:'sug' });
+    $('sug-txt').value=''; $('sug-n').textContent='0 / 200'; $('sug-ajudo').setAttribute('aria-pressed','false'); $('sug-send').disabled=true;
+  });
+
+  /* VAGAS */
+  $('go-vagas').addEventListener('click', function(){ renderVagas(); show('svagas'); });
+  function renderVagas(){
+    var el=$('vagas-list'); el.innerHTML='';
+    vagas.forEach(function(v,i){
+      var b=document.createElement('button'); b.type='button'; b.className='opt'; b.id='vaga-'+i; b.setAttribute('aria-pressed', v.on?'true':'false');
+      b.innerHTML='<span class="bx"></span><span><span class="tx" style="display:block;font-weight:600"></span><span class="d" style="display:block;font-size:12.5px;color:var(--ink-3);font-weight:400"></span></span><span class="cnt"></span>';
+      b.querySelector('.tx').textContent=v.n; b.querySelector('.d').textContent=v.d; b.querySelector('.cnt').textContent=v.c+' interessados';
+      b.addEventListener('click', function(){ v.on=!v.on; v.c+= v.on?1:-1; b.setAttribute('aria-pressed',v.on?'true':'false'); b.querySelector('.cnt').textContent=v.c+' interessados'; });
+      el.appendChild(b);
+    });
+  }
+
+  /* OK SCREEN */
+  function okScreen(o){
+    $('ok-big').textContent=o.big; $('ok-big').className='big'+(o.calm?' calm':'');
+    $('ok-lead').textContent=o.lead; $('ok-more').textContent=o.more||''; $('ok-ban').innerHTML=o.ban||'';
+    var p=$('ok-primary'); p.hidden=!o.primary;
+    if(o.primary){ p.textContent = o.primary==='vagas'?'Ver vagas abertas':'Ver no placar'; p.onclick=function(){ if(o.primary==='vagas'){ renderVagas(); show('svagas'); } else { placarView=o.primary; renderPlacar(); show('s3'); } }; }
+    show('sok');
+  }
+})();
+</script>
+
+</body>
+</html>
