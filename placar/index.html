@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<meta name="description" content="Protótipo do Placar FAUFBA. Só teste, nada é enviado.">
+<meta name="description" content="Protótipo do Mural FAUFBA. Só teste, nada é enviado.">
 <style>[hidden]{display:none!important}img{max-width:100%}</style>
-<title>Placar</title>
+<title>Mural</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
 *,*::before,*::after{box-sizing:border-box}
@@ -189,7 +189,7 @@ td.num.hot{color:var(--night)}
 
 <div class="app">
   <div class="top">
-    <div class="brand">Placar<small>2026.2 · FAUFBA</small></div>
+    <div class="brand">Mural<small>FAUFBA · 2026.2</small></div>
     <span class="proto">protótipo</span>
   </div>
 
@@ -216,6 +216,7 @@ td.num.hot{color:var(--night)}
     <button type="button" class="back" data-back>← VOLTAR</button>
     <div class="tname" id="tname"></div>
     <h1 class="q" id="tq" style="margin-top:8px"></h1>
+    <p class="sub" id="tnote" hidden></p>
     <div id="turno-block">
       <div class="lbl">Seu turno</div>
       <div class="turnos" id="turnos" role="group" aria-label="Turno">
@@ -395,12 +396,21 @@ td.num.hot{color:var(--night)}
     { id:'predio', n:'Sala e prédio', d:'Espaço, conforto, segurança', turno:false, q:'O que incomoda no prédio?',
       items:[
         {n:'Sala sem ar ou ventilação',c:34},{n:'Sem tomada pra notebook',c:27},{n:'Banheiro sem manutenção',c:19},
-        {n:'Iluminação ruim à noite',c:16},{n:'Segurança na saída à noite',c:29},{n:'Sem espaço pra maquete',c:14}]}
+        {n:'Iluminação ruim à noite',c:16},{n:'Segurança na saída à noite',c:29},{n:'Sem espaço pra maquete',c:14}]},
+    { id:'didatica', n:'Didática e aula', d:'Como a aula é conduzida, sem nome', turno:true, q:'O que na condução da aula está travando você?',
+      note:'Sem nome de professor nem de turma. O placar mostra a prática, não a pessoa.',
+      items:[
+        {n:'Critério de nota não explicado',c:{manha:10,tarde:13,noite:22}},
+        {n:'Trabalho devolvido sem comentário',c:{manha:12,tarde:11,noite:19}},
+        {n:'Sem cronograma ou plano de curso',c:{manha:8,tarde:9,noite:17}},
+        {n:'Aula só expositiva, sem prática',c:{manha:7,tarde:8,noite:14}},
+        {n:'Não responde e-mail nem SIGAA',c:{manha:9,tarde:12,noite:21}},
+        {n:'Conteúdo diferente da ementa',c:{manha:4,tarde:6,noite:9}}]}
   ];
   var vagas = [
     {n:'Rádio',d:'Um programa por semana, gravado no celular',c:4,on:false},
     {n:'Revista',d:'Textos curtos, edição digital',c:6,on:false},
-    {n:'Placar',d:'Manter este app e o cartaz da semana',c:3,on:false},
+    {n:'Mural',d:'Manter este app e o cartaz da semana',c:3,on:false},
     {n:'Agenda dos coletivos',d:'Um calendário pros seis',c:2,on:false},
     {n:'Acolhimento de calouros',d:'Receber quem chega, tirar dúvida',c:7,on:false},
     {n:'Comunicação',d:'Posts, cartazes, lista',c:5,on:false}
@@ -445,7 +455,7 @@ td.num.hot{color:var(--night)}
   var list=$('list'), send=$('send');
   function openTheme(th){
     cur=th; turno=null; sel=[]; t0=Date.now();
-    $('tname').textContent=th.n; $('tq').textContent=th.q; $('turno-block').hidden=!th.turno;
+    $('tname').textContent=th.n; $('tq').textContent=th.q; $('tnote').textContent=th.note||''; $('tnote').hidden=!th.note; $('turno-block').hidden=!th.turno;
     document.querySelectorAll('.turno').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
     list.innerHTML='';
     th.items.forEach(function(it,i){
