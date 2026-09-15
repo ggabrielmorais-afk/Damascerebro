@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
+<meta name="color-scheme" content="light">
 <meta name="description" content="Mural FAUFBA. O que trava o estudante vira numero publico.">
 <style>[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Mural</title>
@@ -17,25 +18,8 @@
   --ink:#12151B; --ink-2:#3A414C; --ink-3:#6B7280;
   --bg:#F1F2F0; --card:#FFFFFF; --tint:#F5F6F4; --line:#DFE1DE; --line-2:#C6C9C5;
   --dea-y:#F4EA4D; --dea-b:#469DE2; --dea-r:#D53C2C; --dea-deep:#1B6CA8;
+  color-scheme: light;
   --f-display:'Archivo',system-ui,sans-serif; --f-body:'Inter',system-ui,sans-serif; --f-mono:'JetBrains Mono',ui-monospace,monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --dawn:#DEB558; --noon:#69AC8C; --night:#7C8BE0; --night-soft:#20243F;
-    --alert:#E0685A; --alert-soft:#331C19; --ok:#5FBF93; --ok-soft:#173026; --warn-soft:#3A2F14;
-    --calm:#A99CE0; --calm-soft:#26213A;
-    --ink:#EDEFF2; --ink-2:#B3B9C2; --ink-3:#7F8794;
-    --bg:#0F1216; --card:#171B21; --tint:#1C2128; --line:#252A31; --line-2:#333940;
-    --dea-deep:#6FB6EC;
-  }
-}
-:root[data-theme="dark"]{
-  --dawn:#DEB558; --noon:#69AC8C; --night:#7C8BE0; --night-soft:#20243F;
-  --alert:#E0685A; --alert-soft:#331C19; --ok:#5FBF93; --ok-soft:#173026; --warn-soft:#3A2F14;
-  --calm:#A99CE0; --calm-soft:#26213A;
-  --ink:#EDEFF2; --ink-2:#B3B9C2; --ink-3:#7F8794;
-  --bg:#0F1216; --card:#171B21; --tint:#1C2128; --line:#252A31; --line-2:#333940;
-  --dea-deep:#6FB6EC;
 }
 :root[data-theme="light"]{
   --dawn:#B8891F; --noon:#3F7D62; --night:#3A4CB0; --night-soft:#EAECFA;
@@ -47,6 +31,7 @@
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 
+html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
 h1,h2{font-family:var(--f-display);margin:0;letter-spacing:-.015em;text-wrap:balance}
 p{margin:0}
@@ -106,10 +91,11 @@ button{cursor:pointer}
 .cota.zero{border-color:var(--dea-r);background:var(--alert-soft)}
 .cota.zero .pips i{background:var(--line-2)}
 .rows{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-.row{width:100%;background:var(--card);border:1.5px solid var(--line-2);border-radius:12px;padding:14px 15px;text-align:left;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;min-height:64px}
-.row .n{font-weight:600;font-size:15.5px}
-.row .d{font-size:12.5px;color:var(--ink-3);margin-top:2px;line-height:1.35}
-.row .tg{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border-radius:5px;white-space:nowrap}
+.row{width:100%;background:var(--card);border:1.5px solid var(--line-2);border-radius:12px;padding:14px 15px;text-align:left;display:grid;grid-template-columns:1fr auto;gap:10px 12px;align-items:start;min-height:64px}
+.row>span:first-child{min-width:0}
+.row .n{display:block;font-weight:600;font-size:15.5px;line-height:1.25}
+.row .d{display:block;font-size:12.5px;color:var(--ink-3);margin-top:4px;line-height:1.35}
+.row .tg{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border-radius:5px;white-space:nowrap;margin-top:2px}
 .row .tg.sig{background:var(--calm-soft);color:var(--calm)}
 .row .tg.n{background:var(--night-soft);color:var(--night)}
 .row.calm{border-color:var(--calm)}
