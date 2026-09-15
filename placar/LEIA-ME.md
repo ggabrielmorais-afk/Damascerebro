@@ -19,8 +19,8 @@ está travando, em 40 segundos, sem login e sem nome.
    planilha entre `/d/` e `/edit`.
 5. Implantar como aplicativo da web. Executar como **eu mesmo**, acesso para
    **qualquer pessoa**. É isso que permite responder sem login.
-6. Copiar o endereço terminado em `/exec` e colar na primeira linha de
-   `index.html`, entre as aspas de `endpoint`.
+6. Copiar o endereço terminado em `/exec` e colar no topo de `index.html`,
+   entre as aspas de `endpoint`. Ali também ficam `semestre` e `limite`.
 
 Sem esse endereço o app roda em modo demonstração: nada sai do navegador e a
 etiqueta no topo diz "demonstração". Com o endereço, a etiqueta muda para
@@ -30,6 +30,23 @@ etiqueta no topo diz "demonstração". Com o endereço, a etiqueta muda para
 
 Arrastar a pasta em `app.netlify.com/drop`. Sai um endereço público na hora.
 Só então gerar os cartazes com o QR definitivo.
+
+## Quem pode responder, e quantas vezes
+
+Cada aparelho recebe um código aleatório de doze caracteres, guardado no
+próprio navegador. Ele não contém nome, matrícula nem e-mail. Com esse código,
+a pessoa responde no máximo `limite` temas por semestre, três por padrão.
+
+A quarta tentativa é barrada na tela e recusada de novo no `Codigo.gs`, que
+registra a tentativa na aba `recusados`. O painel mostra quantas pessoas
+responderam e quantas tentativas ficaram fora da conta.
+
+Trocar de semestre é mudar o campo `semestre` no `index.html`. A cota de todo
+mundo zera e a contagem recomeça.
+
+A denúncia e o "quero ajudar" são enviados **sem código nenhum**. O primeiro
+porque precisa ser anônimo de verdade. O segundo porque pode levar contato, e
+contato mais código ligaria as respostas do placar a uma pessoa com nome.
 
 ## O que nunca aparece no placar
 

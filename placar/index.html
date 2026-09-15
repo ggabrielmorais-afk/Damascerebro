@@ -98,6 +98,13 @@ button{cursor:pointer}
 .theme:nth-child(3n+1){border-left-color:var(--dea-y)}
 .theme:nth-child(3n+2){border-left-color:var(--dea-b)}
 .theme:nth-child(3n+3){border-left-color:var(--dea-r)}
+.cota{display:flex;align-items:center;gap:9px;margin-top:12px;padding:11px 13px;border:1px solid var(--line);
+  border-radius:10px;background:var(--tint);font-size:12.5px;color:var(--ink-2);line-height:1.35}
+.cota .pips{display:flex;gap:4px;flex:none}
+.cota .pips i{width:9px;height:9px;border-radius:50%;background:var(--dea-b);display:block}
+.cota .pips i.off{background:var(--line-2)}
+.cota.zero{border-color:var(--dea-r);background:var(--alert-soft)}
+.cota.zero .pips i{background:var(--line-2)}
 .rows{display:flex;flex-direction:column;gap:8px;margin-top:12px}
 .row{width:100%;background:var(--card);border:1.5px solid var(--line-2);border-radius:12px;padding:14px 15px;text-align:left;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;min-height:64px}
 .row .n{font-weight:600;font-size:15.5px}
@@ -208,7 +215,11 @@ td.num.hot{color:var(--night)}
    Cole entre as aspas a URL do aplicativo da web do Apps Script.
    Vazio = modo demonstração, nada sai do navegador.
    =================================================================== */
-window.MURAL_CFG = { endpoint: "" };
+window.MURAL_CFG = {
+  endpoint: "",      // URL do Apps Script, terminada em /exec
+  semestre: "2026.2",// muda uma vez por semestre; zera a cota de todo mundo
+  limite: 3          // quantos temas cada pessoa pode responder no semestre
+};
 </script>
 
 <div class="app">
@@ -224,6 +235,7 @@ window.MURAL_CFG = { endpoint: "" };
     <p class="sub">Escolhe o tema, marca o que falta, pronto. Sem login, sem nome.</p>
     <div class="grp"><h2>Placar</h2><small>VIRA NÚMERO PÚBLICO</small></div>
     <div class="themes" id="themes" role="group" aria-label="Temas do placar"></div>
+    <div class="cota" id="cota"><span class="pips" id="cota-pips" aria-hidden="true"></span><span id="cota-txt"></span></div>
     <button type="button" class="btn ghost" id="home-placar" style="margin-top:10px">Só ver o placar, sem responder</button>
 
     <div class="grp"><h2>Falar com o DEA</h2><small>DENÚNCIA · AJUDA · IDEIA · VAGA</small></div>
@@ -259,6 +271,7 @@ window.MURAL_CFG = { endpoint: "" };
         <small class="cnt-s" id="extra-n">0 / 90</small>
       </div>
     </div>
+    <div class="ban proto" id="sem-cota" hidden><b>Você já respondeu seus temas deste semestre.</b> Isso existe pra um aparelho só não inflar o placar. Você continua podendo ver o placar, mandar sugestão, se oferecer pra uma vaga e usar o canal sigiloso.</div>
     <div class="send"><button type="button" class="btn" id="send" disabled>Enviar</button><div class="foot">SEM LOGIN · SEM NOME · SÓ MARCAR</div></div>
   </section>
 
@@ -449,15 +462,61 @@ window.MURAL_CFG = { endpoint: "" };
     {n:'Acolhimento de calouros',d:'Receber quem chega, tirar dúvida',c:7,on:false},
     {n:'Comunicação',d:'Posts, cartazes, lista',c:5,on:false}
   ];
-  var relatos = [], sugestoes = [];
+  var relatos = [], sugestoes = [], PESSOAS = 0, EXCLUIDAS = 0;
   var cur = null, turno = null, sel = [], t0 = null, placarView = 'oferta';
   var $ = function(id){ return document.getElementById(id); };
 
-  /* ===== LIGAÇÃO COM A PLANILHA DO DEA ===== */
+  /* ===== IDENTIDADE PSEUDÔNIMA E COTA DO SEMESTRE =====
+     Um código aleatório por aparelho. Não tem nome, matrícula nem e-mail
+     dentro dele. Serve pra contar quantos temas a mesma pessoa respondeu
+     e pra segurar o teto do semestre. A denúncia nunca carrega este código. */
   var CFG = window.MURAL_CFG || {};
+  var SEM = CFG.semestre || '2026.2';
+  var LIM = CFG.limite || 3;
+  function guarda(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function le(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  var MEU_ID = (function(){
+    var k = 'mural_id', v = le(k);
+    if(!v){
+      v = '';
+      var abc = 'abcdefghijkmnopqrstuvwxyz23456789';
+      if(window.crypto && crypto.getRandomValues){
+        var a = new Uint8Array(12); crypto.getRandomValues(a);
+        for(var i=0;i<12;i++) v += abc[a[i] % abc.length];
+      } else {
+        for(var j=0;j<12;j++) v += abc[Math.floor(Math.random()*abc.length)];
+      }
+      guarda(k,v);
+    }
+    return v;
+  })();
+  function usados(){ return parseInt(le('mural_usos_'+SEM) || '0', 10) || 0; }
+  function gastaUma(){ guarda('mural_usos_'+SEM, String(usados()+1)); }
+  function restam(){ return Math.max(0, LIM - usados()); }
+  function pintaCota(){
+    var r = restam(), box = $('cota'), pips = $('cota-pips');
+    pips.innerHTML = '';
+    for(var i=0;i<LIM;i++){
+      var d = document.createElement('i');
+      if(i >= r) d.className = 'off';
+      pips.appendChild(d);
+    }
+    box.className = r === 0 ? 'cota zero' : 'cota';
+    $('cota-txt').textContent = r === LIM
+      ? 'Você pode responder ' + LIM + ' temas neste semestre. Escolha os que mais te travam.'
+      : r > 0
+        ? 'Restam ' + r + ' tema' + (r>1?'s':'') + ' pra você responder em ' + SEM + '.'
+        : 'Você já respondeu seus ' + LIM + ' temas de ' + SEM + '. O placar continua aberto, e falar com o DEA também.';
+  }
   var LIVE = !!(CFG.endpoint && CFG.endpoint.indexOf('http') === 0);
   function envia(dados){
     if(!LIVE) return;
+    /* A denúncia e o 'quero ajudar' saem sem código nenhum. O primeiro porque
+       precisa ser anônimo de verdade, o segundo porque pode levar contato,
+       e contato mais código ligaria as respostas do placar a uma pessoa. */
+    if(dados.tipo !== 'relato' && dados.tipo !== 'ajudar'){
+      dados.id = MEU_ID; dados.semestre = SEM;
+    }
     try{
       fetch(CFG.endpoint, { method:'POST', mode:'no-cors', cache:'no-store',
         headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(dados) })
@@ -493,8 +552,10 @@ window.MURAL_CFG = { endpoint: "" };
     if(d.vagas) vagas.forEach(function(v){ if(d.vagas[v.n]!==undefined) v.c = d.vagas[v.n]; });
     if(d.sugestoes) sugestoes = d.sugestoes.slice(0,40).map(function(x){ return {t:x.t, h:!!x.h}; });
     if(d.relatos) relatos = d.relatos.slice(0,40).map(function(x){ return {th:x.th, t:x.t}; });
+    PESSOAS = d.pessoas || 0; EXCLUIDAS = d.excluidas || 0;
   }
   function pintaHome(){
+    pintaCota();
     themes.forEach(function(th){
       var el = document.querySelector('#theme-' + th.id + ' .c');
       if(el) el.textContent = sum(th) + ' marcações';
@@ -561,12 +622,15 @@ window.MURAL_CFG = { endpoint: "" };
       list.appendChild(b);
     });
     $('extra').value=''; $('extra-n').textContent='0 / 90'; $('extra-f').classList.remove('on');
+    var fim = restam()===0;
+    $('sem-cota').hidden = !fim;
+    $('send').textContent = fim ? 'Cota do semestre encerrada' : 'Enviar';
     gate(); show('s1');
   }
   $('turnos').addEventListener('click', function(e){ var b=e.target.closest('.turno'); if(!b) return; turno=b.getAttribute('data-t'); document.querySelectorAll('.turno').forEach(function(x){ x.setAttribute('aria-pressed',x===b?'true':'false'); }); gate(); });
   $('extra-t').addEventListener('click', function(){ var f=$('extra-f'); f.classList.toggle('on'); if(f.classList.contains('on')) $('extra').focus(); });
   $('extra').addEventListener('input', function(){ $('extra-n').textContent=this.value.length+' / 90'; });
-  function gate(){ send.disabled=!(sel.length>0 && (!cur.turno||turno)); }
+  function gate(){ send.disabled = !(sel.length>0 && (!cur.turno||turno)) || restam()===0; }
   send.addEventListener('click', function(){
     var secs=Math.max(1,Math.round((Date.now()-t0)/1000));
     var pk=sel.map(function(i){ return cur.items[i]; });
@@ -588,6 +652,7 @@ window.MURAL_CFG = { endpoint: "" };
     else { m.className='meta neu'; m.textContent=n+' pessoa'+(n===1?'':'s')+' já marcaram isso neste semestre.'; }
     envia({ tipo:'placar', tema:cur.id, temaNome:cur.n, turno:turno||'', extra:txt,
             itens: pk.map(function(it){ return it.n; }) });
+    gastaUma(); pintaCota();
     placarView=cur.id; show('s2');
   });
   $('go-placar').addEventListener('click', function(){ renderPlacar(); show('s3'); });
@@ -628,7 +693,12 @@ window.MURAL_CFG = { endpoint: "" };
       var mine=relatos.filter(function(r){return r.th===th.n;}).slice(0,5); $('rel').hidden=mine.length===0;
       var rl=$('rel-list'); rl.innerHTML=''; mine.forEach(function(r){ var li=document.createElement('li'); li.textContent=r.t; var sm=document.createElement('small'); sm.textContent='AGORA · SEM NOME'; li.appendChild(sm); rl.appendChild(li); });
     }
-    $('upd').textContent='atualizado agora · sessão local';
+    if(LIVE){
+      var t = 'atualizado agora';
+      if(PESSOAS) t += ' · ' + PESSOAS + ' pessoa' + (PESSOAS>1?'s':'') + ' responderam';
+      if(EXCLUIDAS) t += ' · ' + EXCLUIDAS + ' acima do teto, fora da conta';
+      $('upd').textContent = t;
+    } else $('upd').textContent='atualizado agora · sessão local';
   }
 
   /* DENÚNCIA */
@@ -690,7 +760,7 @@ window.MURAL_CFG = { endpoint: "" };
   }
 
   /* BOOT */
-  modo();
+  modo(); pintaCota();
   if(LIVE){
     zera(); pintaHome();
     puxa(function(d){ aplica(d); pintaHome(); if(document.querySelector('.scr.on').id==='s3') renderPlacar(); });

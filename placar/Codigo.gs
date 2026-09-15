@@ -2,6 +2,11 @@
    MURAL FAUFBA — código da planilha
    Cole este arquivo em script.google.com, logado como faufba.dea@gmail.com.
    Preencha os dois IDs abaixo e publique como aplicativo da web.
+
+   Regra de uso: cada aparelho responde no máximo LIMITE temas por semestre.
+   O controle é por um código aleatório gerado no navegador do estudante.
+   Esse código não contém nome, matrícula nem e-mail.
+   Relatos sensíveis e "quero ajudar" chegam sem código nenhum.
    ===================================================================== */
 
 // ID da planilha PÚBLICA (placar, sugestões, quero ajudar, vagas).
@@ -11,6 +16,9 @@ var ID_PLACAR  = 'COLE_AQUI_O_ID_DA_PLANILHA_DO_PLACAR';
 // ID de uma SEGUNDA planilha, separada, só pros relatos sensíveis.
 // Compartilhe essa com uma ou duas pessoas, nominalmente. Mais ninguém.
 var ID_RELATOS = 'COLE_AQUI_O_ID_DA_PLANILHA_DE_RELATOS';
+
+// Teto de temas por pessoa por semestre. Precisa bater com o `limite` do app.
+var LIMITE = 3;
 
 /* ------------------------- recebe respostas ------------------------- */
 function doPost(e) {
@@ -25,19 +33,30 @@ function doPost(e) {
     }
 
     if (d.tipo === 'placar') {
-      var s = aba(ID_PLACAR, 'respostas', ['quando', 'tema', 'tema nome', 'item', 'turno', 'linha']);
+      var id = String(d.id || ''), sem = String(d.semestre || '');
+      if (jaUsou(id, sem) >= LIMITE) {
+        aba(ID_PLACAR, 'recusados', ['quando', 'codigo', 'semestre', 'tema', 'motivo'])
+          .appendRow([agora, id, sem, d.temaNome || '', 'acima do teto de ' + LIMITE + ' temas']);
+        return resposta({ ok: false, motivo: 'limite' });
+      }
+      aba(ID_PLACAR, 'envios', ['quando', 'codigo', 'semestre', 'tema', 'itens'])
+        .appendRow([agora, id, sem, d.temaNome || '', lista(d.itens)]);
+
+      var s = aba(ID_PLACAR, 'respostas', ['quando', 'tema', 'tema nome', 'item', 'turno', 'linha', 'codigo']);
       var itens = d.itens || [];
       for (var i = 0; i < itens.length; i++) {
-        s.appendRow([agora, d.tema || '', d.temaNome || '', itens[i], d.turno || '', i === 0 ? (d.extra || '') : '']);
+        s.appendRow([agora, d.tema || '', d.temaNome || '', itens[i], d.turno || '',
+                     i === 0 ? (d.extra || '') : '', id]);
       }
     } else if (d.tipo === 'sugestao') {
-      aba(ID_PLACAR, 'sugestoes', ['quando', 'sugestao', 'pode ajudar'])
-        .appendRow([agora, d.texto || '', d.ajudo ? 'sim' : '']);
+      aba(ID_PLACAR, 'sugestoes', ['quando', 'sugestao', 'pode ajudar', 'codigo'])
+        .appendRow([agora, d.texto || '', d.ajudo ? 'sim' : '', String(d.id || '')]);
     } else if (d.tipo === 'ajudar') {
       aba(ID_PLACAR, 'ajudar', ['quando', 'como', 'tempo', 'contato'])
         .appendRow([agora, lista(d.como), d.tempo || '', d.contato || '']);
     } else if (d.tipo === 'vaga') {
-      aba(ID_PLACAR, 'vagas', ['quando', 'vaga']).appendRow([agora, d.vaga || '']);
+      aba(ID_PLACAR, 'vagas', ['quando', 'vaga', 'codigo'])
+        .appendRow([agora, d.vaga || '', String(d.id || '')]);
     }
     return resposta({ ok: true });
   } catch (err) {
@@ -45,10 +64,25 @@ function doPost(e) {
   }
 }
 
+/* quantos temas este código já respondeu neste semestre */
+function jaUsou(id, sem) {
+  if (!id) return 0;
+  var ss = SpreadsheetApp.openById(ID_PLACAR);
+  var s = ss.getSheetByName('envios');
+  if (!s || s.getLastRow() < 2) return 0;
+  var v = s.getRange(2, 2, s.getLastRow() - 1, 2).getValues();
+  var n = 0;
+  for (var i = 0; i < v.length; i++) {
+    if (String(v[i][0]) === id && String(v[i][1]) === sem) n++;
+  }
+  return n;
+}
+
 /* ------------------------- devolve o placar ------------------------- */
-/* Os relatos NUNCA saem por aqui. Esta função não abre a planilha deles. */
+/* Os relatos NUNCA saem por aqui. Esta função não abre a planilha deles.
+   Os códigos dos estudantes também não saem: só os totais. */
 function doGet(e) {
-  var out = { placar: {}, vagas: {}, sugestoes: [], relatos: [] };
+  var out = { placar: {}, vagas: {}, sugestoes: [], relatos: [], excluidas: 0, pessoas: 0 };
   try {
     var ss = SpreadsheetApp.openById(ID_PLACAR);
 
@@ -66,6 +100,17 @@ function doGet(e) {
         if (linha) out.relatos.push({ th: String(v[i][2]), t: linha });
       }
     }
+
+    var en = ss.getSheetByName('envios');
+    if (en && en.getLastRow() > 1) {
+      var ev = en.getRange(2, 2, en.getLastRow() - 1, 1).getValues();
+      var vistos = {};
+      for (var p = 0; p < ev.length; p++) { var c = String(ev[p][0]); if (c) vistos[c] = 1; }
+      out.pessoas = Object.keys(vistos).length;
+    }
+
+    var rec = ss.getSheetByName('recusados');
+    if (rec && rec.getLastRow() > 1) out.excluidas = rec.getLastRow() - 1;
 
     var g = ss.getSheetByName('vagas');
     if (g && g.getLastRow() > 1) {
