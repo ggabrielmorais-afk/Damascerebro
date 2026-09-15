@@ -139,8 +139,8 @@ input[type=text]:focus,textarea:focus{border-color:var(--night);outline:0}
 .ban{border-radius:10px;padding:13px 15px;font-size:13.5px;line-height:1.45;margin-top:16px}
 .ban.sig{background:var(--calm-soft);color:var(--ink);border:1.5px solid var(--calm)}
 .ban.sig b{color:var(--calm)}
-.ban.proto{background:var(--warn-soft);color:var(--ink);border:1.5px solid var(--dawn)}
-.ban.proto b{color:var(--dawn)}
+.ban.alerta{background:var(--warn-soft);color:var(--ink);border:1.5px solid var(--dawn)}
+.ban.alerta b{color:var(--dawn)}
 .ban ul{margin:8px 0 0;padding-left:18px}
 .ban li{margin-top:4px}
 .ban li b{font-family:var(--f-mono);font-weight:600}
@@ -229,7 +229,7 @@ window.MURAL_CFG = {
       <button type="button" class="row calm" id="go-den"><span><span class="n">Denúncia ou relato sensível</span><span class="d">Assédio, discriminação, abuso. Fora do placar, com sigilo.</span></span><span class="tg sig">sigiloso</span></button>
       <button type="button" class="row" id="go-help"><span><span class="n">Quero ajudar</span><span class="d">Carona, monitoria, acolher calouro, comunicação.</span></span><span class="tg n">gente</span></button>
       <button type="button" class="row" id="go-sug"><span><span class="n">Sugestão</span><span class="d">Uma ideia pra Faculdade ou pro DEA, em uma frase.</span></span><span class="tg n">ideia</span></button>
-      <button type="button" class="row" id="go-vagas"><span><span class="n">Vagas abertas</span><span class="d">O que o DEA precisa de gente pra tocar agora.</span></span><span class="tg n" id="vagas-cnt"></span></button>
+      <button type="button" class="row" id="go-vagas"><span><span class="n">Como posso ajudar</span><span class="d">As frentes que o DEA toca hoje e onde está faltando gente.</span></span><span class="tg n" id="vagas-cnt"></span></button>
     </div>
     <div class="foot" style="margin-top:22px">SÓ MARCAR · ESCREVER É OPCIONAL</div>
   </section>
@@ -257,7 +257,7 @@ window.MURAL_CFG = {
         <small class="cnt-s" id="extra-n">0 / 90</small>
       </div>
     </div>
-    <div class="ban proto" id="sem-cota" hidden><b>Você já respondeu seus temas deste semestre.</b> Isso existe pra um aparelho só não inflar o placar. Você continua podendo ver o placar, mandar sugestão, se oferecer pra uma vaga e usar o canal sigiloso.</div>
+    <div class="ban alerta" id="sem-cota" hidden><b>Você já respondeu seus temas deste semestre.</b> Isso existe pra um aparelho só não inflar o placar. Você continua podendo ver o placar, mandar sugestão, se oferecer pra uma vaga e usar o canal sigiloso.</div>
     <div class="send"><button type="button" class="btn" id="send" disabled>Enviar</button><div class="foot">SEM LOGIN · SEM NOME · SÓ MARCAR</div></div>
   </section>
 
@@ -295,7 +295,7 @@ window.MURAL_CFG = {
       <div class="empty" id="sug-empty">Nenhuma sugestão ainda nesta sessão. A primeira aparece aqui.</div>
     </div>
     <div id="pl-vagas" hidden>
-      <div class="tw" style="margin-top:14px"><table><thead><tr><th>Vaga</th><th style="text-align:right">Interessados</th></tr></thead><tbody id="vagas-body"></tbody></table></div>
+      <div class="tw" style="margin-top:14px"><table><thead><tr><th>Frente</th><th style="text-align:right">Interessados</th></tr></thead><tbody id="vagas-body"></tbody></table></div>
     </div>
     <p class="note" id="pl-note">Qualquer pessoa abre esta tela. Aluno, Colegiado, Direção. Denúncias nunca aparecem aqui. Neste protótipo os números são ilustrativos e só mudam dentro desta sessão.</p>
     <div class="acts"><button type="button" class="btn" data-home>Responder</button></div>
@@ -307,7 +307,7 @@ window.MURAL_CFG = {
     <div class="tname calm">Denúncia ou relato sensível</div>
     <h1 class="q" style="margin-top:8px">O que aconteceu fica só com quem recebe.</h1>
     <div class="ban sig"><b>Isto não entra no placar.</b> Na versão real, chega a uma pessoa da gestão definida pelo DEA, com sigilo, e você escolhe se quer ser contatado.</div>
-    <div class="ban proto" id="den-proto"><b id="den-proto-b">Protótipo: nada aqui é enviado a ninguém.</b> Se você precisa relatar algo agora, use um canal real:
+    <div class="ban alerta" id="den-proto"><b id="den-proto-b">Protótipo: nada aqui é enviado a ninguém.</b> Se você precisa relatar algo agora, use um canal real:
       <ul><li><b>Ouvidoria da UFBA</b></li><li><b>180</b> · violência contra a mulher</li><li><b>100</b> · direitos humanos</li><li><b>188</b> · CVV, apoio emocional, 24h</li></ul></div>
     <div class="lbl">O que aconteceu</div>
     <div class="chips-w" id="den-tipo" role="group" aria-label="Tipo"></div>
@@ -350,14 +350,14 @@ window.MURAL_CFG = {
   </section>
 
   <!-- S-VAGAS -->
-  <section class="scr" id="svagas" aria-label="Vagas abertas">
+  <section class="scr" id="svagas" aria-label="Como posso ajudar">
     <button type="button" class="back" data-back>← VOLTAR</button>
-    <div class="tname">Vagas abertas</div>
+    <div class="tname">Como posso ajudar</div>
     <h1 class="q" style="margin-top:8px">O DEA precisa de gente pra isto.</h1>
-    <p class="sub">Toca em "tenho interesse" e pronto. Sem processo seletivo, sem formulário.</p>
-    <div class="list" id="vagas-list" role="group" aria-label="Vagas" style="margin-top:16px"></div>
+    <p class="sub">Toca na frente que te interessa e pronto. Sem processo seletivo, sem formulário.</p>
+    <div class="list" id="vagas-list" role="group" aria-label="Frentes" style="margin-top:16px"></div>
     <div class="acts"><button type="button" class="btn ghost" data-home>Voltar ao início</button></div>
-    <div class="foot">INTERESSE ENTRA NO PLACAR, NA ABA VAGAS · SEM NOME</div>
+    <div class="foot">INTERESSE ENTRA NO PLACAR, NA ABA FRENTES · SEM NOME</div>
   </section>
 
   <!-- S-OK GENÉRICO -->
@@ -441,12 +441,8 @@ window.MURAL_CFG = {
         {n:'Não sei se as 200h de extensão já foram integralizadas',c:15}]}
   ];
   var vagas = [
-    {n:'Rádio',d:'Um programa por semana, gravado no celular',c:4,on:false},
-    {n:'Revista',d:'Textos curtos, edição digital',c:6,on:false},
-    {n:'Mural',d:'Manter este app e o cartaz da semana',c:3,on:false},
-    {n:'Agenda dos coletivos',d:'Um calendário pros seis',c:2,on:false},
-    {n:'Acolhimento de calouros',d:'Receber quem chega, tirar dúvida',c:7,on:false},
-    {n:'Comunicação',d:'Posts, cartazes, lista',c:5,on:false}
+    {n:'Mural',d:'Manter o app, trocar o cartaz da semana, levar o número à reunião',c:3,on:false},
+    {n:'Acolhimento de calouros',d:'Receber quem chega, tirar dúvida, apresentar a Faculdade',c:7,on:false}
   ];
   var relatos = [], sugestoes = [], PESSOAS = 0, EXCLUIDAS = 0;
   var cur = null, turno = null, sel = [], t0 = null, placarView = 'oferta';
@@ -590,7 +586,7 @@ window.MURAL_CFG = {
     b.addEventListener('click', function(){ openTheme(th); });
     tg.appendChild(b);
   });
-  function vagasCnt(){ $('vagas-cnt').textContent = vagas.length+' vagas'; }
+  function vagasCnt(){ $('vagas-cnt').textContent = vagas.length+' frentes'; }
   vagasCnt();
 
   /* PLACAR THEME FLOW */
@@ -646,7 +642,7 @@ window.MURAL_CFG = {
 
   /* PLACAR */
   var chipsEl=$('chips');
-  var views=themes.map(function(t){ return {id:t.id,n:t.n}; }).concat([{id:'vagas',n:'Vagas'},{id:'sug',n:'Sugestões'}]);
+  var views=themes.map(function(t){ return {id:t.id,n:t.n}; }).concat([{id:'vagas',n:'Frentes'},{id:'sug',n:'Sugestões'}]);
   views.forEach(function(v){ var b=document.createElement('button'); b.type='button'; b.className='chip'; b.id='chip-'+v.id; b.textContent=v.n; b.addEventListener('click', function(){ placarView=v.id; renderPlacar(); }); chipsEl.appendChild(b); });
   function renderPlacar(){
     views.forEach(function(v){ $('chip-'+v.id).setAttribute('aria-pressed', v.id===placarView?'true':'false'); });
@@ -699,7 +695,7 @@ window.MURAL_CFG = {
     okScreen({ big:'Registrado.', calm:true,
       lead: 'Só quem recebe vê. Isto não entra em nenhum placar.',
       more: seg==='Quero ser contatado' ? 'Na versão real, alguém da gestão entra em contato pelo canal que você deixou.' : seg==='Quero orientação sobre canais oficiais' ? 'Na versão real, você recebe os caminhos formais da UFBA por escrito, sem precisar contar de novo.' : 'Fica registrado, e ninguém vai te procurar.',
-      ban: '<div class="ban proto"><b>Protótipo: nada foi enviado.</b> Se você precisa relatar agora: <b>Ouvidoria da UFBA</b> · <b>180</b> violência contra a mulher · <b>100</b> direitos humanos · <b>188</b> CVV, 24h.</div>',
+      ban: '<div class="ban alerta"><b>Protótipo: nada foi enviado.</b> Se você precisa relatar agora: <b>Ouvidoria da UFBA</b> · <b>180</b> violência contra a mulher · <b>100</b> direitos humanos · <b>188</b> CVV, 24h.</div>',
       primary:null });
     envia({ tipo:'relato', oque:picked('den-tipo'), onde:picked('den-onde'), seguir:seg,
             contato: seg==='Quero ser contatado' ? $('den-contato').value.trim() : '',
@@ -757,7 +753,7 @@ window.MURAL_CFG = {
     $('ok-big').textContent=o.big; $('ok-big').className='big'+(o.calm?' calm':'');
     $('ok-lead').textContent=o.lead; $('ok-more').textContent=o.more||''; $('ok-ban').innerHTML=o.ban||'';
     var p=$('ok-primary'); p.hidden=!o.primary;
-    if(o.primary){ p.textContent = o.primary==='vagas'?'Ver vagas abertas':'Ver no placar'; p.onclick=function(){ if(o.primary==='vagas'){ renderVagas(); show('svagas'); } else { placarView=o.primary; renderPlacar(); show('s3'); } }; }
+    if(o.primary){ p.textContent = o.primary==='vagas'?'Ver as frentes do DEA':'Ver no placar'; p.onclick=function(){ if(o.primary==='vagas'){ renderVagas(); show('svagas'); } else { placarView=o.primary; renderPlacar(); show('s3'); } }; }
     show('sok');
   }
 })();
