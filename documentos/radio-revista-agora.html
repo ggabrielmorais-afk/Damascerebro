@@ -12,288 +12,250 @@
 <style>
 @page{size:A4;margin:0}
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--peri:#9B9BE0;--pink:#F2529A;--coral:#E8604C;--kraft:#EFE3CC;--yellow:#F2E14C;
- --ink:#14110F;--roxo:#5B4E8C;--kraft2:#E4D6BA}
-body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;font-size:10pt;line-height:1.45}
-.pg{width:210mm;height:297mm;position:relative;overflow:hidden;break-after:page;isolation:isolate}
+:root{
+ --papel:#F6F2E9; --kraft:#E9DFC9; --ink:#1A1714; --ink2:#4A443C; --ink3:#8A8276;
+ --coral:#D9513C; --roxo:#4E4478; --peri:#8A8AD4; --pink:#E0457F; --amarelo:#EBD94A;
+ --linha:#D8D0BF;
+}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);font-size:9.8pt;line-height:1.5;
+ -webkit-font-smoothing:antialiased;font-feature-settings:'kern','liga'}
+.pg{width:210mm;height:297mm;position:relative;overflow:hidden;background:var(--papel);
+ padding:17mm 19mm 14mm;display:flex;flex-direction:column;break-after:page}
 .pg:last-child{break-after:auto}
-.pg::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");background-size:180px;
-  opacity:.16;mix-blend-mode:multiply;pointer-events:none;z-index:9}
-.bg-peri{background:var(--peri)} .bg-pink{background:var(--pink)} .bg-yellow{background:var(--yellow)}
-.bg-kraft{background:var(--kraft)} .bg-roxo{background:var(--roxo)}
-.dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(20,17,15,.30) 1px,transparent 1.3px);
-  background-size:7px 7px;z-index:0;pointer-events:none}
-.wrap{position:relative;z-index:3;height:100%;padding:15mm 16mm 12mm;display:flex;flex-direction:column}
-.kraft{background:var(--kraft);position:relative;padding:9mm 10mm;box-shadow:0 1.4mm 0 rgba(20,17,15,.18)}
-.k1{clip-path:polygon(0.00% 1.07%,1.92% 0.16%,3.85% 0.51%,5.77% 1.17%,7.69% 1.35%,9.62% 1.22%,11.54% 0.20%,13.46% 0.11%,15.38% 0.23%,17.31% 1.14%,19.23% 1.10%,21.15% 0.32%,23.08% 0.57%,25.00% 1.29%,26.92% 0.31%,28.85% 0.13%,30.77% 0.26%,32.69% 0.07%,34.62% 1.15%,36.54% 1.24%,38.46% 0.97%,40.38% 1.33%,42.31% 0.52%,44.23% 1.09%,46.15% 1.31%,48.08% 1.15%,50.00% 0.22%,51.92% 1.34%,53.85% 0.06%,55.77% 0.78%,57.69% 0.85%,59.62% 1.06%,61.54% 0.31%,63.46% 0.69%,65.38% 1.05%,67.31% 0.92%,69.23% 1.39%,71.15% 0.36%,73.08% 0.33%,75.00% 1.08%,76.92% 0.19%,78.85% 0.89%,80.77% 0.57%,82.69% 0.46%,84.62% 0.93%,86.54% 0.66%,88.46% 0.55%,90.38% 1.03%,92.31% 0.07%,94.23% 0.64%,96.15% 0.43%,98.08% 0.27%,100.00% 1.10%,100.00% 99.59%,98.08% 99.70%,96.15% 98.96%,94.23% 99.09%,92.31% 98.79%,90.38% 98.67%,88.46% 99.61%,86.54% 98.67%,84.62% 98.82%,82.69% 99.04%,80.77% 99.51%,78.85% 99.23%,76.92% 98.75%,75.00% 99.72%,73.08% 98.82%,71.15% 99.19%,69.23% 98.94%,67.31% 99.11%,65.38% 98.87%,63.46% 98.79%,61.54% 98.65%,59.62% 99.55%,57.69% 98.96%,55.77% 99.40%,53.85% 99.77%,51.92% 99.14%,50.00% 99.06%,48.08% 99.60%,46.15% 99.27%,44.23% 98.68%,42.31% 99.57%,40.38% 99.38%,38.46% 99.16%,36.54% 99.58%,34.62% 99.20%,32.69% 99.74%,30.77% 99.99%,28.85% 99.86%,26.92% 99.91%,25.00% 99.41%,23.08% 98.91%,21.15% 99.35%,19.23% 99.32%,17.31% 99.97%,15.38% 98.70%,13.46% 99.55%,11.54% 99.07%,9.62% 98.85%,7.69% 98.89%,5.77% 99.76%,3.85% 99.86%,1.92% 99.77%,0.00% 98.76%)} .k2{clip-path:polygon(0.00% 0.29%,1.92% 0.35%,3.85% 0.78%,5.77% 1.00%,7.69% 0.41%,9.62% 1.37%,11.54% 0.19%,13.46% 1.24%,15.38% 0.72%,17.31% 0.79%,19.23% 0.45%,21.15% 0.40%,23.08% 0.67%,25.00% 1.09%,26.92% 0.24%,28.85% 0.24%,30.77% 1.30%,32.69% 0.87%,34.62% 0.83%,36.54% 1.37%,38.46% 0.32%,40.38% 0.89%,42.31% 1.03%,44.23% 0.68%,46.15% 1.17%,48.08% 0.02%,50.00% 0.22%,51.92% 0.77%,53.85% 0.83%,55.77% 0.45%,57.69% 0.75%,59.62% 1.20%,61.54% 0.85%,63.46% 1.05%,65.38% 0.89%,67.31% 0.95%,69.23% 0.55%,71.15% 0.16%,73.08% 0.64%,75.00% 0.61%,76.92% 0.51%,78.85% 0.17%,80.77% 0.28%,82.69% 1.27%,84.62% 1.33%,86.54% 0.16%,88.46% 0.18%,90.38% 1.11%,92.31% 0.76%,94.23% 0.58%,96.15% 0.21%,98.08% 1.19%,100.00% 0.33%,100.00% 99.85%,98.08% 98.98%,96.15% 99.91%,94.23% 98.69%,92.31% 98.71%,90.38% 98.72%,88.46% 98.85%,86.54% 99.19%,84.62% 98.63%,82.69% 99.86%,80.77% 99.85%,78.85% 98.71%,76.92% 99.68%,75.00% 99.30%,73.08% 99.81%,71.15% 99.54%,69.23% 99.96%,67.31% 98.67%,65.38% 99.70%,63.46% 98.64%,61.54% 98.73%,59.62% 98.62%,57.69% 99.08%,55.77% 99.11%,53.85% 98.64%,51.92% 98.91%,50.00% 98.89%,48.08% 99.87%,46.15% 99.45%,44.23% 98.78%,42.31% 99.29%,40.38% 99.83%,38.46% 98.67%,36.54% 99.40%,34.62% 99.80%,32.69% 99.86%,30.77% 99.60%,28.85% 99.67%,26.92% 99.89%,25.00% 99.44%,23.08% 99.39%,21.15% 99.91%,19.23% 99.64%,17.31% 99.49%,15.38% 98.71%,13.46% 99.94%,11.54% 99.17%,9.62% 99.19%,7.69% 99.11%,5.77% 99.26%,3.85% 99.40%,1.92% 99.61%,0.00% 99.72%)} .k3{clip-path:polygon(0.00% 1.24%,1.92% 1.03%,3.85% 0.05%,5.77% 0.04%,7.69% 0.75%,9.62% 0.70%,11.54% 0.49%,13.46% 0.53%,15.38% 0.04%,17.31% 0.59%,19.23% 0.17%,21.15% 1.04%,23.08% 0.90%,25.00% 0.93%,26.92% 0.23%,28.85% 0.80%,30.77% 0.87%,32.69% 0.07%,34.62% 0.45%,36.54% 1.04%,38.46% 0.23%,40.38% 1.14%,42.31% 0.95%,44.23% 0.10%,46.15% 0.67%,48.08% 0.94%,50.00% 0.31%,51.92% 0.36%,53.85% 0.92%,55.77% 1.30%,57.69% 1.14%,59.62% 0.97%,61.54% 0.31%,63.46% 0.74%,65.38% 0.39%,67.31% 0.15%,69.23% 0.96%,71.15% 0.87%,73.08% 0.64%,75.00% 0.84%,76.92% 0.55%,78.85% 1.07%,80.77% 0.73%,82.69% 0.14%,84.62% 0.06%,86.54% 0.50%,88.46% 1.03%,90.38% 0.63%,92.31% 0.78%,94.23% 1.18%,96.15% 1.26%,98.08% 0.86%,100.00% 0.55%,100.00% 98.98%,98.08% 99.98%,96.15% 98.70%,94.23% 98.73%,92.31% 99.31%,90.38% 99.52%,88.46% 98.88%,86.54% 99.57%,84.62% 99.05%,82.69% 99.14%,80.77% 99.60%,78.85% 99.05%,76.92% 99.92%,75.00% 99.24%,73.08% 99.98%,71.15% 99.01%,69.23% 99.64%,67.31% 99.13%,65.38% 99.50%,63.46% 99.56%,61.54% 99.12%,59.62% 99.74%,57.69% 99.95%,55.77% 99.89%,53.85% 99.03%,51.92% 99.62%,50.00% 99.36%,48.08% 99.56%,46.15% 98.92%,44.23% 99.04%,42.31% 100.00%,40.38% 99.65%,38.46% 98.96%,36.54% 98.63%,34.62% 99.61%,32.69% 98.66%,30.77% 99.87%,28.85% 99.09%,26.92% 99.32%,25.00% 99.39%,23.08% 98.76%,21.15% 98.87%,19.23% 99.41%,17.31% 98.75%,15.38% 99.38%,13.46% 99.08%,11.54% 99.07%,9.62% 99.19%,7.69% 98.79%,5.77% 99.33%,3.85% 99.73%,1.92% 99.91%,0.00% 98.68%)} .k4{clip-path:polygon(0.00% 0.30%,1.92% 0.00%,3.85% 0.50%,5.77% 1.19%,7.69% 0.98%,9.62% 0.27%,11.54% 0.45%,13.46% 1.07%,15.38% 0.87%,17.31% 1.24%,19.23% 0.85%,21.15% 1.31%,23.08% 0.38%,25.00% 0.96%,26.92% 0.47%,28.85% 0.45%,30.77% 0.64%,32.69% 0.28%,34.62% 0.99%,36.54% 0.64%,38.46% 0.50%,40.38% 1.05%,42.31% 0.63%,44.23% 0.20%,46.15% 1.22%,48.08% 1.21%,50.00% 0.11%,51.92% 0.87%,53.85% 0.05%,55.77% 1.29%,57.69% 0.99%,59.62% 0.66%,61.54% 0.61%,63.46% 0.05%,65.38% 1.06%,67.31% 0.48%,69.23% 0.47%,71.15% 0.48%,73.08% 0.02%,75.00% 0.89%,76.92% 1.25%,78.85% 0.96%,80.77% 0.31%,82.69% 0.88%,84.62% 1.03%,86.54% 1.25%,88.46% 0.67%,90.38% 1.27%,92.31% 0.03%,94.23% 0.24%,96.15% 0.55%,98.08% 0.44%,100.00% 1.40%,100.00% 98.69%,98.08% 99.56%,96.15% 99.07%,94.23% 99.86%,92.31% 99.75%,90.38% 99.93%,88.46% 99.10%,86.54% 99.92%,84.62% 99.72%,82.69% 99.34%,80.77% 99.21%,78.85% 99.29%,76.92% 99.19%,75.00% 99.48%,73.08% 99.44%,71.15% 98.87%,69.23% 99.28%,67.31% 99.18%,65.38% 99.78%,63.46% 99.97%,61.54% 99.33%,59.62% 99.08%,57.69% 99.65%,55.77% 99.35%,53.85% 99.41%,51.92% 99.31%,50.00% 99.98%,48.08% 99.10%,46.15% 99.20%,44.23% 99.74%,42.31% 99.08%,40.38% 99.21%,38.46% 99.35%,36.54% 99.84%,34.62% 98.95%,32.69% 98.82%,30.77% 99.10%,28.85% 99.84%,26.92% 99.83%,25.00% 99.70%,23.08% 99.37%,21.15% 98.78%,19.23% 99.45%,17.31% 99.67%,15.38% 98.62%,13.46% 99.42%,11.54% 99.22%,9.62% 99.36%,7.69% 98.92%,5.77% 99.28%,3.85% 99.10%,1.92% 99.95%,0.00% 99.63%)}
-.k5{clip-path:polygon(0.00% 0.04%,1.92% 0.17%,3.85% 0.77%,5.77% 0.56%,7.69% 1.34%,9.62% 0.27%,11.54% 1.18%,13.46% 0.27%,15.38% 1.12%,17.31% 1.38%,19.23% 0.84%,21.15% 0.58%,23.08% 0.31%,25.00% 1.02%,26.92% 0.24%,28.85% 1.04%,30.77% 0.57%,32.69% 0.35%,34.62% 0.11%,36.54% 1.26%,38.46% 0.43%,40.38% 0.63%,42.31% 1.13%,44.23% 1.23%,46.15% 1.08%,48.08% 0.29%,50.00% 0.02%,51.92% 1.27%,53.85% 0.56%,55.77% 0.01%,57.69% 0.07%,59.62% 0.28%,61.54% 0.70%,63.46% 0.97%,65.38% 0.27%,67.31% 1.40%,69.23% 1.04%,71.15% 0.11%,73.08% 0.35%,75.00% 0.91%,76.92% 0.25%,78.85% 0.58%,80.77% 0.72%,82.69% 0.50%,84.62% 0.81%,86.54% 0.26%,88.46% 0.70%,90.38% 0.88%,92.31% 0.91%,94.23% 1.08%,96.15% 1.07%,98.08% 0.97%,100.00% 1.03%,100.00% 99.38%,98.08% 99.57%,96.15% 98.64%,94.23% 98.86%,92.31% 99.01%,90.38% 99.67%,88.46% 99.32%,86.54% 99.95%,84.62% 99.91%,82.69% 99.61%,80.77% 98.62%,78.85% 98.67%,76.92% 99.17%,75.00% 99.20%,73.08% 99.32%,71.15% 99.11%,69.23% 99.14%,67.31% 99.45%,65.38% 99.36%,63.46% 99.14%,61.54% 99.99%,59.62% 99.61%,57.69% 98.61%,55.77% 98.77%,53.85% 99.39%,51.92% 99.14%,50.00% 98.73%,48.08% 99.39%,46.15% 99.31%,44.23% 99.23%,42.31% 99.05%,40.38% 99.33%,38.46% 98.73%,36.54% 98.63%,34.62% 99.76%,32.69% 98.78%,30.77% 99.07%,28.85% 99.82%,26.92% 98.97%,25.00% 99.64%,23.08% 99.78%,21.15% 99.87%,19.23% 99.66%,17.31% 99.93%,15.38% 99.94%,13.46% 98.79%,11.54% 99.71%,9.62% 99.14%,7.69% 99.02%,5.77% 99.87%,3.85% 99.66%,1.92% 98.77%,0.00% 98.92%)} .k6{clip-path:polygon(0.00% 0.13%,1.92% 0.33%,3.85% 0.99%,5.77% 0.12%,7.69% 0.29%,9.62% 0.80%,11.54% 1.08%,13.46% 0.50%,15.38% 0.77%,17.31% 0.57%,19.23% 0.88%,21.15% 0.06%,23.08% 0.06%,25.00% 0.87%,26.92% 0.79%,28.85% 0.95%,30.77% 0.67%,32.69% 0.54%,34.62% 0.19%,36.54% 0.37%,38.46% 0.17%,40.38% 0.49%,42.31% 1.00%,44.23% 1.11%,46.15% 0.80%,48.08% 0.82%,50.00% 0.27%,51.92% 1.38%,53.85% 0.71%,55.77% 0.00%,57.69% 0.39%,59.62% 0.05%,61.54% 0.45%,63.46% 1.07%,65.38% 0.10%,67.31% 0.04%,69.23% 1.05%,71.15% 0.11%,73.08% 0.83%,75.00% 0.17%,76.92% 1.16%,78.85% 0.43%,80.77% 0.65%,82.69% 0.33%,84.62% 0.33%,86.54% 0.18%,88.46% 1.14%,90.38% 1.31%,92.31% 1.26%,94.23% 0.22%,96.15% 0.61%,98.08% 0.46%,100.00% 0.10%,100.00% 99.23%,98.08% 98.60%,96.15% 99.92%,94.23% 99.03%,92.31% 99.02%,90.38% 99.20%,88.46% 98.69%,86.54% 99.81%,84.62% 99.99%,82.69% 98.61%,80.77% 99.69%,78.85% 99.92%,76.92% 99.60%,75.00% 99.15%,73.08% 99.55%,71.15% 98.75%,69.23% 98.60%,67.31% 99.78%,65.38% 98.69%,63.46% 99.48%,61.54% 99.05%,59.62% 99.54%,57.69% 99.85%,55.77% 99.96%,53.85% 98.74%,51.92% 99.63%,50.00% 99.52%,48.08% 99.96%,46.15% 99.91%,44.23% 99.09%,42.31% 99.61%,40.38% 99.81%,38.46% 98.64%,36.54% 99.15%,34.62% 99.32%,32.69% 99.11%,30.77% 99.39%,28.85% 99.35%,26.92% 99.50%,25.00% 99.74%,23.08% 99.07%,21.15% 98.94%,19.23% 98.99%,17.31% 99.78%,15.38% 98.75%,13.46% 99.80%,11.54% 98.98%,9.62% 98.78%,7.69% 99.31%,5.77% 99.91%,3.85% 99.23%,1.92% 98.78%,0.00% 99.67%)} .k7{clip-path:polygon(0.00% 0.32%,1.92% 1.26%,3.85% 1.32%,5.77% 0.70%,7.69% 0.36%,9.62% 1.25%,11.54% 0.10%,13.46% 0.84%,15.38% 1.26%,17.31% 0.39%,19.23% 0.50%,21.15% 0.70%,23.08% 1.32%,25.00% 1.16%,26.92% 0.12%,28.85% 0.04%,30.77% 0.19%,32.69% 0.01%,34.62% 0.31%,36.54% 1.34%,38.46% 0.63%,40.38% 1.28%,42.31% 0.73%,44.23% 0.77%,46.15% 0.12%,48.08% 0.55%,50.00% 0.34%,51.92% 0.22%,53.85% 1.06%,55.77% 1.12%,57.69% 0.29%,59.62% 0.71%,61.54% 0.01%,63.46% 0.07%,65.38% 0.45%,67.31% 1.34%,69.23% 0.94%,71.15% 1.09%,73.08% 0.67%,75.00% 0.80%,76.92% 1.35%,78.85% 0.12%,80.77% 0.87%,82.69% 0.44%,84.62% 0.96%,86.54% 0.26%,88.46% 0.91%,90.38% 0.19%,92.31% 0.55%,94.23% 0.73%,96.15% 1.09%,98.08% 0.49%,100.00% 0.86%,100.00% 99.00%,98.08% 99.50%,96.15% 99.87%,94.23% 99.82%,92.31% 99.40%,90.38% 99.38%,88.46% 99.71%,86.54% 99.00%,84.62% 99.03%,82.69% 99.35%,80.77% 99.08%,78.85% 99.17%,76.92% 98.69%,75.00% 99.66%,73.08% 99.26%,71.15% 98.91%,69.23% 99.92%,67.31% 99.69%,65.38% 99.51%,63.46% 99.94%,61.54% 99.39%,59.62% 99.97%,57.69% 99.10%,55.77% 99.83%,53.85% 99.48%,51.92% 98.61%,50.00% 99.45%,48.08% 99.02%,46.15% 99.72%,44.23% 98.75%,42.31% 99.01%,40.38% 99.88%,38.46% 99.43%,36.54% 98.97%,34.62% 99.50%,32.69% 99.25%,30.77% 98.84%,28.85% 99.60%,26.92% 98.61%,25.00% 99.37%,23.08% 99.03%,21.15% 98.87%,19.23% 99.21%,17.31% 98.86%,15.38% 99.98%,13.46% 99.42%,11.54% 99.47%,9.62% 99.74%,7.69% 99.47%,5.77% 99.69%,3.85% 99.82%,1.92% 99.50%,0.00% 99.27%)} .k8{clip-path:polygon(0.00% 0.39%,1.92% 0.21%,3.85% 0.44%,5.77% 1.31%,7.69% 0.05%,9.62% 0.47%,11.54% 1.17%,13.46% 0.38%,15.38% 0.24%,17.31% 0.59%,19.23% 1.23%,21.15% 0.73%,23.08% 1.35%,25.00% 0.37%,26.92% 0.44%,28.85% 0.76%,30.77% 1.25%,32.69% 0.12%,34.62% 0.09%,36.54% 1.16%,38.46% 1.34%,40.38% 1.36%,42.31% 1.38%,44.23% 1.11%,46.15% 0.99%,48.08% 0.75%,50.00% 0.41%,51.92% 0.08%,53.85% 0.31%,55.77% 1.00%,57.69% 0.91%,59.62% 0.46%,61.54% 0.77%,63.46% 0.62%,65.38% 0.91%,67.31% 0.52%,69.23% 0.98%,71.15% 0.51%,73.08% 0.60%,75.00% 1.01%,76.92% 0.25%,78.85% 0.35%,80.77% 0.74%,82.69% 0.47%,84.62% 1.07%,86.54% 0.71%,88.46% 0.72%,90.38% 0.92%,92.31% 0.07%,94.23% 0.38%,96.15% 0.86%,98.08% 0.39%,100.00% 0.10%,100.00% 99.17%,98.08% 98.81%,96.15% 99.88%,94.23% 99.11%,92.31% 99.19%,90.38% 99.61%,88.46% 98.84%,86.54% 98.85%,84.62% 98.67%,82.69% 99.48%,80.77% 99.75%,78.85% 99.78%,76.92% 99.77%,75.00% 98.71%,73.08% 98.94%,71.15% 99.21%,69.23% 99.38%,67.31% 99.10%,65.38% 99.36%,63.46% 99.21%,61.54% 98.96%,59.62% 98.85%,57.69% 99.71%,55.77% 99.05%,53.85% 99.40%,51.92% 99.08%,50.00% 99.10%,48.08% 99.30%,46.15% 98.62%,44.23% 98.63%,42.31% 98.72%,40.38% 98.64%,38.46% 99.64%,36.54% 99.83%,34.62% 98.80%,32.69% 99.03%,30.77% 99.65%,28.85% 99.92%,26.92% 99.37%,25.00% 99.91%,23.08% 98.90%,21.15% 98.78%,19.23% 98.79%,17.31% 99.72%,15.38% 99.70%,13.46% 98.75%,11.54% 99.62%,9.62% 98.71%,7.69% 99.26%,5.77% 99.90%,3.85% 99.48%,1.92% 99.87%,0.00% 98.64%)}
-.gira-1{transform:rotate(-1.2deg)} .gira1{transform:rotate(1deg)} .gira-2{transform:rotate(-2.2deg)} .gira2{transform:rotate(2deg)}
-.tape{position:absolute;width:30mm;height:9mm;background:rgba(228,214,186,.92);border:.3mm solid rgba(20,17,15,.12);z-index:6}
-.tape.tl{top:-4mm;left:8mm;transform:rotate(-7deg)} .tape.tr{top:-4mm;right:8mm;transform:rotate(6deg)}
-.tape.bl{bottom:-4mm;left:14mm;transform:rotate(4deg)} .tape.br{bottom:-4mm;right:12mm;transform:rotate(-5deg)}
-h1,h2,h3,.big{font-family:'Anton','Arial Narrow',system-ui,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.005em;line-height:1.02}
-h1{font-size:50pt} h2{font-size:26pt;margin-bottom:5mm} h3{font-size:13pt;margin-bottom:2mm}
-.kick{font-family:'Inter',sans-serif;font-weight:800;font-size:8.5pt;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4mm}
-p{margin-bottom:3mm} p:last-child{margin-bottom:0}
-.lead{font-size:12.5pt;line-height:1.38}
-b,strong{font-weight:700}
-.cut{position:absolute;z-index:2;filter:drop-shadow(0 1mm 0 rgba(20,17,15,.2))}
-.star{position:absolute;z-index:4;width:14mm}
-.selo{display:inline-block;background:var(--pink);color:#fff;padding:3mm 5mm 2.5mm;transform:rotate(-2.5deg);
-  box-shadow:0 1mm 0 rgba(20,17,15,.25)}
-.selo b{font-family:'Anton',sans-serif;font-weight:400;font-size:13pt;letter-spacing:.02em;display:block;text-transform:uppercase}
-.selo span{font-family:'Inter',sans-serif;font-weight:800;font-size:7.5pt;letter-spacing:.18em;color:var(--yellow);text-transform:uppercase}
-.pn{position:absolute;bottom:9mm;right:16mm;z-index:8;font-family:'Inter',sans-serif;font-weight:800;font-size:8pt;letter-spacing:.16em}
-.rod{position:absolute;bottom:9mm;left:16mm;z-index:8;font-family:'Inter',sans-serif;font-weight:800;font-size:8pt;letter-spacing:.16em;opacity:.7}
-.cx{background:var(--kraft);padding:6mm 7mm;position:relative}
-.cx.ama{background:var(--yellow)} .cx.cor{background:var(--coral);color:#fff} .cx.per{background:var(--peri)}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:6mm}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm}
-.num{font-family:'Anton',sans-serif;font-size:34pt;line-height:.85;color:var(--coral)}
-.lista{list-style:none}
-.lista li{display:flex;gap:4mm;padding:2.8mm 0;border-bottom:.4mm dashed rgba(20,17,15,.28);break-inside:avoid}
-.lista li:last-child{border-bottom:0}
-.lista b.n{font-family:'Anton',sans-serif;font-size:14pt;color:var(--coral);min-width:9mm;line-height:1}
-.lista .t{flex:1}
-.lista .t b{display:block;font-size:10.5pt;margin-bottom:.8mm}
-.lista .t span{font-size:9pt;line-height:1.35;display:block}
-.tl li{display:flex;gap:5mm;padding:2.6mm 0;border-bottom:.4mm dashed rgba(20,17,15,.28);list-style:none}
-.tl b{font-family:'Anton',sans-serif;font-size:11pt;min-width:32mm;color:var(--roxo)}
-.tl span{font-size:9.5pt}
-.qr{background:#fff;padding:4mm;position:relative;text-align:center;box-shadow:0 1mm 0 rgba(20,17,15,.25)}
+.cab{display:flex;justify-content:space-between;align-items:baseline;
+ padding-bottom:3mm;border-bottom:.5mm solid var(--ink);margin-bottom:8mm}
+.cab .esq{font-weight:800;font-size:7.5pt;letter-spacing:.18em;text-transform:uppercase}
+.cab .dir{font-weight:600;font-size:7.5pt;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase}
+.kick{font-weight:800;font-size:7.5pt;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);margin-bottom:3mm}
+h1{font-family:'Anton',sans-serif;font-weight:400;font-size:40pt;line-height:1.04;letter-spacing:-.005em}
+h2{font-family:'Anton',sans-serif;font-weight:400;font-size:23pt;line-height:1.08;letter-spacing:-.004em;color:var(--roxo);margin-bottom:5mm}
+h3{font-weight:700;font-size:10pt;line-height:1.3;margin-bottom:1.5mm;color:var(--ink)}
+p{margin-bottom:3mm;color:var(--ink2)} p:last-child{margin-bottom:0}
+p strong,li strong,.pan strong{color:var(--ink);font-weight:700}
+.lead{font-size:11.5pt;line-height:1.45;color:var(--ink);max-width:132mm}
+.col2{column-count:2;column-gap:9mm}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8mm}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6mm}
+.g-lab{display:grid;grid-template-columns:34mm 1fr;gap:8mm;align-items:start}
+.lab{font-weight:800;font-size:7.5pt;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);padding-top:.8mm}
+.pan{background:var(--kraft);padding:6mm 7mm}
+.pan.borda{background:none;border-left:.9mm solid var(--coral);padding:1mm 0 1mm 6mm}
+.pan.roxo{background:var(--roxo);color:#EFECF7} .pan.roxo h3{color:var(--amarelo)} .pan.roxo p{color:#DDD8EE}
+.pan.peri{background:var(--peri);color:#141126} .pan.peri p{color:#1E1A33}
+.num{font-family:'Anton',sans-serif;font-size:24pt;line-height:1;color:var(--coral)}
+.num.roxo{color:var(--roxo)}
+ul.lst{list-style:none}
+ul.lst li{display:grid;grid-template-columns:8mm 1fr;gap:4mm;padding:3mm 0;border-top:.3mm solid var(--linha);break-inside:avoid}
+ul.lst li:first-child{border-top:0;padding-top:0}
+ul.lst .n{font-family:'Anton',sans-serif;font-size:11pt;color:var(--coral);line-height:1.25}
+ul.lst p{margin:0;font-size:9.4pt}
+ul.tl li{display:grid;grid-template-columns:30mm 1fr;gap:5mm;padding:2.6mm 0;border-top:.3mm solid var(--linha);list-style:none;break-inside:avoid}
+ul.tl li:first-child{border-top:0}
+ul.tl b{font-weight:800;font-size:8.5pt;letter-spacing:.06em;color:var(--roxo);text-transform:uppercase;padding-top:.4mm}
+ul.tl span{font-size:9.4pt;color:var(--ink2)}
+.rod{margin-top:auto;padding-top:5mm;border-top:.3mm solid var(--linha);
+ display:flex;justify-content:space-between;font-weight:600;font-size:7pt;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase}
+.selo{display:inline-block;border:.6mm solid var(--ink);padding:2.4mm 4mm 2mm}
+.selo b{font-family:'Anton',sans-serif;font-weight:400;font-size:10.5pt;display:block;line-height:1}
+.selo span{font-weight:800;font-size:6.5pt;letter-spacing:.16em;color:var(--coral);text-transform:uppercase}
+/* capa */
+.capa{background:var(--peri);padding:0;justify-content:flex-end}
+.capa .faixa{position:absolute;top:0;left:0;right:0;height:64mm;background:var(--kraft);clip-path:polygon(0.00% 1.07%,1.92% 0.16%,3.85% 0.51%,5.77% 1.17%,7.69% 1.35%,9.62% 1.22%,11.54% 0.20%,13.46% 0.11%,15.38% 0.23%,17.31% 1.14%,19.23% 1.10%,21.15% 0.32%,23.08% 0.57%,25.00% 1.29%,26.92% 0.31%,28.85% 0.13%,30.77% 0.26%,32.69% 0.07%,34.62% 1.15%,36.54% 1.24%,38.46% 0.97%,40.38% 1.33%,42.31% 0.52%,44.23% 1.09%,46.15% 1.31%,48.08% 1.15%,50.00% 0.22%,51.92% 1.34%,53.85% 0.06%,55.77% 0.78%,57.69% 0.85%,59.62% 1.06%,61.54% 0.31%,63.46% 0.69%,65.38% 1.05%,67.31% 0.92%,69.23% 1.39%,71.15% 0.36%,73.08% 0.33%,75.00% 1.08%,76.92% 0.19%,78.85% 0.89%,80.77% 0.57%,82.69% 0.46%,84.62% 0.93%,86.54% 0.66%,88.46% 0.55%,90.38% 1.03%,92.31% 0.07%,94.23% 0.64%,96.15% 0.43%,98.08% 0.27%,100.00% 1.10%,100.00% 99.59%,98.08% 99.70%,96.15% 98.96%,94.23% 99.09%,92.31% 98.79%,90.38% 98.67%,88.46% 99.61%,86.54% 98.67%,84.62% 98.82%,82.69% 99.04%,80.77% 99.51%,78.85% 99.23%,76.92% 98.75%,75.00% 99.72%,73.08% 98.82%,71.15% 99.19%,69.23% 98.94%,67.31% 99.11%,65.38% 98.87%,63.46% 98.79%,61.54% 98.65%,59.62% 99.55%,57.69% 98.96%,55.77% 99.40%,53.85% 99.77%,51.92% 99.14%,50.00% 99.06%,48.08% 99.60%,46.15% 99.27%,44.23% 98.68%,42.31% 99.57%,40.38% 99.38%,38.46% 99.16%,36.54% 99.58%,34.62% 99.20%,32.69% 99.74%,30.77% 99.99%,28.85% 99.86%,26.92% 99.91%,25.00% 99.41%,23.08% 98.91%,21.15% 99.35%,19.23% 99.32%,17.31% 99.97%,15.38% 98.70%,13.46% 99.55%,11.54% 99.07%,9.62% 98.85%,7.69% 98.89%,5.77% 99.76%,3.85% 99.86%,1.92% 99.77%,0.00% 98.76%)}
+.capa .corpo{position:relative;z-index:2;padding:0 19mm 16mm}
+.capa h1{color:#FFF;font-size:52pt}
+.capa .sub{color:#1B1734;font-size:11.5pt;line-height:1.45;max-width:118mm;margin-top:7mm}
+.capa .topo{position:absolute;top:16mm;left:19mm;right:19mm;z-index:3;display:flex;justify-content:space-between;align-items:flex-start}
+.capa .selo{border-color:var(--ink)}
+.fio{height:.9mm;background:var(--coral);width:26mm;margin-bottom:6mm}
+.qr{width:28mm;background:#fff;padding:2.6mm;border:.3mm solid var(--linha)}
 .qr img{width:100%;display:block;image-rendering:pixelated}
-.qr span{display:block;margin-top:2mm;font-family:'Inter',sans-serif;font-weight:800;font-size:6.5pt;letter-spacing:.14em}
-.marca{font-family:'Anton',sans-serif;font-size:9.5pt;letter-spacing:.04em}
+.qr span{display:block;text-align:center;margin-top:1.5mm;font-weight:800;font-size:5.6pt;letter-spacing:.12em;color:var(--ink2)}
+.destaque{font-family:'Anton',sans-serif;font-size:14pt;line-height:1.2;color:var(--roxo)}
 </style>
-<section class="pg bg-peri">
- <div class="dots"></div>
- <svg viewBox="0 0 230 160" class="cut" style="width:74mm;top:22mm;left:-10mm;transform:rotate(-9deg)"><defs><pattern id="ht2" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r="1.35" fill="#14110F"/></pattern></defs>
-<polygon points="96,26 200,4 200,132 96,110" fill="url(#ht2)"/><rect x="66" y="40" width="34" height="56" rx="6" fill="#14110F"/>
-<rect x="30" y="58" width="44" height="20" rx="8" fill="#14110F" transform="rotate(-18 52 68)"/>
-<g stroke="#E8604C" stroke-width="9" fill="none" stroke-linecap="round">
-<path d="M212 40 L228 30"/><path d="M214 68 L232 68"/><path d="M212 96 L228 106"/></g></svg>
- <svg viewBox="0 0 300 190" class="cut" style="width:104mm;bottom:-4mm;right:-16mm;transform:rotate(2deg);opacity:.92"><defs><pattern id="ht1" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r="1.35" fill="#14110F"/></pattern></defs>
-<polygon points="150,8 292,64 8,64" fill="url(#ht1)"/><polygon points="150,22 262,62 38,62" fill="#EFE3CC"/>
-<rect x="8" y="64" width="284" height="10" fill="#14110F"/>
-<g fill="url(#ht1)"><rect x="26" y="74" width="26" height="92"/><rect x="76" y="74" width="26" height="92"/><rect x="126" y="74" width="26" height="92"/><rect x="176" y="74" width="26" height="92"/><rect x="226" y="74" width="26" height="92"/></g>
-<rect x="0" y="166" width="300" height="9" fill="#14110F"/><rect x="10" y="175" width="280" height="9" fill="#14110F" opacity=".55"/></svg>
- <div class="star" style="color:var(--coral);top:16mm;right:26mm;transform:rotate(-12deg)"><svg viewBox="0 0 100 96" class="cut"><polygon points="50,2 62,36 98,36 69,58 80,94 50,72 20,94 31,58 2,36 38,36" fill="currentColor"/></svg></div>
- <div class="star" style="color:var(--pink);top:34mm;right:14mm;width:9mm;transform:rotate(14deg)"><svg viewBox="0 0 100 96" class="cut"><polygon points="50,2 62,36 98,36 69,58 80,94 50,72 20,94 31,58 2,36 38,36" fill="currentColor"/></svg></div>
- <div class="wrap">
-   <div style="margin-top:58mm">
-     <div class="kraft k1 gira-1" style="padding:12mm 10mm">
-       <div class="tape tl"></div><div class="tape tr"></div>
-       <div class="kick" style="color:var(--coral)">Proposta interna · Semestre 2026.2</div>
-       <h1 style="color:var(--roxo)">Rádio e<br>revista</h1>
-       <p class="lead" style="margin-top:6mm">As duas já existiram na FAUFBA. As duas pararam. Este documento é sobre por que agora é diferente, quanto custa, e o que a gente faz na primeira semana.</p>
-     </div>
-   </div>
-   <div style="margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:8mm">
-     <div class="selo" style="background:var(--pink)"><b>Gestão Ágora</b><span>DEA FAUFBA</span></div>
-     <div style="background:var(--yellow);padding:3.5mm 5mm;transform:rotate(1.5deg);box-shadow:0 1mm 0 rgba(20,17,15,.25);text-align:right">
-       <div style="font-family:'Anton',sans-serif;font-size:11pt;letter-spacing:.02em;text-transform:uppercase;line-height:1">O Mural já está no ar</div>
-       <div style="font-family:'Inter';font-weight:800;font-size:7.5pt;letter-spacing:.1em;margin-top:1.5mm">mural-faufba.netlify.app</div></div>
-   </div>
- </div>
+<section class="pg capa">
+  <div class="faixa"></div>
+  <div class="topo">
+    <div class="selo"><b>Gestão Ágora</b><span>DEA FAUFBA</span></div>
+    <div style="text-align:right;font-weight:800;font-size:7.5pt;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);padding-top:2mm">
+      Proposta interna<br><span style="color:var(--coral)">Semestre 2026.2</span></div>
+  </div>
+  <div class="corpo">
+    <div class="fio"></div>
+    <h1>Rádio e revista</h1>
+    <p class="sub">As duas já existiram na FAUFBA e as duas pararam. Este documento é sobre o que mudou, quanto custa, e o que a gente faz na primeira semana.</p>
+    <div style="margin-top:12mm;display:flex;align-items:flex-end;justify-content:space-between;gap:10mm">
+      <div style="font-weight:800;font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:#1B1734;line-height:1.7">
+        O Mural já está no ar<br><span style="color:#fff">mural-faufba.netlify.app</span></div>
+      <div class="qr"><img src="data:image/png;base64,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" alt="QR do Mural"><span>Aponte a câmera</span></div>
+    </div>
+  </div>
 </section>
-<section class="pg bg-kraft">
- <div class="wrap">
-   <div class="kick" style="color:var(--coral)">Antes de pedir qualquer coisa nova</div>
-   <h2 style="color:var(--roxo)">O primeiro passo<br>já foi dado</h2>
-   <p class="lead" style="max-width:120mm">O Mural está publicado e gravando respostas de verdade. Isso muda a conversa: rádio e revista deixam de ser ideia solta e passam a ser o segundo passo de uma coisa que já anda.</p>
-   <div class="g3" style="margin-top:8mm">
-     <div class="cx per gira-1"><div class="num" style="color:var(--ink)">8</div><p style="font-size:9pt;margin-top:2mm">temas abertos pra resposta, de oferta de disciplina a didática</p></div>
-     <div class="cx ama gira1"><div class="num">40s</div><p style="font-size:9pt;margin-top:2mm">é o tempo de responder, sem login e sem nome</p></div>
-     <div class="cx cor gira-2"><div class="num" style="color:#fff">R$ 0</div><p style="font-size:9pt;margin-top:2mm">de verba, do protótipo até o que está no ar hoje</p></div>
-   </div>
-   <div style="display:flex;gap:7mm;margin-top:9mm;align-items:flex-start">
-     <div style="flex:1">
-       <h3 style="color:var(--coral)">O que o Mural resolve sozinho</h3>
-       <p>Ele mede o que trava o estudante, por tema e por turno, e devolve o número na hora. Cada matrícula responde três temas por semestre, então o número aguenta ser questionado numa reunião.</p>
-       <h3 style="color:var(--coral);margin-top:6mm">O que ele não resolve</h3>
-       <p>Número não conta história. Ninguém se emociona com uma tabela, e ninguém guarda uma planilha. É aí que entram a rádio e a revista.</p>
-     </div>
-     <div style="width:36mm;flex:none">
-       <div class="qr gira2"><div class="tape tl" style="width:20mm;height:7mm;left:5mm"></div>
-         <img src="data:image/png;base64,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" alt="QR do Mural"><span>Aponte a câmera</span></div>
-     </div>
-   </div>
-   <div class="cx gira1" style="margin-top:auto;background:var(--roxo);color:#fff;padding:7mm">
-     <h3 style="color:var(--yellow)">A frase que resume</h3>
-     <p style="margin:0">O Mural diz <b>quantos</b>. A rádio e a revista dizem <b>quem</b> e <b>como é</b>. Sem as duas coisas, a Faculdade ouve estatística e esquece na semana seguinte.</p>
-   </div>
- </div>
- <div class="rod">MURAL · DEA FAUFBA</div><div class="pn">02</div>
+<section class="pg">
+  <div class="cab"><div class="esq">Rádio e revista</div><div class="dir">Ponto de partida · 02</div></div>
+  <div class="kick">Antes de pedir qualquer coisa nova</div>
+  <h2>O primeiro passo já foi dado</h2>
+  <p class="lead">O Mural está publicado e gravando respostas de verdade. Rádio e revista deixam de ser ideia solta e passam a ser o segundo passo de uma coisa que já anda.</p>
+  <div class="g3" style="margin-top:9mm">
+    <div><div class="num">8</div><p style="font-size:9pt;margin-top:2mm">temas abertos pra resposta, de oferta de disciplina a didática</p></div>
+    <div><div class="num">40s</div><p style="font-size:9pt;margin-top:2mm">é o tempo de responder, sem login e sem nome</p></div>
+    <div><div class="num">R$ 0</div><p style="font-size:9pt;margin-top:2mm">de verba, do protótipo até o que está no ar hoje</p></div>
+  </div>
+  <div class="g-lab" style="margin-top:10mm">
+    <div class="lab">Resolve</div>
+    <div><p>O Mural mede o que trava o estudante, por tema e por turno, e devolve o número na hora. Cada matrícula responde três temas por semestre, então o número aguenta ser questionado numa reunião.</p></div>
+  </div>
+  <div class="g-lab" style="margin-top:6mm">
+    <div class="lab">Não resolve</div>
+    <div><p>Número não conta história. Ninguém se emociona com uma tabela e ninguém guarda uma planilha. É aí que entram a rádio e a revista.</p></div>
+  </div>
+  <div class="pan roxo" style="margin-top:10mm">
+    <h3>A divisão de trabalho entre as três coisas</h3>
+    <p style="margin:0">O Mural diz <strong style="color:#fff">quantos</strong>. A rádio e a revista dizem <strong style="color:#fff">quem</strong> e <strong style="color:#fff">como é</strong>. Sem as duas, a Faculdade ouve estatística e esquece na semana seguinte.</p>
+  </div>
+  <div class="rod"><span>Gestão Ágora · DEA FAUFBA</span><span>02</span></div>
 </section>
-<section class="pg bg-pink">
- <div class="dots"></div>
- <svg viewBox="0 0 150 150" class="cut" style="width:46mm;top:14mm;right:16mm;transform:rotate(8deg)"><defs><pattern id="ht5" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r="1.35" fill="#14110F"/></pattern></defs>
-<circle cx="75" cy="78" r="64" fill="url(#ht5)"/><circle cx="75" cy="78" r="52" fill="#EFE3CC"/>
-<g stroke="#14110F" stroke-width="7" stroke-linecap="round"><path d="M75 78 L75 44"/><path d="M75 78 L101 90"/></g>
-<circle cx="75" cy="78" r="6" fill="#E8604C"/><rect x="62" y="4" width="26" height="12" rx="4" fill="#14110F"/></svg>
- <div class="wrap">
-   <div class="kraft k2 gira1" style="margin-top:38mm">
-     <div class="tape tl"></div>
-     <div class="kick" style="color:var(--coral)">Encarando de frente</div>
-     <h2 style="color:var(--ink)">Já morreu antes.<br>Vale dizer por quê.</h2>
-     <p>A FAUFBA já teve revista e já teve programa em áudio. As duas coisas pararam faz anos. Começar fingindo que a ideia é inédita é o jeito mais rápido de repetir o mesmo fim.</p>
-     <ul class="lista" style="margin-top:4mm">
-       <li><b class="n">01</b><div class="t"><b>Pauta do zero</b><span>Toda edição começava com alguém tendo que inventar sobre o que falar. Isso cansa antes da terceira.</span></div></li>
-       <li><b class="n">02</b><div class="t"><b>Uma pessoa só</b><span>Quando essa pessoa se formava ou cansava, acabava junto. Não havia segunda pessoa sabendo fazer.</span></div></li>
-       <li><b class="n">03</b><div class="t"><b>Sem data obrigando</b><span>Sem prazo de fora, a próxima edição podia sempre ser no mês que vem.</span></div></li>
-     </ul>
-   </div>
-   <div class="cx ama gira-1" style="margin-top:7mm">
-     <h3 style="color:var(--ink)">O que não existia antes e existe agora</h3>
-     <ul class="lista">
-       <li><b class="n">→</b><div class="t"><b>A pauta chega pronta</b><span>O Mural recolhe toda semana o que está travando os estudantes. Ninguém precisa inventar assunto: ele vem do que as pessoas marcaram.</span></div></li>
-       <li><b class="n">→</b><div class="t"><b>A Faculdade decidiu duas vezes que precisa ouvir estudante</b><span>A Congregação de 4 de setembro vai pedir à PROGRAD uma janela de ajuste por causa do noturno. A Coordenação Acadêmica marcou pesquisa com formandos pra outubro.</span></div></li>
-       <li><b class="n">→</b><div class="t"><b>Gravar e publicar hoje custa zero</b><span>Celular grava, aplicativo gratuito corta, canal hospeda. O que antes exigia estúdio e gráfica agora exige uma tarde.</span></div></li>
-     </ul>
-   </div>
- </div>
- <div class="rod" style="color:#fff">MURAL · DEA FAUFBA</div><div class="pn" style="color:#fff">03</div>
+<section class="pg">
+  <div class="cab"><div class="esq">Rádio e revista</div><div class="dir">Histórico · 03</div></div>
+  <div class="kick">Encarando de frente</div>
+  <h2>Já morreu antes.<br>Vale dizer por quê.</h2>
+  <p class="lead">A FAUFBA já teve revista e já teve programa em áudio. As duas pararam faz anos. Começar fingindo que a ideia é inédita é o jeito mais rápido de repetir o mesmo fim.</p>
+  <div class="g-lab" style="margin-top:9mm">
+    <div class="lab">O que matou</div>
+    <div>
+      <ul class="lst">
+        <li><span class="n">01</span><div><h3>Pauta do zero</h3><p>Toda edição começava com alguém tendo que inventar sobre o que falar. Isso cansa antes da terceira.</p></div></li>
+        <li><span class="n">02</span><div><h3>Uma pessoa só</h3><p>Quando essa pessoa se formava ou cansava, acabava junto. Não havia segunda pessoa sabendo fazer.</p></div></li>
+        <li><span class="n">03</span><div><h3>Sem data obrigando</h3><p>Sem prazo de fora, a próxima edição podia sempre ser no mês que vem.</p></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="g-lab" style="margin-top:9mm">
+    <div class="lab">O que mudou</div>
+    <div>
+      <ul class="lst">
+        <li><span class="n">01</span><div><h3>A pauta chega pronta</h3><p>O Mural recolhe toda semana o que está travando os estudantes. Ninguém precisa inventar assunto: ele vem do que as pessoas marcaram.</p></div></li>
+        <li><span class="n">02</span><div><h3>A Faculdade decidiu duas vezes que precisa ouvir estudante</h3><p>A Congregação de 4 de setembro vai pedir à PROGRAD uma janela de ajuste por causa do noturno. A Coordenação Acadêmica marcou pesquisa com formandos pra outubro.</p></div></li>
+        <li><span class="n">03</span><div><h3>Gravar e publicar hoje custa zero</h3><p>Celular grava, aplicativo gratuito corta, canal hospeda. O que antes exigia estúdio e gráfica agora exige uma tarde.</p></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rod"><span>Gestão Ágora · DEA FAUFBA</span><span>03</span></div>
 </section>
-<section class="pg bg-kraft">
- <svg viewBox="0 0 120 190" class="cut" style="width:34mm;top:16mm;right:18mm;transform:rotate(7deg)"><defs><pattern id="ht3" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r="1.35" fill="#14110F"/></pattern></defs>
-<rect x="38" y="10" width="44" height="86" rx="22" fill="url(#ht3)"/>
-<path d="M22 82 a38 38 0 0 0 76 0" stroke="#14110F" stroke-width="10" fill="none"/>
-<rect x="54" y="120" width="12" height="38" fill="#14110F"/><rect x="26" y="158" width="68" height="12" rx="6" fill="#14110F"/></svg>
- <div class="wrap">
-   <div class="kick" style="color:var(--coral)">A rádio · uma tarde por episódio</div>
-   <h2 style="color:var(--roxo)">Conversa de 30 minutos,<br>gravada em sala</h2>
-   <p class="lead" style="max-width:112mm">Um professor convidado e dois estudantes, numa sala qualquer da Faculdade, com o celular no meio da mesa. Áudio, sem câmera. Sobe com uma imagem fixa, então não existe edição de vídeo pra fazer.</p>
-   <div class="g2" style="margin-top:7mm">
-     <div class="cx per gira-1"><h3 style="color:var(--ink)">Tema do primeiro</h3><p style="font-size:9.5pt;margin:0"><b>A Faculdade que temos e a que a gente queria.</b> Conversa aberta, sem pauta fechada e sem cobrança de ninguém. É o convite mais fácil de aceitar e o mais difícil de gerar atrito.</p></div>
-     <div class="cx ama gira1"><h3 style="color:var(--ink)">Quem faz o quê</h3><p style="font-size:9.5pt;margin:0">Uma pessoa produz: convida, marca a sala, publica. Outra conduz a conversa. As duas funções são separadas de propósito, pra ninguém precisar ser bom nas duas.</p></div>
-   </div>
-   <div class="cx cor gira-2" style="margin-top:7mm">
-     <h3 style="color:var(--yellow)">Episódio zero, antes de convidar qualquer professor</h3>
-     <p style="margin:0;font-size:9.5pt">Grave primeiro uma conversa de quinze minutos entre três pessoas do DEA sobre os primeiros números do Mural. Ninguém de fora, nenhuma agenda pra combinar, nenhum risco. Serve pra testar o gravador, o corte e a publicação, e pra chegar no primeiro convidado mostrando um episódio pronto em vez de uma ideia.</p>
-   </div>
-   <div style="margin-top:auto">
-     <h3 style="color:var(--coral)">O caminho inteiro, em quatro passos</h3>
-     <ul class="lista">
-       <li><b class="n">01</b><div class="t"><b>Convite</b><span>Uma mensagem dizendo que é conversa de 30 minutos, em áudio, sobre a Faculdade. Nada de questionário mandado antes.</span></div></li>
-       <li><b class="n">02</b><div class="t"><b>Gravação</b><span>Sala reservada, celular no gravador, uma hora bloqueada. Grava corrido, sem parar pra corrigir.</span></div></li>
-       <li><b class="n">03</b><div class="t"><b>Corte</b><span>Tira o começo bagunçado e o fim, equaliza o volume. Uma hora de trabalho em aplicativo gratuito.</span></div></li>
-       <li><b class="n">04</b><div class="t"><b>Publicação</b><span>Capa fixa com a identidade da Ágora, sobe no canal, link no grupo e no cartaz da semana.</span></div></li>
-     </ul>
-   </div>
- </div>
- <div class="rod">MURAL · DEA FAUFBA</div><div class="pn">04</div>
+<section class="pg">
+  <div class="cab"><div class="esq">Rádio e revista</div><div class="dir">A rádio · 04</div></div>
+  <div class="kick">Uma tarde por episódio</div>
+  <h2>Conversa de 30 minutos,<br>gravada em sala</h2>
+  <p class="lead">Um professor convidado e dois estudantes, numa sala qualquer da Faculdade, com o celular no meio da mesa. Áudio, sem câmera. Sobe com uma imagem fixa, então não existe edição de vídeo pra fazer.</p>
+  <div class="g2" style="margin-top:9mm">
+    <div class="pan"><h3>Tema do primeiro</h3><p style="margin:0;font-size:9.4pt"><strong>A Faculdade que temos e a que a gente queria.</strong> Conversa aberta, sem pauta fechada e sem cobrança de ninguém. É o convite mais fácil de aceitar e o mais difícil de gerar atrito.</p></div>
+    <div class="pan"><h3>Quem faz o quê</h3><p style="margin:0;font-size:9.4pt">Uma pessoa produz: convida, marca a sala, publica. Outra conduz a conversa. As duas funções são separadas de propósito, pra ninguém precisar ser bom nas duas.</p></div>
+  </div>
+  <div class="pan borda" style="margin-top:9mm">
+    <h3>Episódio zero, antes de convidar qualquer professor</h3>
+    <p style="margin:0">Grave primeiro uma conversa de quinze minutos entre três pessoas do DEA sobre os primeiros números do Mural. Ninguém de fora, nenhuma agenda pra combinar, nenhum risco. Serve pra testar o gravador, o corte e a publicação, e pra chegar no primeiro convidado mostrando um episódio pronto em vez de uma ideia.</p>
+  </div>
+  <div class="g-lab" style="margin-top:9mm">
+    <div class="lab">O caminho</div>
+    <div>
+      <ul class="lst">
+        <li><span class="n">01</span><div><h3>Convite</h3><p>Uma mensagem dizendo que é conversa de 30 minutos, em áudio, sobre a Faculdade. Nada de questionário mandado antes.</p></div></li>
+        <li><span class="n">02</span><div><h3>Gravação</h3><p>Sala reservada, celular no gravador, uma hora bloqueada. Grava corrido, sem parar pra corrigir.</p></div></li>
+        <li><span class="n">03</span><div><h3>Corte</h3><p>Tira o começo bagunçado e o fim, equaliza o volume. Uma hora em aplicativo gratuito.</p></div></li>
+        <li><span class="n">04</span><div><h3>Publicação</h3><p>Capa fixa com a identidade da Ágora, sobe no canal, link no grupo e no cartaz da semana.</p></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rod"><span>Gestão Ágora · DEA FAUFBA</span><span>04</span></div>
 </section>
-<section class="pg bg-peri">
- <div class="dots"></div>
- <div class="star" style="color:var(--coral);top:18mm;right:20mm;transform:rotate(-10deg)"><svg viewBox="0 0 100 96" class="cut"><polygon points="50,2 62,36 98,36 69,58 80,94 50,72 20,94 31,58 2,36 38,36" fill="currentColor"/></svg></div>
- <div class="wrap">
-   <div class="kraft k3 gira-1" style="margin-top:20mm">
-     <div class="tape tr"></div>
-     <div class="kick" style="color:var(--coral)">Cinco episódios já com assunto</div>
-     <h2 style="color:var(--ink)">Ninguém vai precisar<br>inventar pauta</h2>
-     <ul class="lista">
-       <li><b class="n">01</b><div class="t"><b>A Faculdade que temos e a que a gente queria</b><span>O piloto. Conversa aberta com um professor convidado.</span></div></li>
-       <li><b class="n">02</b><div class="t"><b>Estudar trabalhando</b><span>O curso visto do noturno. Aula que acaba depois do último ônibus, ateliê sem vaga, trabalho de dia.</span></div></li>
-       <li><b class="n">03</b><div class="t"><b>Atravessar o TFG</b><span>Fala direto com formandos e pré-formandos, o mesmo público da pesquisa da Coordenação em outubro.</span></div></li>
-       <li><b class="n">04</b><div class="t"><b>O que o Mural mostrou no semestre</b><span>Os números na mesa, comentados por quem respondeu e por quem decide.</span></div></li>
-       <li><b class="n">05</b><div class="t"><b>Quem saiu daqui</b><span>Um egresso recente conta o que a Faculdade preparou e o que não preparou.</span></div></li>
-     </ul>
-   </div>
-   <div class="cx gira1" style="margin-top:7mm">
-     <h3 style="color:var(--coral)">Que tipo de convidado rende conversa</h3>
-     <p style="font-size:9.5pt">Os nomes a gente escolhe junto. O que importa é o perfil, porque é ele que decide se tem assunto e se as pessoas escutam até o fim.</p>
-     <div class="g2" style="margin-top:4mm;gap:4mm">
-       <p style="font-size:9pt;margin:0"><b>Quem voltou de uma pesquisa fora.</b> Chega com assunto pronto e vontade de contar.</p>
-       <p style="font-size:9pt;margin:0"><b>Quem dá a disciplina que mais trava.</b> Rende a conversa mais útil do semestre.</p>
-       <p style="font-size:9pt;margin:0"><b>Professor recém-chegado.</b> Ainda enxerga a Faculdade de fora e compara.</p>
-       <p style="font-size:9pt;margin:0"><b>Quem os estudantes já procuram.</b> A confiança já construída aparece no áudio.</p>
-     </div>
-   </div>
- </div>
- <div class="rod">MURAL · DEA FAUFBA</div><div class="pn">05</div>
+<section class="pg">
+  <div class="cab"><div class="esq">Rádio e revista</div><div class="dir">Pauta · 05</div></div>
+  <div class="kick">Cinco episódios já com assunto</div>
+  <h2>Ninguém vai precisar<br>inventar pauta</h2>
+  <ul class="lst" style="margin-top:7mm">
+    <li><span class="n">01</span><div><h3>A Faculdade que temos e a que a gente queria</h3><p>O piloto. Conversa aberta com um professor convidado.</p></div></li>
+    <li><span class="n">02</span><div><h3>Estudar trabalhando</h3><p>O curso visto do noturno. Aula que acaba depois do último ônibus, ateliê sem vaga, trabalho de dia.</p></div></li>
+    <li><span class="n">03</span><div><h3>Atravessar o TFG</h3><p>Fala direto com formandos e pré-formandos, o mesmo público da pesquisa da Coordenação em outubro.</p></div></li>
+    <li><span class="n">04</span><div><h3>O que o Mural mostrou no semestre</h3><p>Os números na mesa, comentados por quem respondeu e por quem decide.</p></div></li>
+    <li><span class="n">05</span><div><h3>Quem saiu daqui</h3><p>Um egresso recente conta o que a Faculdade preparou e o que não preparou.</p></div></li>
+  </ul>
+  <div class="g-lab" style="margin-top:10mm">
+    <div class="lab">Convidados</div>
+    <div>
+      <p style="margin-bottom:4mm">Os nomes a gente escolhe junto. O que importa é o perfil, porque é ele que decide se tem assunto e se as pessoas escutam até o fim.</p>
+      <div class="col2">
+        <p style="font-size:9.2pt"><strong>Quem voltou de uma pesquisa fora.</strong> Chega com assunto pronto e vontade de contar.</p>
+        <p style="font-size:9.2pt"><strong>Quem dá a disciplina que mais trava.</strong> Rende a conversa mais útil do semestre.</p>
+        <p style="font-size:9.2pt"><strong>Professor recém-chegado.</strong> Ainda enxerga a Faculdade de fora e compara com onde esteve antes.</p>
+        <p style="font-size:9.2pt"><strong>Quem os estudantes já procuram.</strong> A confiança já construída aparece no áudio.</p>
+      </div>
+    </div>
+  </div>
+  <div class="rod"><span>Gestão Ágora · DEA FAUFBA</span><span>05</span></div>
 </section>
-<section class="pg bg-yellow">
- <div class="dots"></div>
- <svg viewBox="0 0 210 160" class="cut" style="width:82mm;bottom:14mm;right:-8mm;transform:rotate(-6deg)"><defs><pattern id="ht4" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r="1.35" fill="#14110F"/></pattern></defs>
-<polygon points="8,26 100,10 100,146 8,154" fill="url(#ht4)"/><polygon points="110,10 202,26 202,154 110,146" fill="#EFE3CC" stroke="#14110F" stroke-width="4"/>
-<g fill="#14110F"><rect x="122" y="40" width="68" height="9"/><rect x="122" y="58" width="52" height="7"/><rect x="122" y="74" width="60" height="7"/><rect x="122" y="90" width="44" height="7"/></g>
-<rect x="20" y="40" width="64" height="44" fill="#E8604C"/></svg>
- <div class="wrap">
-   <div class="kraft k4 gira1" style="margin-top:14mm">
-     <div class="tape tl"></div><div class="tape br"></div>
-     <div class="kick" style="color:var(--coral)">A revista · uma edição por semestre</div>
-     <h2 style="color:var(--roxo)">O que a Faculdade<br>produz e ninguém vê</h2>
-     <p>Todo semestre a FAUFBA gera centenas de pranchas, maquetes e ensaios vistos por uma banca de três pessoas e depois esquecidos no HD de quem fez. A revista é onde isso volta a existir.</p>
-     <div class="g2" style="margin-top:5mm;gap:5mm">
-       <div><h3 style="color:var(--coral);font-size:11pt">Metade: trabalho de estudante</h3><p style="font-size:9pt;margin:0">Prancha ou foto de maquete, com um parágrafo do próprio autor contando o que tentou fazer. O parágrafo é o que transforma imagem bonita em conteúdo, e custa cinco minutos de quem já fez o trabalho.</p></div>
-       <div><h3 style="color:var(--coral);font-size:11pt">Metade: olhar sobre a Faculdade</h3><p style="font-size:9pt;margin:0">Entrevistas curtas e um ensaio fotográfico sobre o prédio. É a parte que dá personalidade à edição e a que exige texto original.</p></div>
-     </div>
-   </div>
-   <div class="cx per gira-2" style="margin-top:7mm;width:72%">
-     <h3 style="color:var(--ink)">Uma seção que só existe porque o Mural existe</h3>
-     <p style="margin:0;font-size:9.5pt">Quatro páginas com os números do semestre: o que mais travou, por turno, e o que a Faculdade respondeu. Vira a memória da gestão, e é exatamente o que faltou nas vezes anteriores, quando a chapa seguinte entrou sem saber o que tinha sido feito.</p>
-   </div>
-   <div class="cx gira1" style="margin-top:6mm;width:66%">
-     <h3 style="color:var(--coral)">Por que semestral e em PDF</h3>
-     <p style="margin:0;font-size:9pt">O calendário da Faculdade já define a data, então ninguém precisa inventar prazo. PDF abre no celular, vai por WhatsApp e fica guardado. A Congregação acabou de relatar contingenciamento orçamentário, então pedir gráfica agora seria começar por onde a conversa trava.</p>
-   </div>
- </div>
- <div class="rod">MURAL · DEA FAUFBA</div><div class="pn">06</div>
+<section class="pg">
+  <div class="cab"><div class="esq">Rádio e revista</div><div class="dir">A revista · 06</div></div>
+  <div class="kick">Uma edição por semestre</div>
+  <h2>O que a Faculdade<br>produz e ninguém vê</h2>
+  <p class="lead">Todo semestre a FAUFBA gera centenas de pranchas, maquetes e ensaios vistos por uma banca de três pessoas e depois esquecidos no HD de quem fez. A revista é onde isso volta a existir.</p>
+  <div class="g2" style="margin-top:9mm">
+    <div class="pan"><h3>Metade: trabalho de estudante</h3><p style="margin:0;font-size:9.4pt">Prancha ou foto de maquete, com um parágrafo do próprio autor contando o que tentou fazer. O parágrafo é o que transforma imagem bonita em conteúdo, e custa cinco minutos de quem já fez o trabalho.</p></div>
+    <div class="pan"><h3>Metade: olhar sobre a Faculdade</h3><p style="margin:0;font-size:9.4pt">Entrevistas curtas e um ensaio fotográfico sobre o prédio. É a parte que dá personalidade à edição e a que exige texto original.</p></div>
+  </div>
+  <div class="pan peri" style="margin-top:8mm">
+    <h3>Uma seção que só existe porque o Mural existe</h3>
+    <p style="margin:0">Quatro páginas com os números do semestre: o que mais travou, por turno, e o que a Faculdade respondeu. Vira a memória da gestão, e é exatamente o que faltou nas vezes anteriores, quando a chapa seguinte entrou sem saber o que tinha sido feito.</p>
+  </div>
+  <div class="g-lab" style="margin-top:9mm">
+    <div class="lab">Formato</div>
+    <div class="col2">
+      <p><strong>O semestre já é o prazo.</strong> O calendário da Faculdade define a data e ninguém precisa inventar um.</p>
+      <p><strong>PDF circula e não custa.</strong> Abre no celular, vai por WhatsApp, fica guardado. A Congregação acabou de relatar contingenciamento, então pedir gráfica agora seria começar por onde a conversa trava.</p>
+      <p><strong>A curadoria é o trabalho.</strong> Escolher, pedir o parágrafo, diagramar. Não tem apuração nem produção do zero, que é onde revista estudantil costuma morrer.</p>
+    </div>
+  </div>
+  <div class="rod"><span>Gestão Ágora · DEA FAUFBA</span><span>06</span></div>
 </section>
-<section class="pg bg-kraft">
- <div class="wrap">
-   <div class="kick" style="color:var(--coral)">O que sai do bolso de alguém</div>
-   <h2 style="color:var(--roxo)">Nada. O custo é tempo.</h2>
-   <ul class="lista" style="margin-top:5mm">
-     <li><b class="n">→</b><div class="t"><b>Gravador</b><span>Celular de quem estiver na sala, no aplicativo que já vem instalado.</span></div></li>
-     <li><b class="n">→</b><div class="t"><b>Edição de áudio</b><span>Aplicativo gratuito, no computador ou no próprio celular.</span></div></li>
-     <li><b class="n">→</b><div class="t"><b>Sala pra gravar</b><span>Sala da Faculdade, reservada como qualquer atividade estudantil.</span></div></li>
-     <li><b class="n">→</b><div class="t"><b>Capa e diagramação</b><span>A identidade da Ágora, que já existe pronta.</span></div></li>
-     <li><b class="n">→</b><div class="t"><b>Hospedagem e publicação</b><span>Canal do DEA no YouTube, e a revista em PDF, sem gráfica.</span></div></li>
-   </ul>
-   <div class="g3" style="margin-top:8mm">
-     <div class="cx per gira-1"><div class="num" style="color:var(--ink)">1</div><p style="font-size:8.5pt;margin-top:2mm">tarde por episódio, do convite à publicação</p></div>
-     <div class="cx ama gira1"><div class="num">2h</div><p style="font-size:8.5pt;margin-top:2mm">por semana pra manter a revista viva entre edições</p></div>
-     <div class="cx cor gira-2"><div class="num" style="color:#fff">R$ 0</div><p style="font-size:8.5pt;margin-top:2mm">de verba pedida à Faculdade, agora ou depois</p></div>
-   </div>
-   <div class="cx gira1" style="margin-top:auto;background:var(--roxo);color:#fff;padding:7mm">
-     <h3 style="color:var(--yellow)">Onde pode aparecer dinheiro depois</h3>
-     <p style="margin:0;font-size:9.5pt">Registrada como ação de extensão no SIATEX, a rádio passa a emitir certificado e pode contar hora complementar pra quem participa. O registro exige um docente ou técnico efetivo como proponente. Não é condição pra começar, é o passo que vale dar depois que existir episódio publicado pra mostrar.</p>
-   </div>
- </div>
- <div class="rod">MURAL · DEA FAUFBA</div><div class="pn">07</div>
+<section class="pg">
+  <div class="cab"><div class="esq">Rádio e revista</div><div class="dir">Custo · 07</div></div>
+  <div class="kick">O que sai do bolso de alguém</div>
+  <h2>Nada. O custo é tempo.</h2>
+  <ul class="lst" style="margin-top:7mm">
+    <li><span class="n">—</span><div><h3>Gravador</h3><p>Celular de quem estiver na sala, no aplicativo que já vem instalado.</p></div></li>
+    <li><span class="n">—</span><div><h3>Edição de áudio</h3><p>Aplicativo gratuito, no computador ou no próprio celular.</p></div></li>
+    <li><span class="n">—</span><div><h3>Sala pra gravar</h3><p>Sala da Faculdade, reservada como qualquer atividade estudantil.</p></div></li>
+    <li><span class="n">—</span><div><h3>Capa e diagramação</h3><p>A identidade da Ágora, que já existe pronta.</p></div></li>
+    <li><span class="n">—</span><div><h3>Hospedagem e publicação</h3><p>Canal do DEA no YouTube, e a revista em PDF, sem gráfica.</p></div></li>
+  </ul>
+  <div class="g3" style="margin-top:10mm">
+    <div><div class="num roxo">1</div><p style="font-size:9pt;margin-top:2mm">tarde por episódio, do convite à publicação</p></div>
+    <div><div class="num roxo">2h</div><p style="font-size:9pt;margin-top:2mm">por semana pra manter a revista viva entre edições</p></div>
+    <div><div class="num roxo">R$ 0</div><p style="font-size:9pt;margin-top:2mm">de verba pedida à Faculdade, agora ou depois</p></div>
+  </div>
+  <div class="pan borda" style="margin-top:10mm">
+    <h3>Onde pode aparecer dinheiro depois</h3>
+    <p style="margin:0">Registrada como ação de extensão no SIATEX, a rádio passa a emitir certificado e pode contar hora complementar pra quem participa. O registro exige um docente ou técnico efetivo como proponente. Não é condição pra começar, é o passo que vale dar depois que existir episódio publicado pra mostrar.</p>
+  </div>
+  <div class="rod"><span>Gestão Ágora · DEA FAUFBA</span><span>07</span></div>
 </section>
-<section class="pg bg-roxo">
- <div class="dots"></div>
- <svg viewBox="0 0 300 190" class="cut" style="width:112mm;bottom:-8mm;left:-12mm;transform:rotate(-3deg);opacity:.9"><defs><pattern id="ht1" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r="1.35" fill="#14110F"/></pattern></defs>
-<polygon points="150,8 292,64 8,64" fill="url(#ht1)"/><polygon points="150,22 262,62 38,62" fill="#EFE3CC"/>
-<rect x="8" y="64" width="284" height="10" fill="#14110F"/>
-<g fill="url(#ht1)"><rect x="26" y="74" width="26" height="92"/><rect x="76" y="74" width="26" height="92"/><rect x="126" y="74" width="26" height="92"/><rect x="176" y="74" width="26" height="92"/><rect x="226" y="74" width="26" height="92"/></g>
-<rect x="0" y="166" width="300" height="9" fill="#14110F"/><rect x="10" y="175" width="280" height="9" fill="#14110F" opacity=".55"/></svg>
- <div class="star" style="color:var(--yellow);top:22mm;right:22mm;transform:rotate(12deg)"><svg viewBox="0 0 100 96" class="cut"><polygon points="50,2 62,36 98,36 69,58 80,94 50,72 20,94 31,58 2,36 38,36" fill="currentColor"/></svg></div>
- <div class="wrap">
-   <div class="kraft k5 gira-1" style="margin-top:16mm">
-     <div class="tape tl"></div><div class="tape tr"></div>
-     <div class="kick" style="color:var(--coral)">Datas que já existem no calendário da Faculdade</div>
-     <h2 style="color:var(--ink)">De outubro<br>a novembro</h2>
-     <ul class="tl" style="margin-top:4mm">
-       <li><b>02 e 09/10</b><span>Congregação. Dá pra levar o primeiro número consolidado do Mural.</span></li>
-       <li><b>05 a 16/10</b><span>Janela da pesquisa da Coordenação Acadêmica sobre a Matriz T, com formandos e pré-formandos.</span></li>
-       <li><b>Semana de 13/10</b><span>Episódio zero gravado entre nós, sem convidado de fora.</span></li>
-       <li><b>Fim de outubro</b><span>Primeiro episódio com professor convidado, publicado.</span></li>
-       <li><b>Novembro</b><span>Chamada aberta de trabalhos pra revista, junto com o fim do semestre.</span></li>
-       <li><b>23 a 25/11</b><span>Seminário Estudantil UFBA, campus de Ondina. Espaço pra mostrar o Mural e a rádio fora da Faculdade.</span></li>
-     </ul>
-   </div>
-   <div class="cx ama gira1" style="margin-top:7mm">
-     <h3 style="color:var(--ink)">Uma oportunidade que tem prazo</h3>
-     <p style="margin:0;font-size:9.5pt">O concurso do CAU-BA, edição 2026, tem categoria de <b>Prática Inovadora no Ensino de Arquitetura e Urbanismo</b>. O Mural se encaixa, e com um episódio e uma edição publicados a inscrição fica muito mais forte. Vale conferir o prazo no e-mail que o Colegiado mandou em setembro.</p>
-   </div>
-   <div style="margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between">
-     <div class="selo" style="background:var(--coral)"><b>Gestão Ágora</b><span>DEA FAUFBA</span></div>
-     <div style="text-align:right;color:#fff;font-family:'Inter';font-weight:800;font-size:8pt;letter-spacing:.14em">
-       mural-faufba.netlify.app</div>
-   </div>
- </div>
- <div class="rod" style="color:#fff">MURAL · DEA FAUFBA · 2026.2</div><div class="pn" style="color:#fff">08</div>
+<section class="pg">
+  <div class="cab"><div class="esq">Rádio e revista</div><div class="dir">Calendário · 08</div></div>
+  <div class="kick">Datas que já existem no calendário da Faculdade</div>
+  <h2>De outubro a novembro</h2>
+  <ul class="tl" style="margin-top:7mm">
+    <li><b>02 e 09/10</b><span>Congregação. Dá pra levar o primeiro número consolidado do Mural.</span></li>
+    <li><b>05 a 16/10</b><span>Janela da pesquisa da Coordenação Acadêmica sobre a Matriz T, com formandos e pré-formandos.</span></li>
+    <li><b>Semana de 13/10</b><span>Episódio zero gravado entre nós, sem convidado de fora.</span></li>
+    <li><b>Fim de outubro</b><span>Primeiro episódio com professor convidado, publicado.</span></li>
+    <li><b>Novembro</b><span>Chamada aberta de trabalhos pra revista, junto com o fim do semestre.</span></li>
+    <li><b>23 a 25/11</b><span>Seminário Estudantil UFBA, campus de Ondina. Espaço pra mostrar o Mural e a rádio fora da Faculdade.</span></li>
+  </ul>
+  <div class="pan" style="margin-top:10mm">
+    <h3>Uma oportunidade que tem prazo</h3>
+    <p style="margin:0">O concurso do CAU-BA, edição 2026, tem categoria de <strong>Prática Inovadora no Ensino de Arquitetura e Urbanismo</strong>. O Mural se encaixa, e com um episódio e uma edição publicados a inscrição fica muito mais forte. Vale conferir o prazo no e-mail que o Colegiado mandou em setembro.</p>
+  </div>
+  <div style="margin-top:12mm;display:flex;align-items:flex-end;justify-content:space-between">
+    <div class="selo"><b>Gestão Ágora</b><span>DEA FAUFBA</span></div>
+    <div style="text-align:right;font-weight:800;font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)">mural-faufba.netlify.app</div>
+  </div>
+  <div class="rod"><span>Gestão Ágora · DEA FAUFBA</span><span>08</span></div>
 </section>
