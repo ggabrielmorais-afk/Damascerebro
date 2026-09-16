@@ -33,20 +33,35 @@ Só então gerar os cartazes com o QR definitivo.
 
 ## Quem pode responder, e quantas vezes
 
-Cada aparelho recebe um código aleatório de doze caracteres, guardado no
-próprio navegador. Ele não contém nome, matrícula nem e-mail. Com esse código,
-a pessoa responde no máximo `limite` temas por semestre, três por padrão.
+Pra responder um tema do placar, o estudante informa a matrícula da UFBA.
+São nove dígitos, começando em 2, e o app confere o formato antes de deixar
+enviar. Isso rejeita erro de digitação, não confirma que a pessoa existe.
 
-A quarta tentativa é barrada na tela e recusada de novo no `Codigo.gs`, que
-registra a tentativa na aba `recusados`. O painel mostra quantas pessoas
-responderam e quantas tentativas ficaram fora da conta.
+A matrícula viaja até o Apps Script e **nunca é gravada**. O script a
+transforma numa marca embaralhada, usando o `SEGREDO` que está no topo do
+`Codigo.gs`, e guarda só essa marca. A mesma matrícula gera sempre a mesma
+marca, e a marca não volta a ser matrícula.
 
-Trocar de semestre é mudar o campo `semestre` no `index.html`. A cota de todo
-mundo zera e a contagem recomeça.
+Com isso:
 
-A denúncia e o "quero ajudar" são enviados **sem código nenhum**. O primeiro
-porque precisa ser anônimo de verdade. O segundo porque pode levar contato, e
-contato mais código ligaria as respostas do placar a uma pessoa com nome.
+- a mesma matrícula responde no máximo `limite` temas por semestre, três por
+  padrão, e trocar de aparelho não zera a cota;
+- o painel mostra quantos estudantes distintos responderam, contando marcas
+  diferentes, sem saber nenhuma delas;
+- dá pra conferir uma matrícula específica rodando a função `conferir()` no
+  editor do Apps Script.
+
+Antes de publicar, **troque o `SEGREDO`** por uma frase comprida qualquer, e
+nunca mais mude. Se mudar depois, as marcas antigas param de bater com as
+novas e a cota reinicia pra todo mundo.
+
+Trocar de semestre é mudar o campo `semestre` no `index.html`. A cota zera e
+a contagem recomeça, sem apagar nada do que já foi respondido.
+
+A denúncia e o "quero ajudar" são enviados **sem matrícula e sem código**. O
+primeiro porque precisa ser anônimo de verdade. O segundo porque pode levar
+contato, e contato mais identificador ligaria as respostas do placar a uma
+pessoa com nome.
 
 ## O que nunca aparece no placar
 

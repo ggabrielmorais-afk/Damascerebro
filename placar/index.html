@@ -124,6 +124,12 @@ textarea{min-height:104px;resize:vertical;line-height:1.45}
 input[type=text]:focus,textarea:focus{border-color:var(--night);outline:0}
 .calmset input[type=text]:focus,.calmset textarea:focus{border-color:var(--calm)}
 .cnt-s{display:block;margin-top:6px;font-family:var(--f-mono);font-size:10px;color:var(--ink-3)}
+.mat{margin-top:18px;border:1.5px solid var(--line-2);border-radius:11px;padding:14px 15px;background:var(--tint)}
+.mat label{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.mat input{background:var(--card);letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.mat .por{font-size:12.5px;color:var(--ink-3);line-height:1.4;margin-top:9px}
+.mat .por b{color:var(--ink-2)}
+.mat .erro{font-size:12.5px;color:var(--alert);margin-top:7px;font-weight:600}
 
 /* chips (multi/single) */
 .chips-w{display:flex;flex-wrap:wrap;gap:8px}
@@ -218,7 +224,7 @@ window.MURAL_CFG = {
   <!-- S0 HOME -->
   <section class="scr on" id="s0" aria-label="Início">
     <h1 class="q">O que está travando você na Faculdade?</h1>
-    <p class="sub">Escolhe o tema, marca o que falta, pronto. Sem login, sem nome.</p>
+    <p class="sub">Escolhe o tema, marca o que falta, pronto. Sem login e sem nome, só a matrícula pra ninguém responder duas vezes.</p>
     <div class="grp"><h2>Placar</h2><small>VIRA NÚMERO PÚBLICO</small></div>
     <div class="themes" id="themes" role="group" aria-label="Temas do placar"></div>
     <div class="cota" id="cota"><span class="pips" id="cota-pips" aria-hidden="true"></span><span id="cota-txt"></span></div>
@@ -257,8 +263,14 @@ window.MURAL_CFG = {
         <small class="cnt-s" id="extra-n">0 / 90</small>
       </div>
     </div>
-    <div class="ban alerta" id="sem-cota" hidden><b>Você já respondeu seus temas deste semestre.</b> Isso existe pra um aparelho só não inflar o placar. Você continua podendo ver o placar, mandar sugestão, se oferecer pra uma vaga e usar o canal sigiloso.</div>
-    <div class="send"><button type="button" class="btn" id="send" disabled>Enviar</button><div class="foot">SEM LOGIN · SEM NOME · SÓ MARCAR</div></div>
+    <div class="mat">
+      <label for="mat">Sua matrícula</label>
+      <input type="text" id="mat" inputmode="numeric" maxlength="9" placeholder="os 9 números, sem pontos" autocomplete="off">
+      <div class="por"><b>Por que pedimos.</b> É o que impede a mesma pessoa de responder várias vezes e inflar o número. <b>A matrícula não fica guardada.</b> O sistema grava só uma marca embaralhada dela, que não volta a ser número e não chega a nome nenhum.</div>
+      <div class="erro" id="mat-erro" hidden></div>
+    </div>
+    <div class="ban alerta" id="sem-cota" hidden><b>Esta matrícula já respondeu seus temas deste semestre.</b> Isso existe pra ninguém inflar o placar respondendo várias vezes. Você continua podendo ver o placar, mandar sugestão, se oferecer pra uma vaga e usar o canal sigiloso.</div>
+    <div class="send"><button type="button" class="btn" id="send" disabled>Enviar</button><div class="foot">SEM LOGIN · SEM NOME · MATRÍCULA NÃO FICA GUARDADA</div></div>
   </section>
 
   <!-- S2 RECEBIDO (placar) -->
@@ -472,8 +484,19 @@ window.MURAL_CFG = {
     }
     return v;
   })();
-  function usados(){ return parseInt(le('mural_usos_'+SEM) || '0', 10) || 0; }
-  function gastaUma(){ guarda('mural_usos_'+SEM, String(usados()+1)); }
+  /* Matrícula da UFBA: nove dígitos, começa em 2, e os dois seguintes são o
+     ano de entrada. Isso só checa o formato, não confirma que a pessoa existe. */
+  function matricula(){ return (le('mural_mat') || '').replace(/\D/g,''); }
+  function matOk(m){
+    m = (m === undefined ? matricula() : m);
+    if(!/^2\d{8}$/.test(m)) return false;
+    var ano = parseInt(m.slice(1,3), 10);
+    return ano >= 5 && ano <= 35;
+  }
+  function chaveUso(){ return 'mural_usos_' + SEM + '_' + (matricula() || 'sem'); }
+  function usados(){ return parseInt(le(chaveUso()) || '0', 10) || 0; }
+  function gastaUma(){ guarda(chaveUso(), String(usados()+1)); }
+  function fixaUso(n){ guarda(chaveUso(), String(n)); }
   function restam(){ return Math.max(0, LIM - usados()); }
   function pintaCota(){
     var r = restam(), box = $('cota'), pips = $('cota-pips');
@@ -485,10 +508,10 @@ window.MURAL_CFG = {
     }
     box.className = r === 0 ? 'cota zero' : 'cota';
     $('cota-txt').textContent = r === LIM
-      ? 'Você pode responder ' + LIM + ' temas neste semestre. Escolha os que mais te travam.'
+      ? 'Cada matrícula responde ' + LIM + ' temas por semestre. Escolha os que mais te travam.'
       : r > 0
-        ? 'Restam ' + r + ' tema' + (r>1?'s':'') + ' pra você responder em ' + SEM + '.'
-        : 'Você já respondeu seus ' + LIM + ' temas de ' + SEM + '. O placar continua aberto, e falar com o DEA também.';
+        ? 'Restam ' + r + ' tema' + (r>1?'s':'') + ' pra sua matrícula em ' + SEM + '.'
+        : 'Esta matrícula já respondeu seus ' + LIM + ' temas de ' + SEM + '. O placar continua aberto, e falar com o DEA também.';
   }
   var LIVE = !!(CFG.endpoint && CFG.endpoint.indexOf('http') === 0);
   function envia(dados){
@@ -499,6 +522,9 @@ window.MURAL_CFG = {
     if(dados.tipo !== 'relato' && dados.tipo !== 'ajudar'){
       dados.id = MEU_ID; dados.semestre = SEM;
     }
+    /* A matrícula sai apenas na resposta do placar, e o servidor a embaralha
+       antes de gravar. Denúncia, sugestão, vagas e ajudar nunca a carregam. */
+    if(dados.tipo === 'placar'){ dados.matricula = matricula(); }
     try{
       fetch(CFG.endpoint, { method:'POST', mode:'no-cors', cache:'no-store',
         headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(dados) })
@@ -513,6 +539,17 @@ window.MURAL_CFG = {
     window[fn] = function(d){ clearTimeout(tmr); limpa(); pronto(d); };
     sc.onerror = function(){ clearTimeout(tmr); limpa(); pronto(null); };
     sc.src = CFG.endpoint + (CFG.endpoint.indexOf('?') < 0 ? '?' : '&') + 'cb=' + fn + '&t=' + Date.now();
+    document.head.appendChild(sc);
+  }
+  function consultaUsos(m, pronto){
+    if(!LIVE){ pronto(null); return; }
+    var fn = '__muralq' + Date.now(), sc = document.createElement('script');
+    var tmr = setTimeout(function(){ limpa(); pronto(null); }, 9000);
+    function limpa(){ window[fn] = undefined; if(sc.parentNode) sc.parentNode.removeChild(sc); }
+    window[fn] = function(d){ clearTimeout(tmr); limpa(); pronto(d && typeof d.usos === 'number' ? d.usos : null); };
+    sc.onerror = function(){ clearTimeout(tmr); limpa(); pronto(null); };
+    sc.src = CFG.endpoint + (CFG.endpoint.indexOf('?') < 0 ? '?' : '&') +
+             'cb=' + fn + '&m=' + encodeURIComponent(m) + '&s=' + encodeURIComponent(SEM) + '&t=' + Date.now();
     document.head.appendChild(sc);
   }
   function zera(){
@@ -612,8 +649,46 @@ window.MURAL_CFG = {
   $('turnos').addEventListener('click', function(e){ var b=e.target.closest('.turno'); if(!b) return; turno=b.getAttribute('data-t'); document.querySelectorAll('.turno').forEach(function(x){ x.setAttribute('aria-pressed',x===b?'true':'false'); }); gate(); });
   $('extra-t').addEventListener('click', function(){ var f=$('extra-f'); f.classList.toggle('on'); if(f.classList.contains('on')) $('extra').focus(); });
   $('extra').addEventListener('input', function(){ $('extra-n').textContent=this.value.length+' / 90'; });
-  function gate(){ send.disabled = !(sel.length>0 && (!cur.turno||turno)) || restam()===0; }
+  function gate(){
+    send.disabled = !(sel.length>0 && (!cur.turno||turno) && matOk()) || restam()===0;
+  }
+  (function(){
+    var el = $('mat');
+    el.addEventListener('input', function(){
+      var limpo = this.value.replace(/\D/g,'').slice(0,9);
+      if(this.value !== limpo) this.value = limpo;
+      guarda('mural_mat', limpo);
+      var e = $('mat-erro');
+      if(limpo.length === 0 || matOk(limpo)){ e.hidden = true; }
+      else {
+        e.hidden = false;
+        e.textContent = limpo.length < 9
+          ? 'A matrícula da UFBA tem nove números.'
+          : 'Esses nove números não têm cara de matrícula da UFBA. Confira.';
+      }
+      pintaCota(); gate();
+    });
+  })();
   send.addEventListener('click', function(){
+    if(!matOk()){ $('mat').focus(); return; }
+    send.disabled = true;
+    var rotulo = send.textContent;
+    send.textContent = 'Conferindo...';
+    consultaUsos(matricula(), function(usos){
+      send.textContent = rotulo;
+      if(typeof usos === 'number' && usos >= LIM){
+        fixaUso(usos); pintaCota();
+        $('sem-cota').hidden = false;
+        send.textContent = 'Cota do semestre encerrada';
+        $('mat-erro').hidden = false;
+        $('mat-erro').textContent = 'Esta matrícula já respondeu ' + usos + ' temas neste semestre.';
+        return;
+      }
+      if(typeof usos === 'number') fixaUso(usos);
+      registra();
+    });
+  });
+  function registra(){
     var secs=Math.max(1,Math.round((Date.now()-t0)/1000));
     var pk=sel.map(function(i){ return cur.items[i]; });
     pk.forEach(function(it){ if(cur.turno) it.c[turno]+=1; else it.c+=1; });
@@ -636,7 +711,7 @@ window.MURAL_CFG = {
             itens: pk.map(function(it){ return it.n; }) });
     gastaUma(); pintaCota();
     placarView=cur.id; show('s2');
-  });
+  }
   $('go-placar').addEventListener('click', function(){ renderPlacar(); show('s3'); });
   $('home-placar').addEventListener('click', function(){ renderPlacar(); show('s3'); });
 
@@ -742,7 +817,7 @@ window.MURAL_CFG = {
   }
 
   /* BOOT */
-  modo(); pintaCota();
+  modo(); $('mat').value = matricula(); pintaCota();
   if(LIVE){
     zera(); pintaHome();
     puxa(function(d){ aplica(d); pintaHome(); if(document.querySelector('.scr.on').id==='s3') renderPlacar(); });
