@@ -1,6 +1,6 @@
 # Cartazes do Mural — gestão Ágora
 
-São **duas famílias** de cartazes, com o mesmo conteúdo e duas direções de arte.
+São **três famílias** de cartazes, com o mesmo conteúdo e duas direções de arte.
 Imprima a que o pessoal do DEA escolher — ou as duas, em murais diferentes.
 
 ---
@@ -37,6 +37,48 @@ Fonte editável: `cartazes-xerox.html`.
 a caixa do QR. O texto corrido fica limpo. É assim na referência: as letras de "DCE"
 são recortadas, mas "diretório central dos estudantes" não é. Cortar o texto do
 cartaz destrói a leitura e não é o estilo.
+
+---
+
+## Família 3 — colagem (`Agora-Cartazes-A4-Colagem.pdf`)
+
+A direção dos modelos escolhidos no Canva: fundo chapado lilás ou rosa, uma folha
+de papel **rasgada e torta** por cima, estrelas do movimento estudantil espalhadas,
+fitas crepe segurando o papel, etiquetas chapadas e um recorte em silhueta no topo.
+
+| # | Fundo | Folha | Recorte | Chamada |
+|---|-------|-------|---------|---------|
+| 1 | Lilás `#A294DA` | Kraft | Megafone | Fale na Ágora. Todo mundo vai ler. |
+| 2 | Rosa `#E33C82` | Kraft | Cadeado | Fale. Só quem precisa vai ler. |
+| 3 | Creme `#F1EADC` | Lilás | Fachada | 40 segundos. Três temas. Um semestre. |
+
+Tipografia: **Anton** no título, **Inter** no corpo. Fonte editável: `cartazes-colagem.html`.
+
+### As bordas rasgadas são geradas, não desenhadas
+
+Cada folha tem a borda irregular gerada por código, com semente fixa — o mesmo
+cartaz sai idêntico toda vez. Para variar o rasgo, troque o número da semente em
+`gera-colagem.py` (`semente=3`, `11`, `23`).
+
+### Se quiser trocar os recortes por foto de verdade
+
+Os três recortes são silhuetas em SVG, não foto. Funcionam impressos, mas a
+referência usa **foto recortada em preto e branco de alto contraste**. Se você
+gerar as imagens no Flow, é só soltar no lugar do desenho, no Canva. Prompts:
+
+1. **Megafone** — `black and white high contrast halftone photograph of a hand
+   holding a vintage megaphone, cut out on pure white background, 1970s protest
+   poster collage element, heavy grain, no text`
+2. **Cadeado / sigilo** — `black and white high contrast halftone photograph of a
+   closed brass padlock on a folded paper envelope, cut out on pure white
+   background, xerox texture, protest zine collage element, no text`
+3. **Fachada da FAUFBA** — `black and white high contrast halftone photograph of a
+   neoclassical university building facade with columns and a pediment, small
+   crowd of student silhouettes on the steps, cut out on pure white background,
+   1970s Brazilian student movement poster collage, heavy grain, no text`
+
+Peça em formato quadrado ou 4:3, fundo branco liso, e recorte no Canva com
+*Editar imagem → Remover fundo* se vier com fundo.
 
 ---
 
