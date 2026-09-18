@@ -3,11 +3,16 @@
 São **três famílias** de cartazes, com a mesma mensagem e três direções de arte.
 Imprima a que o pessoal do DEA escolher — ou as três, em murais diferentes.
 
-## Para mandar inteiro: `Mural-Cartazes-Agora-DEA.pdf`
+## Para mandar: `Mural-Cartazes-Escolha-DEA.pdf` ← este
 
-Um PDF só, 10 páginas: **uma capa** que explica o Mural e as três direções, mais os
-nove cartazes. É este que vai para quem ainda não viu nada — não precisa de contexto
-por fora. Fonte: `cartazes-todos.html`, montado por `junta.py`.
+**Duas páginas.** Capa explicando o Mural, e uma página com as nove artes lado a
+lado, três por coluna. Quem recebe decide olhando uma página só. É este que vai
+para alguém que ainda não viu nada. Fonte: `cartazes-escolha.html`.
+
+`Mural-Cartazes-Agora-DEA.pdf` é a versão longa: capa mais os nove cartazes em
+tamanho cheio, 10 páginas. Serve para quem já escolheu e vai imprimir, não para
+quem ainda vai decidir — dez páginas de arte trocando de estilo cansa antes de
+ajudar. Fonte: `cartazes-todos.html`, montado por `junta.py`.
 
 > `junta.py` escopa o CSS de cada família por uma classe (`.fam-q`, `.fam-x`, `.fam-c`)
 > antes de juntar tudo. As três usam os mesmos nomes de classe (`.pg`, `h1`, `.etq`,
@@ -15,9 +20,19 @@ por fora. Fonte: `cartazes-todos.html`, montado por `junta.py`.
 
 ## A marca
 
-Os nove cartazes usam a **marca em linóleo** (`marca/marca-linoleo.svg`) — o quadrado
-de cantos abertos, talhado. Nos cartazes de colagem ela aparece carimbada e torta, no
-canto de cima da folha.
+Os nove cartazes usam a **logo que o Gabriel gerou no Flow**: quatro cantos cheios e
+o vão no meio de cada lado, com textura de linóleo. Fica em `marca/logo-agora-ink.png`
+e `marca/logo-agora-branca.png`, já recortada do fundo branco, com transparência.
+
+Nos cartazes de colagem ela aparece carimbada e torta, no canto de cima da folha.
+
+`cartazes/logo.py` serve a logo em **qualquer cor**, como data URI: ele guarda só o
+recorte em `logo-mask.png` e pinta o canal alfa na hora. É por isso que ela aparece
+em tinta no cartaz amarelo, em amarelo no preto e em papel no vermelho, sem precisar
+de um arquivo por cor.
+
+> A versão em linóleo desenhada por mim (`marca/marca-linoleo.svg`) continua na pasta,
+> mas **não é a marca**. Ficou só como registro.
 
 ---
 

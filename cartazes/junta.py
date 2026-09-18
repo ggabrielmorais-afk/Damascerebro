@@ -7,8 +7,8 @@ cada CSS e escopado por uma classe de familia antes de entrar no mesmo arquivo.
 Sem isso, o CSS de uma familia atropela a outra."""
 import re, importlib.util
 
-_spec = importlib.util.spec_from_file_location('lino', 'gera-linoleo.py')
-_lino = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_lino)
+import sys; sys.path.insert(0, '.')
+import logo as _logo
 
 QR = open('qr.txt', encoding='utf-8').read()
 AMARELO='#F4EA4D'; AZUL='#1B6CA8'; AZULC='#469DE2'; VERMELHO='#D53C2C'
@@ -62,7 +62,7 @@ for arq, fam, nome in FAMILIAS:
 CAPA = f'''<section class="fam-capa pg" data-document-role="page" data-label="Capa">
  <div class="fio"><i></i><i></i><i></i></div>
  <div class="topo">
-   <div class="mk"><svg viewBox="-6 -6 112 112">{_lino.marca_corpo(INK)}</svg></div>
+   <div class="mk">{_logo.tag(INK, 'logo')}</div>
    <div class="tx"><b>Ágora</b><span>Gestão 2026 · DEA FAUFBA</span></div>
  </div>
  <h1>Cartazes do Mural</h1>
@@ -118,7 +118,7 @@ CSS_CAPA = f'''
 .fam-capa .fio i:nth-child(3){{background:{VERMELHO}}}
 .fam-capa .topo{{display:flex;align-items:center;gap:5mm}}
 .fam-capa .mk{{width:17mm;height:17mm;flex:none}}
-.fam-capa .mk svg{{width:100%;height:100%;display:block}}
+.fam-capa .mk .logo{{width:100%;height:100%;display:block;object-fit:contain}}
 .fam-capa .tx b{{font-family:'Anton',sans-serif;font-weight:400;font-size:16pt;
  display:block;line-height:1;letter-spacing:.05em;text-transform:uppercase;color:{INK}}}
 .fam-capa .tx span{{font-weight:800;font-size:8pt;letter-spacing:.16em;

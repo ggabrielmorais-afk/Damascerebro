@@ -6,8 +6,8 @@ recortes em silhueta. Sem foto: os recortes sao desenhados em SVG, e ele pode
 trocar por foto de verdade depois (os prompts estao no LEIA-ME)."""
 import math, random, importlib.util
 
-_spec = importlib.util.spec_from_file_location('lino', 'gera-linoleo.py')
-_lino = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_lino)
+import sys; sys.path.insert(0, '.')
+import logo as _logo
 
 FONTES = open('fontes-anton-inter.css', encoding='utf-8').read()
 QR = open('qr.txt', encoding='utf-8').read()
@@ -114,7 +114,7 @@ def cartaz(rotulo, fundo, cor_folha, cor_tit, etq_cor, etq_tx, desenho,
  <div class="fita" style="left:22mm;top:36mm;transform:rotate(-38deg)"></div>
  <div class="fita" style="left:150mm;top:38mm;transform:rotate(36deg)"></div>
  <div class="fita" style="left:24mm;top:244mm;transform:rotate(34deg)"></div>
- <div class="carimbo">{f'<svg viewBox="-6 -6 112 112">{_lino.marca_corpo(cor_carimbo)}</svg>'}</div>
+ <div class="carimbo">{_logo.tag(cor_carimbo, 'carimbo-img')}</div>
  <div class="miolo">
    <div class="rec">
      <div class="rec-fl">{folha(semente+7, PAPEL, 100, 74)}</div>
@@ -204,7 +204,7 @@ h1{{font-family:'Anton',sans-serif;font-weight:400;font-size:46pt;line-height:.9
 
 .carimbo{{position:absolute;right:26mm;top:44mm;width:20mm;height:20mm;z-index:6;
  transform:rotate(7deg)}}
-.carimbo svg{{width:100%;height:100%;display:block}}
+.carimbo img{{width:100%;height:100%;display:block;object-fit:contain}}
 .ass{{position:absolute;left:14mm;bottom:20mm;z-index:6;color:{PAPEL};
  font-weight:800;font-size:11pt;line-height:1.25;letter-spacing:.1em;
  text-transform:uppercase;padding:3.5mm 6mm;transform:rotate(-3.5deg)}}

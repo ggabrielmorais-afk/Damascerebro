@@ -9,8 +9,8 @@ as letras de 'DCE' sao recortadas, mas 'diretorio central dos estudantes' nao.""
 
 import importlib.util
 
-_spec = importlib.util.spec_from_file_location('lino', 'gera-linoleo.py')
-_lino = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_lino)
+import sys; sys.path.insert(0, '.')
+import logo as _logo
 
 FONTES = open('fontes-poppins.css', encoding='utf-8').read()
 QR = open('qr.txt', encoding='utf-8').read()
@@ -25,10 +25,9 @@ def mistura(frente, fundo, a):
     return '#%02X%02X%02X' % tuple(round(f[i]*a + b[i]*(1-a)) for i in range(3))
 
 def marca(cor, fundo):
-    """A marca da Agora em linoleo. O fundo nao e usado: o linoleo tem
-    transparencia de verdade, entao nao precisa de mordida na cor do fundo."""
-    return (f'<svg viewBox="-6 -6 112 112" class="mk" aria-hidden="true">'
-            f'{_lino.marca_corpo(cor)}</svg>')
+    """A logo da Agora, pintada na cor do cartaz. O fundo nao e usado: o PNG
+    ja vem com transparencia."""
+    return _logo.tag(cor)
 
 def lockup(cor, fundo):
     return f'''<div class="lock">
@@ -73,7 +72,7 @@ c1 = cartaz(
     'O que você marcar vira número público no mesmo dia. É assim que a Faculdade '
     'para de ouvir “uns alunos reclamaram” e passa a ver quantos são.',
     'Sem login. Sem nome. Só a matrícula, que não fica guardada.',
-    'o número aparece no mesmo dia',
+    'você é parte da FAU, você é parte dessa história',
     'Xerox 1 — placar público')
 
 c2 = cartaz(
@@ -83,7 +82,7 @@ c2 = cartaz(
     'Canal sigiloso dentro do Mural. Não aparece no placar em hipótese nenhuma.',
     'Você escolhe se quer ser contatado. Sem nome, sem matrícula.<br>'
     'Canais oficiais: Ouvidoria da UFBA · 180 · 100 · 188 CVV',
-    'isso nunca vira placar',
+    'seu sigilo é garantido, e sua denúncia também',
     'Xerox 2 — canal sigiloso')
 
 temas = (f'<p class="temas" style="color:{mistura(PAPEL, VERMELHO, .82)}">Oferta de disciplina · Matrícula e SIGAA · '
@@ -96,7 +95,7 @@ c3 = cartaz(
     '40 segundos.<br>três temas.<br>um semestre.',
     'Cada matrícula responde três temas no semestre. Escolha os que mais te travam.',
     'Depois dos três, o Mural agradece e fecha. Vale por todo o semestre.',
-    'uma matrícula, três temas',
+    '40 segundos seus mudam toda a FAUFBA',
     'Xerox 3 — 40 segundos', temas)
 
 CSS = f'''
@@ -111,9 +110,9 @@ body{{font-family:'Poppins',system-ui,sans-serif;-webkit-font-smoothing:antialia
 .etq,.ar{{flex:none}}
 /* o simbolo em tamanho de cartaz, sangrando pela direita */
 .grande{{position:absolute;right:-18mm;bottom:72mm;width:62mm;height:62mm;z-index:0}}
-.grande .mk{{width:100%;height:100%;display:block}}
+.grande .mk{{width:100%;height:100%;display:block;object-fit:contain}}
 .lock-top{{display:flex;align-items:flex-start;gap:5mm}}
-.lock .mk{{width:25mm;height:25mm;flex:none;display:block}}
+.lock .mk{{width:25mm;height:25mm;flex:none;display:block;object-fit:contain}}
 .lock-tx b{{display:block;font-weight:900;font-size:18.5pt;line-height:.87;
  letter-spacing:-.025em;text-transform:lowercase}}
 .lock-tx b span{{font-weight:700;margin-left:.07em}}
