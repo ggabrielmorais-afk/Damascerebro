@@ -1,7 +1,23 @@
 # Cartazes do Mural — gestão Ágora
 
-São **três famílias** de cartazes, com o mesmo conteúdo e duas direções de arte.
-Imprima a que o pessoal do DEA escolher — ou as duas, em murais diferentes.
+São **três famílias** de cartazes, com a mesma mensagem e três direções de arte.
+Imprima a que o pessoal do DEA escolher — ou as três, em murais diferentes.
+
+## Para mandar inteiro: `Mural-Cartazes-Agora-DEA.pdf`
+
+Um PDF só, 10 páginas: **uma capa** que explica o Mural e as três direções, mais os
+nove cartazes. É este que vai para quem ainda não viu nada — não precisa de contexto
+por fora. Fonte: `cartazes-todos.html`, montado por `junta.py`.
+
+> `junta.py` escopa o CSS de cada família por uma classe (`.fam-q`, `.fam-x`, `.fam-c`)
+> antes de juntar tudo. As três usam os mesmos nomes de classe (`.pg`, `h1`, `.etq`,
+> `.qr`), então sem isso uma atropela a outra.
+
+## A marca
+
+Os nove cartazes usam a **marca em linóleo** (`marca/marca-linoleo.svg`) — o quadrado
+de cantos abertos, talhado. Nos cartazes de colagem ela aparece carimbada e torta, no
+canto de cima da folha.
 
 ---
 
