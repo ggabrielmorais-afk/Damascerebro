@@ -127,6 +127,54 @@ O Flow devolve PNG com borda macia, que não serve como marca final. Duas saída
 2. Ou vetorize você: Illustrator (*Image Trace → Black and White Logo*), Inkscape
    (*Traçar bitmap*) ou vectorizer.ai. Depois limpe os nós tortos à mão.
 
+---
+
+## Sobre o D1 e o "sem fundo"
+
+**Gerador de imagem não entrega transparência.** Flow, Imagen, Midjourney — todos
+devolvem um retângulo opaco. O `transparent background` no prompt faz a imagem vir
+com um fundo *cinza xadrez desenhado*, que é pior. O caminho é gerar em branco e
+recortar depois.
+
+Se ainda quiser gerar no Flow, use esta versão, que facilita o recorte:
+
+```
+black linocut woodcut print of a bold geometric open square symbol with gaps
+at the corners, rough hand carved texture, visible ink bleed and imperfect
+edges, isolated and centered on a plain flat pure white background with wide
+empty margins, nothing else in the frame, 1970s Brazilian student movement
+print, extreme high contrast pure black and pure white only, no text,
+no letters, no gradient, no color, no paper texture, no shadow
+```
+
+O que muda: `isolated`, `wide empty margins`, `nothing else in the frame` e
+`no paper texture` — é a textura de papel que estraga o recorte automático.
+Depois, no Canva: *Editar imagem → Remover fundo*. Sai razoável, mas come um
+pouco das bordas rasgadas, que é justo o que dá a graça do linóleo.
+
+## A saída melhor: já está pronta, em vetor
+
+Em vez de gerar e recortar, desenhei o linóleo direto em SVG, a partir da
+geometria da marca que já existe. **Fundo transparente de verdade**, porque as
+falhas de tinta são subcaminhos com `fill-rule="evenodd"` — buraco de verdade,
+não mancha branca por cima.
+
+| Arquivo | Uso |
+|---|---|
+| `marca-linoleo.svg` | fundo claro, escala infinita |
+| `marca-linoleo-branca.svg` | fundo escuro |
+| `marca-linoleo-512.png` · `-128.png` | tinta, PNG transparente |
+| `marca-linoleo-branca-512.png` · `-128.png` | branca, PNG transparente |
+
+O talhe é gerado por código com semente fixa (`semente=7` em `gera-linoleo.py`),
+então a marca sai idêntica toda vez. Para um talhe diferente, troque o número.
+Os parâmetros da goiva são `tremor` (tremido do corte), `chance` e `lasca`
+(frequência e tamanho das mordidas) e `n_furos` (falhas de tinta por barra).
+
+Testada nos três fundos e a **1 cm**: segura.
+
+---
+
 ## O que já existe
 
 A marca atual está nesta pasta: `marca-ink.svg`, `marca-cores.svg`, `marca-branca.svg`
