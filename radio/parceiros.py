@@ -12,7 +12,7 @@ def _dce_mask():
     return im.crop(im.point(lambda v: 255 if v > 40 else 0).getbbox())
 
 def _dea_rgba():
-    im = Image.open('pdfimg_78f8ed88.jpeg').convert('RGB')
+    im = Image.open('dea-logo-origem.jpeg').convert('RGB')
     # recorta o branco de fundo, mantendo as cores da marca
     alfa = im.convert('L').point(lambda v: 0 if v > 235 else 255)
     out = im.convert('RGBA'); out.putalpha(alfa)

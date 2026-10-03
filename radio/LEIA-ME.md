@@ -38,3 +38,17 @@ Para mexer em texto, é só editar a chamada — o layout se refaz sozinho.
 
 Depois de gerar, confira o transbordo: `node verify-rd.js` acusa qualquer página
 cujo conteúdo passe de A4.
+
+## Outubro: podcast agora, revista em 2027
+
+`../documentos/DEA-Podcast-Revista-2027.pdf`, 8 páginas, gerado por `gera-outubro.py`, que
+reaproveita os blocos e o CSS daqui. Páginas: capa, o nome do Mural (Pulso, Escuta, Soma), o
+aniversário da FAU em 30/10, episódio zero, próximos episódios, linha editorial da revista, como a
+edição nasce e calendário (com a correção do CAU-BA: a categoria é pra docente e pra prática de 2025).
+
+Pra rodar de novo: `python gera-outubro.py` escreve `dea-outubro.html`; o PDF sai pelo Chrome sem
+cabeçalho (`--headless --print-to-pdf --no-pdf-header-footer`). Com `--qa`, o HTML ganha uma linha no
+fim dizendo, por página, quanto passou de A4 (tem que dar `0/0` em todas).
+
+`fontes-poppins.css` e `qr.txt` entraram no repositório agora: sem eles nenhum dos dois geradores roda.
+O `parceiros.py` passou a abrir `dea-logo-origem.jpeg`, o nome atual do arquivo.
